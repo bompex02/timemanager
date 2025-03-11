@@ -4,7 +4,7 @@
   
   <script>
   export default {
-    name: 'HomeView',
+    name: 'LogoutView',
     // Weitere Optionen werden später hinzugefügt
   }
   </script>
