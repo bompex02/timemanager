@@ -19,39 +19,41 @@
       </router-link>
 
       <router-link
-        @click="handleClick('e-commerce')"
-        to="/e-commerce"
+        @click="handleClick('timerecording')"
+        to="/timerecording"
         class="flex items-center gap-x-2 w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900 cursor-pointer">
         <div class="grid mr-4 place-items-center">
           <i class="pi pi-shopping-cart"></i>
         </div>
-        E-Commerce
+        Zeiterfassung
       </router-link>
 
       <router-link
-        @click="handleClick('inbox')"
-        to="/inbox"
+        @click="handleClick('calender')"
+        to="/calender"
         class="flex items-center gap-x-2 w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900 cursor-pointer">
         <div class="grid mr-4 place-items-center">
           <i class="pi pi-inbox"></i>
         </div>
-        Inbox
+        Kalender        
+      </router-link>
+
+      <router-link
+        @click="handleClick('reports')"
+        to="/reports"
+        class="flex items-center gap-x-2 w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900 cursor-pointer">
+        <div class="grid mr-4 place-items-center">
+          <i class="pi pi-users"></i>
+        </div>
+        Berichte
+        <!-- Für die kleine Zahl oben neben dem Button -->
         <div class="grid ml-auto place-items-center justify-self-end">
           <div
             class="relative grid items-center px-2 py-1 font-sans text-xs font-bold uppercase rounded-full select-none whitespace-nowrap bg-blue-gray-500/20 text-blue-gray-900 cursor-pointer">
             <span class="">14</span>
           </div>
         </div>
-      </router-link>
-
-      <router-link
-        @click="handleClick('profile')"
-        to="/profile"
-        class="flex items-center gap-x-2 w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900 cursor-pointer">
-        <div class="grid mr-4 place-items-center">
-          <i class="pi pi-users"></i>
-        </div>
-        Profile
+        <!---->
       </router-link>
 
       <router-link
@@ -79,7 +81,6 @@
 
 
 <script setup>
-import { ref } from 'vue'
 import 'primeicons/primeicons.css'
 
 const handleClick = (componentName) => {

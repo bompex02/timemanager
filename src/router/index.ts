@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import DashboardView from '@/views/DashboardView.vue'
-import ECommerceView from '@/views/ECommerceView.vue'
-import InboxView from '@/views/InboxView.vue'
-import ProfileView from '@/views/ProfileView.vue'
+import TimerecordingView from '@/views/TimerecordingView.vue' 
+import CalenderView from '@/views/CalenderView.vue'
+import ReportsView from '@/views/ReportsView.vue'
 import SettingsView from '@/views/SettingsView.vue'
 import LogoutView from '@/views/LogoutView.vue'
 import HomeView from '@/views/HomeView.vue'
@@ -22,19 +22,19 @@ const router = createRouter({
       component: DashboardView,
     },
     {
-      path: '/e-commerce',
-      name: 'e-commerce',
-      component: ECommerceView,
+      path: '/timerecording',
+      name: 'timerecording',
+      component: TimerecordingView,
     },
     {
-      path: '/inbox',
-      name: 'inbox',
-      component: InboxView,
+      path: '/calender',
+      name: 'calender',
+      component: CalenderView,
     },
     {
-      path: '/profile',
-      name: 'profile',
-      component: ProfileView,
+      path: '/reports',
+      name: 'reports',
+      component: ReportsView,
     },
     {
       path: '/settings',

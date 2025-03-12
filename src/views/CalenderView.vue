@@ -4,7 +4,7 @@
   
   <script>
   export default {
-    name: 'ProfileView',
+    name: 'CalenderView',
     // Weitere Optionen werden später hinzugefügt
   }
   </script>

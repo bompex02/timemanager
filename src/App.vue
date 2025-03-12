@@ -11,6 +11,7 @@
 <script setup>
 import MenuSidebar from './components/MenuSidebar.vue'
 import { RouterView } from 'vue-router'
+
 </script>
 
 <style scoped>
@@ -22,4 +23,11 @@ import { RouterView } from 'vue-router'
   width: 20rem;      /* Breite der Sidebar – hier anpassbar */
   z-index: 100;      /* Damit die Sidebar über anderen Inhalten liegt */
 }
+
+.content-container {
+  flex-grow: 1;
+  margin-left: 20rem; /* Platz für die Sidebar */
+  padding: 2rem; /* Etwas Innenabstand */
+}
+
 </style>

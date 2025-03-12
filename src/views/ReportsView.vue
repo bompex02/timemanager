@@ -4,7 +4,7 @@
   
   <script>
   export default {
-    name: 'ECommerceView',
+    name: 'ReportsView',
     // Weitere Optionen werden später hinzugefügt
   }
   </script>
