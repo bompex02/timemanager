@@ -1,19 +1,21 @@
 <template>
   <div class="flex gap-5">
-    <TimeRecording @update-time-entry="addTimeEntry"/>
-    <TimeEntryList :entries="timeEntries" />
+    <TimeRecording @update-time-record="addTimeRecord"/>
+    <TimeRecordList :timeRecords="timeRecords" />
   </div>
 </template>
 
-<script setup>
-  import { ref } from 'vue';
-  import TimeEntryList from '@/components/TimeEntryList.vue';
-  import TimeRecording from '@/components/TimeRecording.vue';
-  
-  const timeEntries = ref([]);
+<script setup lang="ts">
+import { ref } from 'vue';
+import TimeRecordList from '@/components/TimeRecordList.vue';
+import TimeRecording from '@/components/TimeRecording.vue';
+import { TimeRecord } from '../models/TimeRecord';
 
-  const addTimeEntry = (entry) => {
-    timeEntries.value.unshift(entry); // unshift setzt den neuen Eintrag am Anfang der Liste
-  }
+// Generate TimeRecord Array with an empty array to prevent 'undefined' error
+const timeRecords = ref<TimeRecord[]>([]);
 
+const addTimeRecord = (record: TimeRecord) => {
+  console.log('Neuer Eintrag:', record);
+  timeRecords.value.unshift(record);
+};
 </script>
