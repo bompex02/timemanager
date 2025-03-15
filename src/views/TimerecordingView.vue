@@ -1,13 +1,13 @@
 <template>
   <div class="flex gap-5">
     <TimeRecording @update-time-record="addTimeRecord"/>
-    <TimeRecordList :timeRecords="timeRecords" />
+    <TodaysRecordList :timeRecords="timeRecords" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import TimeRecordList from '@/components/TimeRecordList.vue';
+import TodaysRecordList from '@/components/TodaysREcordList.vue';
 import TimeRecording from '@/components/TimeRecording.vue';
 import { TimeRecord } from '../models/TimeRecord';
 
