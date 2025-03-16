@@ -10,7 +10,7 @@ export class TimeRecordService {
   private records = reactive<TimeRecord[]>([]);
   
 
-constructor() {} // Prevent direct instantiation
+  constructor() {} // Prevent direct instantiation
 
   static getInstance(): TimeRecordService {
     if (!TimeRecordService.instance) {
@@ -42,6 +42,13 @@ constructor() {} // Prevent direct instantiation
         acc[normalizedDate].push(record);
         return acc;
     }, {});
-}
-  
+  }
+
+  // return all records in the current week
+  getRecordsInCurrentWeek(): TimeRecord[] {
+    const today = dateService.getCurrentDate();
+    const startOfWeek = dateService.getStartOfWeek(today);
+    const endOfWeek = dateService.getEndOfWeek(today);
+    return this.records.filter(record => record.timestamp >= startOfWeek && record.timestamp <= endOfWeek);
+  }  
 }

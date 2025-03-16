@@ -14,6 +14,10 @@ export class DateService {
         return new Date(Date.now());
     }
 
+    getCurrentTime(): string {
+        return new Date(Date.now()).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit' });   
+    }
+
     normalizeDate(date: Date): string {
         const day = String(date.getDate()).padStart(2, '0');   // day two-digit
         const month = String(date.getMonth() + 1).padStart(2, '0'); // month two-digit
@@ -40,5 +44,16 @@ export class DateService {
     
         return new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0])); // convert string to date
     }
-    
+
+    getStartOfWeek(date: Date): Date {
+        const day = date.getDay();
+        const diff = date.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
+        return new Date(date.setDate(diff));
+    }
+
+    getEndOfWeek(date: Date): Date {
+        const day = date.getDay();
+        const diff = date.getDate() - day + (day === 0 ? 0 : 7); // adjust when day is sunday
+        return new Date(date.setDate(diff));
+    }    
 }
