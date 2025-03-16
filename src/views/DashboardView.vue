@@ -1,15 +1,17 @@
 <template>
-    <!-- Inhalt wird später hinzugefügt -->
-  </template>
+    <AllRecordList :timeRecords="timeRecords" />
+</template>
   
-  <script>
-  export default {
-    name: 'DashboardView',
-    // Weitere Optionen werden später hinzugefügt
-  }
-  </script>
+<script setup lang="ts">
+import AllRecordList from '../components/AllRecordList.vue';
+import { TimeRecordService } from '../services/TimeRecordService';
+
+const timeRecordService = TimeRecordService.getInstance();
+const timeRecords = timeRecordService.getRecords();
+
+</script>
   
-  <style scoped>
+<style scoped>
   /* Stildefinitionen werden später hinzugefügt */
-  </style>
+</style>
   

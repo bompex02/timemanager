@@ -20,21 +20,23 @@
 </template>
 
   
-<script setup>
+<script setup lang="ts">
   import { ref } from 'vue'; 
-  import { showSuccess, showError } from '@/utils/toastService';
-  import { TimeRecordService } from '@/services/TimeRecordService';
-  import { TimeRecord, RecordType } from '@/models/TimeRecord';
+  import { showSuccess, showError } from '../services/ToastService';
+  import { TimeRecordService } from '../services/TimeRecordService';
+  import { DateService } from '../services/DateService';
+  import { TimeRecord, RecordType } from '../models/TimeRecord';
 
   const isClockedIn = ref(false); 
   const emit = defineEmits(['update-time-record']); // Emit event to update time record
 
-  // Singelton
+  // Singeltons
   const timeRecordService = TimeRecordService.getInstance(); 
+  const dateService = DateService.getInstance();
     
   // Toggle between 'in' and 'out' states based on which button is clicked
-  const toggleClock = (action) => {
-    const currentDateTime = ref(new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()); // Current date and time  
+  const toggleClock = (action: string) => {
+    const currentDateTime = ref(dateService.getCurrentDate());  
 
     if (action === 'in') {
         if (isClockedIn.value) {
@@ -42,8 +44,7 @@
             return;
         }
       isClockedIn.value = true;
-      const record = new TimeRecord(timeRecordService.getRecords()+1, RecordType.Einstempeln, currentDateTime.value);
-      emit('update-time-record', record);
+      const record = new TimeRecord(timeRecordService.getRecords().length+1, RecordType.Einstempeln, currentDateTime.value);
       timeRecordService.addRecord(record);
       showSuccess('Einstempeln erfolgreich!');
     } else if (action === 'out') {
@@ -52,8 +53,7 @@
             return;
         }
       isClockedIn.value = false;
-      const record = new TimeRecord(timeRecordService.getRecords() + 1, RecordType.Ausstempeln, currentDateTime.value);
-      emit('update-time-record', record);
+      const record = new TimeRecord(timeRecordService.getRecords().length+1, RecordType.Ausstempeln, currentDateTime.value);
       timeRecordService.addRecord(record);
       showSuccess('Ausstempeln erfolgreich!');
     }
