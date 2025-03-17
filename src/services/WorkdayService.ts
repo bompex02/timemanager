@@ -19,16 +19,41 @@ export class WorkdayService{
             WorkdayService.instance = new WorkdayService();
         }
         return WorkdayService.instance;
-    }
+    }    
 
-    // generate dummy workdays for 5 days for testing
-    private generateDummyWorkdays(): void {
+    // generates dummy workdays for testing purposes
+    generateDummyWorkdays() {
+        console.log("📌 Generiere Dummy-Workdays...");
+    
+        this.workdays.length = 0; // 🔥 Leere alte Workdays
+    
         const today = new Date();
-        for (let i = 0; i < 5; i++) {
-            const workDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() - i);
-            this.workdays.push(new Workday(workDate, Math.random() * (8 - 4) + 4, false));
+        let workdaysAdded = 0;
+        let daysBack = 0;
+    
+        while (workdaysAdded < 10 || daysBack < 14) { // Mindestens 10 Werktage, max. 14 Tage
+            const day = new Date(today);
+            day.setDate(today.getDate() - daysBack);
+    
+            // ✅ Falls Wochenende: Als leerer Workday speichern (damit im Chart nichts angezeigt wird)
+            if (day.getDay() === 6 || day.getDay() === 0) {
+                // Math.floor(Math.random() * (8 - 4) + 4) => random workhours between 4 and 8
+                // Math.floor(Math.random() * 2) === 1) => random boolean for homeOffice
+                this.workdays.push(new Workday(new Date(day), Math.floor(Math.random() * (8 - 4) + 4), Math.floor(Math.random() * 2) === 1)); 
+            } else {
+                // dummy workday
+                this.workdays.push(new Workday(
+                    new Date(day),
+                    Math.floor(Math.random() * (8 - 4) + 4), 
+                    false
+                ));
+                workdaysAdded++; // only increment if it's a workday
+            }
+    
+            daysBack++; // count days back
         }
     }
+    
 
     // get all workdays
     getWorkdays(): Workday[] {
@@ -43,7 +68,20 @@ export class WorkdayService{
     
         return this.workdays
             .filter(workday => workday.date >= startOfWeek && workday.date <= endOfWeek)
-            .sort((a, b) => a.date.getTime() - b.date.getTime()); // Nach Datum sortieren
+            .sort((a, b) => a.date.getTime() - b.date.getTime()); // sort by date
+            }
+
+
+    // get workdays of the last 2 weeks
+    getWorkdaysOfLast2Weeks(): Workday[] {
+        if (this.workdays.length < 10) {
+            console.warn("!DEBUG!: Keine Workdays gefunden! Generiere Dummy-Daten...");
+            this.generateDummyWorkdays();
+        }
+    
+        return [...this.workdays]
+            .sort((a, b) => a.date.getTime() - b.date.getTime()) // sort by date
+            .slice(-14); // get only the last 14 workdays
     }
 
     // create workday

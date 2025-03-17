@@ -45,9 +45,9 @@ export class DateService {
         return new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0])); // convert string to date
     }
 
-    getStartOfWeek(date: Date): Date {
+    getStartOfWeek(date: Date, offset?: number): Date {
         const day = date.getDay();
-        const diff = date.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
+        const diff = date.getDate() - day + (day === 0 ? -6 : 1) + (offset || 0); // adjust when day is sunday & add offset optinal to jump to next/previous week
         return new Date(date.setDate(diff));
     }
 
@@ -55,5 +55,9 @@ export class DateService {
         const day = date.getDay();
         const diff = date.getDate() - day + (day === 0 ? 0 : 7); // adjust when day is sunday
         return new Date(date.setDate(diff));
-    }    
+    }  
+    
+    formatMonthYear(date: Date): string {
+        return date.toLocaleDateString('de-DE', { year: 'numeric', month: 'long' });
+    }
 }
