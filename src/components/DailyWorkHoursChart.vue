@@ -48,7 +48,7 @@
     },
     formatter: (params: any) => {
       const data = params[0].data;
-      const homeOfficeText = data.homeOffice ? "🏡 Home-Office" : "🏢 Büro";
+      const homeOfficeText = data.homeOffice ? "🏡 Home-Office" : "🏢 Office";
       return `
         <strong>${params[0].axisValue}</strong><br/>
         ⏳ <strong>${data.value}</strong> Stunden<br/>

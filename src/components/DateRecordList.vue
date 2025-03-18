@@ -5,9 +5,9 @@
     <!-- checks if there are todays records -->
     <template v-if="todayRecords.length > 0">
       <ul class="mt-4 border-t pt-4 text-gray-700 overflow-y-auto max-h-[260px] pr-3 space-y-2">
-        <li v-for="(record, index) in todayRecords" :key="index" class="flex justify-between border-b pb-1">
+        <li v-for="(record, index) in todayRecords" :key="index" class="flex justify-between border-b">
           <span class="font-medium text-gray-900">{{ record.recordType }}</span>
-          <span class="text-gray-600">{{ dateService.formatTimeString(record.timestamp) }}</span>
+          <span class="text-gray-900">{{ dateService.getTimeString(record.timestamp) }}</span>
         </li>
       </ul>
     </template>
@@ -23,11 +23,13 @@
   import { computed } from 'vue';
   import { TimeRecordService } from '../services/TimeRecordService';
   import { DateService } from '../services/DateService';
+  import { WorkdayService } from '../services/WorkdayService';
 
   const date = defineProps<{ date: Date, title: string }>();
 
   const timeRecordService = TimeRecordService.getInstance();
   const dateService = DateService.getInstance();
+  const workdayService = WorkdayService.getInstance();
 
   const todayRecords = computed(() => {  
     console.log("🔍 Filter Datum:", date.date);

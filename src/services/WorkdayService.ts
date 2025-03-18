@@ -22,9 +22,7 @@ export class WorkdayService{
     }    
 
     // generates dummy workdays for testing purposes
-    generateDummyWorkdays() {
-        console.log("📌 Generiere Dummy-Workdays...");
-    
+    generateDummyWorkdays() {    
         this.workdays.length = 0; // 🔥 Leere alte Workdays
     
         const today = new Date();
@@ -107,5 +105,11 @@ export class WorkdayService{
         }
     
         return totalHours;
+    }
+
+    getHomeOfficeForDay(date : Date): boolean {
+        const workday = this.workdays.find(workday => workday.date.getTime() === date.getTime());
+        if (workday) return workday.homeOffice;
+        else return false;
     }
 }

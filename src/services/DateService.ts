@@ -25,9 +25,14 @@ export class DateService {
         return `${day}.${month}.${year}`; // return date in DD.MM.YYYY format
     }
 
-    formatTimeString(date: Date): string {
-        return new Date(date).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit' });   
+    getTimeString(date: Date): string {
+        return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
     }
+
+    getDateString(date: Date): string {
+        return `${date.getDate().toString().padStart(2, '0')}.${date.getMonth().toString().padStart(2, '0')}.${date.getFullYear().toString().padStart(4, '0')}`;
+    }
+
 
     parseDateFromString(dateStr: string): Date {
         if (!dateStr) {
