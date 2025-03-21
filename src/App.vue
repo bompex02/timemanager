@@ -3,7 +3,7 @@
   <div class="sidebar-container">
     <MenuSidebar />
   </div>
-  <div class="content-container">
+  <div class="content-container bg-white">
     <RouterView />
   </div>
 </template>

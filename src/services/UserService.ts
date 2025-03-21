@@ -20,11 +20,11 @@ export class UserService {
     }
 
     // get user by id
-    getUserById(id: number): User | undefined {
+    getUserById(id: string): User | undefined {
         return this.users.find(user => user.id === id);
     }
 
-    // add user
+    // add new user to list 
     addUser(user: User): void {
         this.users.push(user);
     }
@@ -38,7 +38,18 @@ export class UserService {
     }
 
     // delete user by id
-    deleteUser (id: number): void {
+    deleteUser (id: string): void {
         this.users = this.users.filter(user => user.id !== id);
     }
+
+    // get current status of user: 'Eingestempelt' or 'Ausgestempelt' : default is 'Ausgestempelt'
+    getCurrentStatus(id: string): User["currentStatus"] {
+        let currentUser = this.users.find(user => user.id === id);
+        if(currentUser){
+            if(currentUser.currentStatus) {
+                return currentUser.currentStatus;
+            }
+        }
+        return 'Ausgestempelt';;
+    }    
 }

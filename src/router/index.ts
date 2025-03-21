@@ -6,6 +6,8 @@ import ReportsView from '@/views/ReportsView.vue'
 import SettingsView from '@/views/SettingsView.vue'
 import LogoutView from '@/views/LogoutView.vue'
 import HomeView from '@/views/HomeView.vue'
+import LoginView from '@/views/LoginView.vue'
+import RegisterView from '@/views/RegisterView.vue'
 
 
 const router = createRouter({
@@ -46,6 +48,16 @@ const router = createRouter({
       name: 'logout',
       component: LogoutView,
     },
+    {
+      path: '/login',
+      name: 'login',
+      component: LoginView,
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: RegisterView,
+    }
   ],
 })
 
