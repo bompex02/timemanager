@@ -1,23 +1,23 @@
 import './assets/main.css'
-
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import PrimeVue from 'primevue/config';
 import 'primeicons/primeicons.css';
-import { initializeApp } from "firebase/app"; // Import Firebase
+import { initializeApp } from "firebase/app";
 
-// Your web app's Firebase configuration
+// firebase config from .env
 const firebaseConfig = {
-  apiKey: "YOUR-FIREBASE-API-KEY",
-  authDomain: "timemanager-2b521.firebaseapp.com",
-  projectId: "timemanager-2b521",
-  storageBucket: "timemanager-2b521.firebasestorage.app",
-  messagingSenderId: "463303248439",
-  appId: "1:463303248439:web:4d9c1b1e7e45c8c141cdb2"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
-// Initialize Firebase
+
+// initialize firebase
 initializeApp(firebaseConfig);
 
 const app = createApp(App)
