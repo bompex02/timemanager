@@ -76,15 +76,14 @@
         Log In
       </router-link>
 
-      <router-link
-        @click="handleClick('logout')"
-        to="/logout"
+      <button
+        @click="handleClick('logout')"        
         class="mt-auto flex items-bottom gap-x-2 w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900 cursor-pointer">
         <div class="grid mr-4 place-items-center">
           <i class="pi pi-sign-out"></i>
         </div>
         Log Out
-      </router-link>
+      </button>
     </nav>
   </div>
 </template>
