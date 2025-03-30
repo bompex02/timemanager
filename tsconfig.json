@@ -9,6 +9,15 @@
     }
   ],
   "compilerOptions": {
-    "types": ["node"] // add node type here
+    "types": ["node"],
+    "module": "ESNext",
+    "target": "ES2022",
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "ts-node": {
+    "esm": true
   }
 }

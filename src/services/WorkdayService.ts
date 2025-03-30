@@ -1,5 +1,5 @@
 import { reactive } from "vue";
-import { Workday } from "../models/Workday";
+import type { Workday } from "../models/WorkModels";
 import { TimeRecordService } from "./TimeRecordService";
 import { DateService } from "./DateService";
 
@@ -8,7 +8,7 @@ const dateService = DateService.getInstance();
 
 export class WorkdayService{
     private static instance: WorkdayService
-    private workdays = reactive<Workday[]>([])
+    private workdays = reactive<Workday[]>([]);
 
     constructor() {
         this.generateDummyWorkdays();
@@ -23,7 +23,7 @@ export class WorkdayService{
 
     // generates dummy workdays for testing purposes
     generateDummyWorkdays() {    
-        this.workdays.length = 0; // 🔥 Leere alte Workdays
+        this.workdays.length = 0; // clear the array of workdays
     
         const today = new Date();
         let workdaysAdded = 0;
@@ -37,14 +37,22 @@ export class WorkdayService{
             if (day.getDay() === 6 || day.getDay() === 0) {
                 // Math.floor(Math.random() * (8 - 4) + 4) => random workhours between 4 and 8
                 // Math.floor(Math.random() * 2) === 1) => random boolean for homeOffice
-                this.workdays.push(new Workday(new Date(day), Math.floor(Math.random() * (8 - 4) + 4), Math.floor(Math.random() * 2) === 1)); 
+                this.workdays.push(
+                    {
+                        date: new Date(day), // date
+                        hoursWorked: Math.floor(Math.random() * (8 - 4) + 4), // work hours
+                        homeOffice: Math.floor(Math.random() * 2) === 1 // home office
+                    }
+                );    
             } else {
                 // dummy workday
-                this.workdays.push(new Workday(
-                    new Date(day),
-                    Math.floor(Math.random() * (8 - 4) + 4), 
-                    false
-                ));
+                this.workdays.push(
+                    {
+                        date: new Date(day), // date
+                        hoursWorked: Math.floor(Math.random() * (8 - 4) + 4), // work hours
+                        homeOffice: false // home office
+                    }                
+                );
                 workdaysAdded++; // only increment if it's a workday
             }
     
@@ -84,12 +92,17 @@ export class WorkdayService{
 
     // create workday
     createWorkday(date: Date, hoursWorked: number, homeOffice: boolean): Workday {
-        return new Workday(date, hoursWorked, homeOffice);
+        let workday = {
+            date: date,
+            hoursWorked: hoursWorked,
+            homeOffice: homeOffice
+        }
+        return workday;
     }
 
-    // get all workdays for the specified date
-    getHoursWorkedForDay(workday: Workday): number {
-        const records = timeRecordService.getRecordsByDate(workday.date);
+    // get all workdays for the specified date (async because of the API call)
+    async getHoursWorkedForDay(workday: Workday): Promise<number> {
+        const records = await timeRecordService.getRecordsByDate(workday.date);
     
         if (records.length < 2) return 0; // min 2 records to calculate hours worked
     
@@ -107,6 +120,7 @@ export class WorkdayService{
         return totalHours;
     }
 
+    // return a bool value showing if the workday is a home office day or not
     getHomeOfficeForDay(date : Date): boolean {
         const workday = this.workdays.find(workday => workday.date.getTime() === date.getTime());
         if (workday) return workday.homeOffice;

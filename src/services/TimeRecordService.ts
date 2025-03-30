@@ -1,19 +1,19 @@
-import { reactive } from 'vue';
-import { TimeRecord, RecordType } from '../models/TimeRecord';
+import { TimeRecord } from '../models/TimeRecord';
 import { DateService } from './DateService';
+
+// base url for the backend API
+const BASE_URL = 'http://localhost:3000';
 
 const dateService = DateService.getInstance();
 
-// Used as singelton
+// Singleton class for managing time records
+// This class is responsible for making API calls to the backend
 export class TimeRecordService {
   private static instance: TimeRecordService;
-  private records = reactive<TimeRecord[]>([]);
-  
 
-  constructor() {
-    this.generateDummyRecords();
-  } // Prevent direct instantiation
+  private constructor() {}
 
+  // Singleton pattern to ensure only one instance of TimeRecordService exists
   static getInstance(): TimeRecordService {
     if (!TimeRecordService.instance) {
       TimeRecordService.instance = new TimeRecordService();
@@ -21,61 +21,69 @@ export class TimeRecordService {
     return TimeRecordService.instance;
   }
 
-  generateDummyRecords(): void {
-    const now = new Date();
-    for (let i = 0; i < 6; i++) { // 4 Tage
-        for (let j = 0; j < 4; j++) { // 10 Einträge pro Tag
-            // Zufällige Uhrzeit generieren
-            const randomHour = Math.floor(Math.random() * 24); // 0 - 23 Uhr
-            const randomMinute = Math.floor(Math.random() * 60); // 0 - 59 Minuten
-            const randomSecond = Math.floor(Math.random() * 60); // 0 - 59 Sekunden
+  // add a new TimeRecord to the mongodb via the backend API
+  async addTimeRecord(record: TimeRecord): Promise<void> {
+    const response = await fetch(`${BASE_URL}/records`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(record),
+    });
 
-            // Neues Datum mit zufälliger Uhrzeit erstellen
-            const recordDate = new Date(now);
-            recordDate.setDate(now.getDate() - i); // Zurückrechnen auf vergangene Tage
-            recordDate.setHours(randomHour, randomMinute, randomSecond, 0);
+    if (!response.ok) {
+      throw new Error('Fehler beim Hinzufügen eines TimeRecords');
+    }
+  }
 
-            // Zufälliger RecordType (Einstempeln oder Ausstempeln)
-            const recordType = Math.random() > 0.5 ? RecordType.Einstempeln : RecordType.Ausstempeln;
+  // fetch all TimeRecords from the mongodb via the backend API and return them as an array of TimeRecord objects
+  async getAllRecords(): Promise<TimeRecord[]> {
+    const response = await fetch(`${BASE_URL}/records`);
+    if (!response.ok) {
+      throw new Error('Fehler beim Abrufen der TimeRecords');
+    }
+    return await response.json();
+  }
 
-            // Neuen TimeRecord erstellen und speichern
-            let record = new TimeRecord(i * 10 + j, recordType, recordDate);
-            this.records.unshift(record);
-          }
+  // returns all time records and groups them by date
+  async getRecordsByDate(date: Date): Promise<TimeRecord[]> {
+    const all = await this.getAllRecords();
+    const dayStart = new Date(date);
+    dayStart.setHours(0, 0, 0, 0);
+    const dayEnd = new Date(date);
+    dayEnd.setHours(23, 59, 59, 999);
+
+    // filter records by date and return them
+    return all.filter(record => {
+      const ts = new Date(record.timestamp).getTime();
+      return ts >= dayStart.getTime() && ts <= dayEnd.getTime();
+    });
+  }
+
+  // returns all timerecords for the current week
+  async getRecordsInCurrentWeek(): Promise<TimeRecord[]> {
+    const all = await this.getAllRecords();
+    const start = dateService.getStartOfWeek(new Date());
+    const end = dateService.getEndOfWeek(new Date());
+
+    // filter records by week and return them
+    return all.filter(record => {
+      const ts = new Date(record.timestamp).getTime();
+      return ts >= start.getTime() && ts <= end.getTime();
+    });
+  }
+
+  // groups all time records by date and returns them as an object with date keys and arrays of TimeRecord objects
+  async getGroupedRecordsByDate(): Promise<Record<string, TimeRecord[]>> {
+    const records = await this.getAllRecords();
+
+    // sort records by date
+    return records.reduce((acc: Record<string, TimeRecord[]>, record) => {
+      const dateKey = dateService.normalizeDate(new Date(record.timestamp));
+      if (!acc[dateKey]) {
+        acc[dateKey] = [];
       }
-  }
-
-  addRecord(record: TimeRecord): void {
-    this.records.unshift(record);
-  }
-
-  getRecords(): TimeRecord[] {
-    return this.records;
-  }
-
-  getRecordsByDate(date: Date): TimeRecord[] {
-    return this.records.filter(record => record.timestamp.toDateString() === date.toDateString());
-  }
-
-
-  // groups records by date
-  getGroupedRecordsByDate(): Record<string, TimeRecord[]> {
-    return this.records.reduce((acc: Record<string, TimeRecord[]>, record: TimeRecord) => {
-        const normalizedDate = dateService.normalizeDate(record.timestamp); // normalize date to DD.MM.YYYY format
-        if (!acc[normalizedDate]) {
-            acc[normalizedDate] = [];
-        }
-        acc[normalizedDate].push(record);
-        acc[normalizedDate].sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime()); // sort records by timestamp 
-        return acc;
+      acc[dateKey].push(record);
+      acc[dateKey].sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+      return acc;
     }, {});
   }
-
-  // return all records in the current week
-  getRecordsInCurrentWeek(): TimeRecord[] {
-    const today = dateService.getCurrentDate();
-    const startOfWeek = dateService.getStartOfWeek(today);
-    const endOfWeek = dateService.getEndOfWeek(today);
-    return this.records.filter(record => record.timestamp >= startOfWeek && record.timestamp <= endOfWeek);
-  }  
 }
