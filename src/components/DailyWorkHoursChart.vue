@@ -23,7 +23,7 @@
   import VChart from 'vue-echarts';
   import { WorkdayService } from '../services/WorkdayService';
   import { DateService } from '../services/DateService';
-  import { Workday } from '../models/Workday';
+  import type { Workday } from '../models/WorkModels';
 
   use([BarChart, GridComponent, TooltipComponent, LegendComponent, CanvasRenderer]);
 

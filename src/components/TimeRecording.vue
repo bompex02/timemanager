@@ -35,7 +35,9 @@
   const dateService = DateService.getInstance();
     
   // Toggle between 'in' and 'out' states based on which button is clicked
-  const toggleClock = (action: string) => {
+  const toggleClock = async (action: string) => {
+    const allRecords = await timeRecordService.getAllRecords();
+
     const currentDateTime = ref(dateService.getCurrentDate());  
 
     if (action === 'in') {
@@ -44,8 +46,12 @@
             return;
         }
       isClockedIn.value = true;
-      const record = new TimeRecord(timeRecordService.getRecords().length+1, RecordType.Einstempeln, currentDateTime.value);
-      timeRecordService.addRecord(record);
+      const record = new TimeRecord(
+        allRecords.length + 1, // ID
+        RecordType.Einstempeln, // RecordType
+        currentDateTime.value // Date
+      );
+      timeRecordService.addTimeRecord(record);
       showSuccess('Einstempeln erfolgreich!');
     } else if (action === 'out') {
         if (!isClockedIn.value) {
@@ -53,11 +59,11 @@
             return;
         }
       isClockedIn.value = false;
-      const record = new TimeRecord(timeRecordService.getRecords().length+1, RecordType.Ausstempeln, currentDateTime.value);
-      timeRecordService.addRecord(record);
+      const record = new TimeRecord(allRecords.length + 1, RecordType.Ausstempeln, currentDateTime.value);
+
+      timeRecordService.addTimeRecord(record);
       showSuccess('Ausstempeln erfolgreich!');
     }
   };
 
 </script>
-  

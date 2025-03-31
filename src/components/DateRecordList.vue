@@ -3,7 +3,7 @@
     <h2 class="text-xl text-center font-semibold text-gray-800 mb-4">{{ title }}</h2>
 
     <!-- checks if there are todays records -->
-    <template v-if="todayRecords.length > 0">
+    <template v-if="Object.keys(todayRecords).length > 0">
       <ul class="mt-4 border-t pt-4 text-gray-700 overflow-y-auto max-h-[260px] pr-3 space-y-2">
         <li v-for="(record, index) in todayRecords" :key="index" class="flex justify-between border-b">
           <span class="font-medium text-gray-900">{{ record.recordType }}</span>
@@ -20,23 +20,32 @@
 </template>
 
 <script setup lang="ts">
-  import { computed } from 'vue';
+  import { ref } from 'vue';
   import { TimeRecordService } from '../services/TimeRecordService';
   import { DateService } from '../services/DateService';
-  import { WorkdayService } from '../services/WorkdayService';
+  import { TimeRecord } from '../models/TimeRecord';
 
   const date = defineProps<{ date: Date, title: string }>();
 
   const timeRecordService = TimeRecordService.getInstance();
   const dateService = DateService.getInstance();
-  const workdayService = WorkdayService.getInstance();
+  
+  const allRecords = await timeRecordService.getAllRecords();
 
-  const todayRecords = computed(() => {  
+  const todayRecords = ref<TimeRecord[]>([]);
+  
+  const fetchTodayRecords = async () => {
+
+    // ----------------------------- FOR DEBUG ONLY! ---------------------------------
     console.log("🔍 Filter Datum:", date.date);
-    console.log('All Records:', timeRecordService.getRecords());
+    console.log('All Records:', allRecords);
     console.log('Todays Records:', timeRecordService.getRecordsByDate(date.date));
-    return timeRecordService.getRecordsByDate(date.date);
-  });
+    // -------------------------------------------------------------------------------
+    todayRecords.value = await timeRecordService.getRecordsByDate(date.date);
+  }
+
+  fetchTodayRecords();
+
 
   function getDisplayDate(date: Date): string {
     const normalizedDate = dateService.normalizeDate(date);

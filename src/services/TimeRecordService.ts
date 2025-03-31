@@ -36,16 +36,29 @@ export class TimeRecordService {
 
   // fetch all TimeRecords from the mongodb via the backend API and return them as an array of TimeRecord objects
   async getAllRecords(): Promise<TimeRecord[]> {
-    const response = await fetch(`${BASE_URL}/records`);
-    if (!response.ok) {
-      throw new Error('Fehler beim Abrufen der TimeRecords');
+    try {
+      const response = await fetch(`${BASE_URL}/records`);
+      
+      if (!response.ok) {
+        const errorText = await response.text(); // detailed error message
+        throw new Error(`Fehler beim Abrufen der TimeRecords: ${response.status} - ${errorText}`);
+      }
+  
+      return await response.json();
+    } catch (error) {
+      console.error("API Fehler:", error);
+      throw new Error("Fehler beim Abrufen der TimeRecords");
     }
-    return await response.json();
   }
+  
 
   // returns all time records and groups them by date
   async getRecordsByDate(date: Date): Promise<TimeRecord[]> {
     const all = await this.getAllRecords();
+    if (!all) {
+      throw new Error('Fehler beim Abrufen der gruppierten TimeRecords: keine TimeRecords gefunden');
+      return [];
+    }
     const dayStart = new Date(date);
     dayStart.setHours(0, 0, 0, 0);
     const dayEnd = new Date(date);

@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-  import { computed } from 'vue';
+  import { ref } from 'vue';
   import { TimeRecordService } from '../services/TimeRecordService';
   import { DateService } from '../services/DateService';
   import { WorkdayService } from '../services/WorkdayService';
@@ -50,14 +50,22 @@
   const timeRecordService = TimeRecordService.getInstance();
   const workdayService = WorkdayService.getInstance();
 
-  // returns all records sorted by date descending
-  const sortedGroupedRecords = computed(() => {
-    const grouped = timeRecordService.getGroupedRecordsByDate();
-    return Object.keys(grouped)
+  // returns all records sorted by date descending (ref for reactive array of records)
+  const sortedGroupedRecords = ref<Record<string, TimeRecord[]>>({});
+  
+  // load records from service and groups them by date
+  const fetchGroupedRecords = async () => {
+    const grouped = await timeRecordService.getGroupedRecordsByDate();
+
+    sortedGroupedRecords.value = Object.keys(grouped)
       .sort((a, b) => dateService.parseDateFromString(b).getTime() - dateService.parseDateFromString(a).getTime())
       .reduce((acc, key) => {
         acc[key] = grouped[key];
         return acc;
       }, {} as Record<string, TimeRecord[]>);
-  });
+  };
+  
+  // calls method to load records and groups them by date
+  fetchGroupedRecords();
+
 </script>

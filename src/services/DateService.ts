@@ -19,6 +19,11 @@ export class DateService {
     }
 
     normalizeDate(date: Date): string {
+        // if date is type string convert it to date (mongoDB returns date as string)
+        if (typeof date === "string") {
+            date = new Date(date);
+        }
+
         const day = String(date.getDate()).padStart(2, '0');   // day two-digit
         const month = String(date.getMonth() + 1).padStart(2, '0'); // month two-digit
         const year = date.getFullYear(); // year four-digit

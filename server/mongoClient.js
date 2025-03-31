@@ -10,12 +10,7 @@ if (!uri) {
   throw new Error('MongoDB connection string is not defined in .env file');
 }
 
-const client = new MongoClient(uri, {
-  ssl: true,
-  tlsAllowInvalidCertificates: false,
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+const client = new MongoClient(uri);
 
 let isConnected = false;
 
@@ -25,7 +20,6 @@ export const getDb = async () => {
     await client.connect();
     isConnected = true;
     await client.db("timemanager").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
     console.log('✅ MongoDB verbunden');
   }
 

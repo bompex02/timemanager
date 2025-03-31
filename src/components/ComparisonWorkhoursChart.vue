@@ -17,7 +17,7 @@
 <script setup lang="ts">
     import { computed, ref, onMounted } from 'vue';
     import VChart from 'vue-echarts';
-    import { WorkMonth } from '../models/WorkMonth';
+    import type { WorkMonth } from '../models/WorkModels';
     import { WorkMonthService } from '../services/WorkMonthService';
     import { DateService } from '../services/DateService';
     import { use } from 'echarts/core';
@@ -34,12 +34,13 @@
     // current month
     const workMonth = ref<WorkMonth | null>(null);
 
-    onMounted(() => {
-    const today = dateService.getCurrentDate();
-    const month = today.getMonth();
-    const year = today.getFullYear();
+    onMounted( async () => {
+        const today = dateService.getCurrentDate();
+        const month = today.getMonth();
+        const year = today.getFullYear();
 
-    workMonth.value = workMonthService.getWorkMonth(year, month);
+        workMonth.value = await workMonthService.getWorkMonth(year, month);
+
     });
 
     // Chart Optionen für ECharts
