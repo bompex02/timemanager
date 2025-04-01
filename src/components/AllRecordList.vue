@@ -24,7 +24,7 @@
         <ul>
           <li v-for="(record, recIndex) in records" :key="recIndex" class="border-b border-gray-300 py-2 flex justify-between">
             <span class="text-sm text-gray-600">{{ record.recordType }}</span>
-            <span class="text-sm text-gray-600 m-2 pr-4">{{ dateService.normalizeDate(record.timestamp) }}</span>
+            <span class="text-sm text-gray-600 m-2 pr-4">{{ dateService.getTimeString(record.timestamp) }}</span>
           </li>
         </ul>
 

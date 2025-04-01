@@ -18,6 +18,7 @@ export class DateService {
         return new Date(Date.now()).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit' });   
     }
 
+    // returns date in DD.MM.YYYY format
     normalizeDate(date: Date): string {
         // if date is type string convert it to date (mongoDB returns date as string)
         if (typeof date === "string") {
@@ -30,7 +31,12 @@ export class DateService {
         return `${day}.${month}.${year}`; // return date in DD.MM.YYYY format
     }
 
+    // returns time of datetime in HH:MM:SS format
     getTimeString(date: Date): string {
+        // if date is type string convert it to date (mongoDB returns date as string)
+        if (typeof date === "string") {
+            date = new Date(date);
+        }
         return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
     }
 
