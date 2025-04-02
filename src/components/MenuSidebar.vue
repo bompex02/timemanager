@@ -77,7 +77,7 @@
       </router-link>
 
       <button
-        @click="handleClick('logout')"        
+        @click="handleClick('logout'); handleLogOut()"       
         class="mt-auto flex items-bottom gap-x-2 w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900 cursor-pointer">
         <div class="grid mr-4 place-items-center">
           <i class="pi pi-sign-out"></i>
@@ -91,9 +91,24 @@
 
 <script setup>
 import 'primeicons/primeicons.css'
+import { UserService } from '../services/UserService'
+import { AuthService } from '../services/AuthService';
+import { useRouter } from 'vue-router'
 
+const userService = UserService.getInstance();
+const authService = AuthService.getInstance();
+
+const router = useRouter();
+
+// Logs the clicked button for debug in the browser console 
 const handleClick = (componentName) => {
   console.log('Button Clicked: => ', componentName)
+}
+
+// Logs out the user via authService
+const handleLogOut = () => {
+  console.log('Logout User: ', userService.currentUser)
+  authService.logOutUser(router);
 }
 
 </script>

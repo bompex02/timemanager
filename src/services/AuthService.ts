@@ -1,16 +1,15 @@
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { UserService } from "./UserService";
 import { User } from "../models/User";
-import { useRouter } from 'vue-router'
 
 const userService = UserService.getInstance();
-const router = useRouter()
 
 export class AuthService {
     private static instance: AuthService;
 
-    constructor() {}
+    constructor() {} // prevent another instantiation
 
+    // Singleton pattern to ensure only one instance of AuthService exists
     static getInstance(): AuthService {
         if (!AuthService.instance) {
             AuthService.instance = new AuthService();
@@ -64,7 +63,9 @@ export class AuthService {
         );
     }
 
-    async logOutUser(): Promise<void> {
+    // logout user via firebase auth and reset current user in userService
+    // param router is nullable (optional)
+    async logOutUser(router? : any): Promise<void> {
         return signOut(getAuth())
             .then(() => {
                 userService.setCurrentUser(null); // Set current user to null
