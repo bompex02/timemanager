@@ -24,6 +24,7 @@
   import { ref } from 'vue'; 
   import { showSuccess, showError } from '../services/ToastService';
   import { TimeRecordService } from '../services/TimeRecordService';
+  import { UserService } from '../services/UserService';
   import { DateService } from '../services/DateService';
   import { TimeRecord, RecordType } from '../models/TimeRecord';
 
@@ -32,6 +33,7 @@
 
   // Singeltons
   const timeRecordService = TimeRecordService.getInstance(); 
+  const userService = UserService.getInstance();
   const dateService = DateService.getInstance();
     
   // Toggle between 'in' and 'out' states based on which button is clicked
@@ -39,6 +41,9 @@
     const allRecords = await timeRecordService.getAllRecords();
 
     const currentDateTime = ref(dateService.getCurrentDate());  
+
+    const userId = userService.getCurrentUser()?.id || '';
+
 
     if (action === 'in') {
         if (isClockedIn.value) {
@@ -48,6 +53,7 @@
       isClockedIn.value = true;
       const record = new TimeRecord(
         allRecords.length + 1, // ID
+        userId, // User ID
         RecordType.Einstempeln, // RecordType
         currentDateTime.value // Date
       );
@@ -59,7 +65,12 @@
             return;
         }
       isClockedIn.value = false;
-      const record = new TimeRecord(allRecords.length + 1, RecordType.Ausstempeln, currentDateTime.value);
+      const record = new TimeRecord(
+        allRecords.length + 1, // ID
+        userId, // User ID
+        RecordType.Ausstempeln, // RecordType
+        currentDateTime.value // Date
+      );
 
       timeRecordService.addTimeRecord(record);
       showSuccess('Ausstempeln erfolgreich!');

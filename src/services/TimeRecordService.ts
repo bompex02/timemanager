@@ -50,6 +50,23 @@ export class TimeRecordService {
       throw new Error("Fehler beim Abrufen der TimeRecords");
     }
   }
+
+  // fetches all TimeRecords for a specific user from the backend API via userId param
+  async getAllRecordsForUser(userId: string): Promise<TimeRecord[]> {
+    try {
+      const response = await fetch(`${BASE_URL}/records/user/${userId}`);
+      
+      if (!response.ok) {
+        const errorText = await response.text(); // detailed error message
+        throw new Error(`Fehler beim Abrufen der TimeRecords: ${response.status} - ${errorText}`);
+      }
+  
+      return await response.json();
+    } catch (error) {
+      console.error("API Fehler:", error);
+      throw new Error("Fehler beim Abrufen der TimeRecords");
+    }
+  }
   
 
   // returns all time records and groups them by date

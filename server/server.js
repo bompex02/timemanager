@@ -1,5 +1,5 @@
 import express from 'express';
-import { MongoClient, ObjectId } from 'mongodb';
+import { ObjectId } from 'mongodb';
 import cors from 'cors';
 import { getDb } from './mongoClient.js';
 
@@ -125,6 +125,24 @@ app.delete('/records/:id', async (req, res) => {
         
     } catch (error) {
         console.error('Fehler beim Löschen:', error);
+        res.status(500).json({ message: 'Serverfehler', error: error.message });
+    }
+});
+
+// gets all records from the mongoDb collection 'timeRecords' for a specific user by userId
+app.get('/records/user/:userId', async (req, res) => {
+    const userId = req.params.userId;
+
+    try {
+        const db = await getDb();
+
+        // find all records for the user by userId 
+        const records = await db.collection('timeRecords').find({ user: userId }).toArray();
+
+        res.json(records);
+
+    } catch (error) {
+        console.error('Fehler beim Abrufen:', error);
         res.status(500).json({ message: 'Serverfehler', error: error.message });
     }
 });
