@@ -20,7 +20,6 @@ export const getDb = async () => {
     await client.connect();
     isConnected = true;
     await client.db("timemanager").command({ ping: 1 });
-    console.log('✅ MongoDB verbunden');
   }
 
   return client.db('timemanager');

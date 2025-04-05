@@ -75,7 +75,7 @@ router.beforeEach(async (to, from, next) => {
   if(!user && to.meta.requiresAuth) {
     // if user tries is not logged in and tries to access a route that requires auth, redirect to login
     next({ name: 'login' });
-  } else if( user && to.path === '/login'|| to.path === '/register') {
+  } else if (user && (to.path === '/login' || to.path === '/register')) {
     // if user is logged in and tries to access login or register page, redirect to dashboard
     next('/dashboard');
   } else {
