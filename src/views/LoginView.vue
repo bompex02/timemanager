@@ -55,9 +55,9 @@ const authService = AuthService.getInstance()
 
 const logInUser = (event: Event) => {
     event.preventDefault(); // Prevent form submission
-    // FOR DEBUG ONLY!
-    authService.logInUser(email.value, password.value)
+    authService.logInUser(email.value, password.value, router);
+    // ----------------------FOR DEBUG ONLY!--------------------------
     console.log('Login user: ' + email.value + ' ' + password.value)
-    router.push('/dashboard')
+    // ---------------------------------------------------------------
 }
 </script>

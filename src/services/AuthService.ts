@@ -43,7 +43,7 @@ export class AuthService {
     }
 
     // login user with username + password via firebase auth
-    async logInUser(email: string, password: string): Promise<void> {
+    async logInUser(email: string, password: string, router?: any): Promise<void> {
         return signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {  
                 let appUser = new User(
@@ -56,6 +56,7 @@ export class AuthService {
                 );
                 userService.setCurrentUser(appUser); // Set current user;        
                 console.log("User registered successfully", userCredential);
+                router.push('/dashboard');
             })
             .catch((error) => {
                 console.error("Error registering user", error);
