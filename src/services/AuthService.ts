@@ -1,4 +1,5 @@
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { auth } from "../config/firebaseConfig";
 import { UserService } from "./UserService";
 import { User } from "../models/User";
 
@@ -19,7 +20,7 @@ export class AuthService {
 
     // register new user with username + password via firebase auth
     async registerUser(email: string, password: string): Promise<void> {
-        return createUserWithEmailAndPassword(getAuth(), email, password)
+        return createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 let appUser = new User(
                     userCredential.user.uid, 
@@ -43,7 +44,7 @@ export class AuthService {
 
     // login user with username + password via firebase auth
     async logInUser(email: string, password: string): Promise<void> {
-        return signInWithEmailAndPassword(getAuth(), email, password)
+        return signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {  
                 let appUser = new User(
                     userCredential.user.uid,
@@ -66,7 +67,7 @@ export class AuthService {
     // logout user via firebase auth and reset current user in userService
     // param router is nullable (optional)
     async logOutUser(router? : any): Promise<void> {
-        return signOut(getAuth())
+        return signOut(auth)
             .then(() => {
                 userService.setCurrentUser(null); // Set current user to null
                 console.log("User logged out successfully");

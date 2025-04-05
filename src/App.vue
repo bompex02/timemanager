@@ -11,6 +11,10 @@
 <script setup>
 import MenuSidebar from './components/MenuSidebar.vue'
 import { RouterView } from 'vue-router'
+import { UserService } from './services/UserService';
+
+const userService = UserService.getInstance();
+console.log('Current User:', userService.getCurrentUser());
 
 </script>
 

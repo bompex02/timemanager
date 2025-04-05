@@ -35,6 +35,8 @@
   const timeRecordService = TimeRecordService.getInstance(); 
   const userService = UserService.getInstance();
   const dateService = DateService.getInstance();
+
+  console.log('Current User:', userService.getCurrentUser());
     
   // Toggle between 'in' and 'out' states based on which button is clicked
   const toggleClock = async (action: string) => {
@@ -43,6 +45,11 @@
     const currentDateTime = ref(dateService.getCurrentDate());  
 
     const userId = userService.getCurrentUser()?.id || '';
+
+    if (!userId) {
+        showError('Kein Benutzer angemeldet!');
+        return;
+    }
 
 
     if (action === 'in') {
