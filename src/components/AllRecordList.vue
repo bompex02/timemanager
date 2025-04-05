@@ -45,17 +45,20 @@
   import { WorkdayService } from '../services/WorkdayService';
   import { RecordType, TimeRecord } from '../models/TimeRecord';
   import InfoBadge from './InfoBadge.vue';
+  import { UserService } from '../services/UserService';
 
   const dateService = DateService.getInstance();
   const timeRecordService = TimeRecordService.getInstance();
   const workdayService = WorkdayService.getInstance();
+  const userService = UserService.getInstance();
 
   // returns all records sorted by date descending (ref for reactive array of records)
   const sortedGroupedRecords = ref<Record<string, TimeRecord[]>>({});
   
   // load records from service and groups them by date
   const fetchGroupedRecords = async () => {
-    const grouped = await timeRecordService.getGroupedRecordsByDate();
+    const userId = await userService.getCurrentUser()?.id || '';
+    const grouped = await timeRecordService.getGroupedRecordsForUserByDate(userId);
 
     sortedGroupedRecords.value = Object.keys(grouped)
       .sort((a, b) => dateService.parseDateFromString(b).getTime() - dateService.parseDateFromString(a).getTime())

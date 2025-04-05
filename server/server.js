@@ -137,7 +137,7 @@ app.get('/records/user/:userId', async (req, res) => {
         const db = await getDb();
 
         // find all records for the user by userId 
-        const records = await db.collection('timeRecords').find({ user: userId }).toArray();
+        const records = await db.collection('timeRecords').find({ userId: userId }).toArray();
 
         res.json(records);
 

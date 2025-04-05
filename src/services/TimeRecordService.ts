@@ -55,6 +55,9 @@ export class TimeRecordService {
   async getAllRecordsForUser(userId: string): Promise<TimeRecord[]> {
     try {
       const response = await fetch(`${BASE_URL}/records/user/${userId}`);
+
+      console.log("Response Status:", response.status); // Logs status code
+      console.log("Response Headers:", response.headers); // Logs response headers
       
       if (!response.ok) {
         const errorText = await response.text(); // detailed error message
@@ -101,9 +104,11 @@ export class TimeRecordService {
     });
   }
 
-  // groups all time records by date and returns them as an object with date keys and arrays of TimeRecord objects
-  async getGroupedRecordsByDate(): Promise<Record<string, TimeRecord[]>> {
-    const records = await this.getAllRecords();
+  // groups all time records by date for specific user and returns them as an object with date keys and arrays of TimeRecord objects
+  async getGroupedRecordsForUserByDate(userId: string): Promise<Record<string, TimeRecord[]>> {
+    const records = await this.getAllRecordsForUser(userId);
+
+    console.log("All Records from record service:", records);
 
     // sort records by date
     return records.reduce((acc: Record<string, TimeRecord[]>, record) => {
