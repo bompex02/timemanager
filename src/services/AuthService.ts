@@ -30,8 +30,6 @@ export class AuthService {
                     "default", // default department
                     "Ausgestempelt" // default status
                 );           
-                // override currentStatus with the value from the userService
-                appUser.currentStatus = userService.getCurrentStatus(appUser.id);
                 userService.addUser(appUser);
                 console.log("User registered successfully", userCredential);
             })

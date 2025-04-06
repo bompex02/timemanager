@@ -16,17 +16,22 @@
           Ausstempeln
         </button>
       </div>
+      <span class="pt-1.5 flex items-center gap-1 text-sm font-medium text-gray-900 dark:text-white me-3">
+        <span class="flex w-2.5 h-2.5 rounded-full shrink-0" :class="currentUserStatus === 'Eingestempelt' ? 'bg-green-600' : 'bg-red-600'"></span>
+        {{ currentUserStatus }}
+      </span>
     </div>
 </template>
 
   
 <script setup lang="ts">
-  import { ref } from 'vue'; 
+  import { ref, onMounted } from 'vue'; 
   import { showSuccess, showError } from '../services/ToastService';
   import { TimeRecordService } from '../services/TimeRecordService';
   import { UserService } from '../services/UserService';
   import { DateService } from '../services/DateService';
   import { TimeRecord, RecordType } from '../models/TimeRecord';
+  import type { currentUserStatus } from '../models/User';
 
   const isClockedIn = ref(false); 
   const emit = defineEmits(['update-time-record']); // Emit event to update time record
@@ -36,50 +41,66 @@
   const userService = UserService.getInstance();
   const dateService = DateService.getInstance();
 
-  console.log('Current User:', userService.getCurrentUser());
+  onMounted(() => {
+    currentUserStatus.value = userService.getCurrentUserStatus();
+    console.log('Current User Status:', currentUserStatus.value);
+  });
+
+  // status of current user from the user service
+  const currentUserStatus = userService.currentStatus;
     
   // Toggle between 'in' and 'out' states based on which button is clicked
   const toggleClock = async (action: string) => {
     const allRecords = await timeRecordService.getAllRecords();
 
-    const currentDateTime = ref(dateService.getCurrentDate());  
+    // gets the current date time from the date service
+    const currentDateTime = dateService.getCurrentDate();  
 
+    // gets the current user id from the user service
     const userId = userService.getCurrentUser()?.id || '';
 
+    // checks if there is a id in the current user
     if (!userId) {
         showError('Kein Benutzer angemeldet!');
         return;
     }
-
 
     if (action === 'in') {
         if (isClockedIn.value) {
             showError('Sie sind bereits eingestempelt!');       
             return;
         }
+
       isClockedIn.value = true;
+
       const record = new TimeRecord(
         allRecords.length + 1, // ID
         userId, // User ID
         RecordType.Einstempeln, // RecordType
-        currentDateTime.value // Date
+        currentDateTime // Date
       );
+
       timeRecordService.addTimeRecord(record);
+      userService.setCurrentUserStatus('Eingestempelt');
       showSuccess('Einstempeln erfolgreich!');
+
     } else if (action === 'out') {
         if (!isClockedIn.value) {
             showError('Bereits ausgestempelt!');
             return;
         }
+
       isClockedIn.value = false;
+      
       const record = new TimeRecord(
         allRecords.length + 1, // ID
         userId, // User ID
         RecordType.Ausstempeln, // RecordType
-        currentDateTime.value // Date
+        currentDateTime // Date
       );
 
       timeRecordService.addTimeRecord(record);
+      userService.setCurrentUserStatus('Ausgestempelt');
       showSuccess('Ausstempeln erfolgreich!');
     }
   };

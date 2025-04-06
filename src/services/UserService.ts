@@ -1,12 +1,14 @@
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import { User } from "../models/User";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
+import type { currentUserStatus } from "../models/User";
 
 export class UserService {
     private static instance: UserService;
     private users = reactive<User[]>([]);
     private currentUser: User | null = null;
+    public currentStatus = ref<currentUserStatus>('Ausgestempelt');
     private auth = auth;
 
     constructor() {
@@ -37,6 +39,16 @@ export class UserService {
         return UserService.instance;
     }
 
+    // Initialize auth state
+    async initialize(): Promise<void> {
+        return new Promise((resolve) => {
+            const unsubscribe = onAuthStateChanged(this.auth, () => {
+                unsubscribe();
+                resolve();
+            });
+        });
+    }
+
     // get all users
     getUsers(): User[] {
         return this.users;
@@ -60,6 +72,11 @@ export class UserService {
         }
     }
 
+    // delete user by id
+    deleteUser (id: string): void {
+        this.users = this.users.filter(user => user.id !== id);
+    }
+
     // set current user
     setCurrentUser(user: User | null): void {
         this.currentUser = user;
@@ -68,16 +85,6 @@ export class UserService {
         } else {
             localStorage.removeItem('currentUser');
         }
-    }
-
-    // Initialize auth state
-    async initialize(): Promise<void> {
-        return new Promise((resolve) => {
-            const unsubscribe = onAuthStateChanged(this.auth, () => {
-                unsubscribe();
-                resolve();
-            });
-        });
     }
 
     // Get the current user
@@ -93,14 +100,17 @@ export class UserService {
         return this.currentUser;
     }
 
-    // delete user by id
-    deleteUser (id: string): void {
-        this.users = this.users.filter(user => user.id !== id);
+    // sets or updates the status of the current user
+    setCurrentUserStatus(status: User["currentStatus"]): void {
+        if (this.currentUser) {
+            this.currentUser.currentStatus = status;
+        }
+        this.currentStatus.value = status;
     }
 
     // get current status of user: 'Eingestempelt' or 'Ausgestempelt' : default is 'Ausgestempelt'
-    getCurrentStatus(id: string): User["currentStatus"] {
-        let currentUser = this.users.find(user => user.id === id);
+    getCurrentUserStatus(): User["currentStatus"] {
+        let currentUser = this.currentUser;
         if(currentUser){
             if(currentUser.currentStatus) {
                 return currentUser.currentStatus;

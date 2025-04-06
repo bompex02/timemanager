@@ -1,4 +1,4 @@
-export type currentStatus = 'Eingestempelt' | 'Ausgestempelt';
+export type currentUserStatus = 'Eingestempelt' | 'Ausgestempelt';
 
 export class User {
     id: string;
@@ -6,9 +6,9 @@ export class User {
     password: string;
     role: string;
     department: string;
-    currentStatus: currentStatus;
+    currentStatus: currentUserStatus;
 
-    constructor(id: string, email: string, password: string, role: string, department: string, currentStatus: currentStatus) {
+    constructor(id: string, email: string, password: string, role: string, department: string, currentStatus: currentUserStatus) {
         this.id = id;
         this.email = email;
         this.password = password;
