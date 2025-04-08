@@ -43,10 +43,11 @@
 
     });
 
+
     // Chart Optionen für ECharts
     const chartOptions = computed(() => ({
     title: {
-        subtext: dateService.formatMonthYear(dateService.getCurrentDate()), 
+        subtext: dateService.getCurrentDate().toLocaleDateString('default', { month: 'long', year: 'numeric' }), 
         left: 'center'
     },
     tooltip: {

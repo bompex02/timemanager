@@ -8,7 +8,20 @@ export class DateService {
             DateService.instance = new DateService();
         }
         return DateService.instance;
-      }
+    }
+
+    // display values for month names
+    private monthNames = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+
+    // returns current month name from the monthNames array
+    getCurrentMonthString(): string {
+        const date = new Date(Date.now());
+        return this.monthNames[date.getMonth()]; 
+    }
+
 
     getCurrentDate(): Date {
         return new Date(Date.now());
@@ -72,8 +85,4 @@ export class DateService {
         const diff = date.getDate() - day + (day === 0 ? 0 : 7); // adjust when day is sunday
         return new Date(date.setDate(diff));
     }  
-    
-    formatMonthYear(date: Date): string {
-        return date.toLocaleDateString('de-DE', { year: 'numeric', month: 'long' });
-    }
 }
