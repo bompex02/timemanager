@@ -58,7 +58,7 @@
   // load records from service and groups them by date
   const fetchGroupedRecords = async () => {
     const userId = await userService.getCurrentUser()?.id || '';
-    const grouped = await timeRecordService.getGroupedRecordsForUserByDate(userId);
+    const grouped = await timeRecordService.getGroupedRecordsForUser(userId);
 
     sortedGroupedRecords.value = Object.keys(grouped)
       .sort((a, b) => dateService.parseDateFromString(b).getTime() - dateService.parseDateFromString(a).getTime())

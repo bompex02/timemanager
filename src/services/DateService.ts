@@ -1,5 +1,6 @@
 export class DateService {
     private static instance: DateService;
+    private currentDisplayDate: Date = new Date();
 
     constructor() {} // prevent direct instantiation
 
@@ -24,7 +25,23 @@ export class DateService {
 
 
     getCurrentDate(): Date {
-        return new Date(Date.now());
+        return this.currentDisplayDate;
+    }
+
+    jumpToPreviousMonth(): void {
+        const newDate = new Date(this.currentDisplayDate);
+        newDate.setMonth(newDate.getMonth() - 1);
+        this.currentDisplayDate = newDate;
+    }
+
+    jumpToNextMonth(): void {
+        const newDate = new Date(this.currentDisplayDate);
+        newDate.setMonth(newDate.getMonth() + 1);
+        this.currentDisplayDate = newDate;
+    }
+
+    setCurrentDate(date: Date): void {
+        this.currentDisplayDate = new Date(date);
     }
 
     getCurrentTime(): string {

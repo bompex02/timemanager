@@ -54,6 +54,10 @@ export class TimeRecordService {
   // fetches all TimeRecords for a specific user from the backend API via userId param
   async getAllRecordsForUser(userId: string): Promise<TimeRecord[]> {
     try {
+      if (!userId) {
+        throw new Error('Fehler beim Abrufen der TimeRecords: keine UserId angegeben');
+      }
+
       const response = await fetch(`${BASE_URL}/records/user/${userId}`);
 
       console.log("Response Status:", response.status); // Logs status code
@@ -70,6 +74,27 @@ export class TimeRecordService {
       throw new Error("Fehler beim Abrufen der TimeRecords");
     }
   }
+
+  // fetches all TimeRecords for a specific user for a specific date from the backend API via userId param and filters them by date
+  async getRecordsForUserByDate(userId: string, date: Date): Promise<TimeRecord[]> {
+    // fetch all records for the user
+    const records = await this.getAllRecordsForUser(userId);
+    
+    // normalize the target date to ensure consistent comparison
+    const normalizedTargetDate = dateService.normalizeDate(date);
+  
+    // filter records by normalized date
+    const filteredRecords = records.filter((record) => {
+      const recordDate = dateService.normalizeDate(new Date(record.timestamp));
+      return recordDate === normalizedTargetDate;
+    });
+  
+    // sort records by timestamp in ascending order
+    filteredRecords.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+  
+    return filteredRecords;
+  }
+  
   
 
   // returns all time records and groups them by date
@@ -105,7 +130,7 @@ export class TimeRecordService {
   }
 
   // groups all time records by date for specific user and returns them as an object with date keys and arrays of TimeRecord objects
-  async getGroupedRecordsForUserByDate(userId: string): Promise<Record<string, TimeRecord[]>> {
+  async getGroupedRecordsForUser(userId: string): Promise<Record<string, TimeRecord[]>> {
     const records = await this.getAllRecordsForUser(userId);
 
     console.log("All Records from record service:", records);
