@@ -37,19 +37,10 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { RecordType, TimeRecord } from '../models/TimeRecord';
-import { TimeRecordService } from '../services/TimeRecordService';
-import { UserService } from '../services/UserService';
-import { DateService } from '../services/DateService';
-import { WorkdayService } from '../services/WorkdayService';
-
-const timeRecordService = TimeRecordService.getInstance();
-const userService = UserService.getInstance();
 
 // State
 const currentDate = ref(new Date());
 const selectedDate = ref<Date | null>(null);
-let nextId = 1;
 
 // Computed month/year label
 const displayMonthAndYear = computed(() => {
@@ -73,15 +64,17 @@ const daysInMonth = computed(() => {
   return Array.from({ length: numDays }, (_, index) => new Date(year, month, index + 1));
 });
 
-// Navigation
+// jump to previous month
 function previousMonth() {
   currentDate.value = new Date(currentDate.value.setMonth(currentDate.value.getMonth() - 1));
 }
 
+// jump to next month
 function nextMonth() {
   currentDate.value = new Date(currentDate.value.setMonth(currentDate.value.getMonth() + 1));
 }
 
+// set the selected date as the value of the selectedDate ref
 function selectDay(day: Date) {
   selectedDate.value = day;
 }
