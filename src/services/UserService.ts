@@ -100,22 +100,25 @@ export class UserService {
         return this.currentUser;
     }
 
-    // sets or updates the status of the current user
+    // sets or updates the status of the current user and saves it to localStorage
     setCurrentUserStatus(status: User["currentStatus"]): void {
         if (this.currentUser) {
             this.currentUser.currentStatus = status;
+            localStorage.setItem("currentStatus", status);
         }
         this.currentStatus.value = status;
     }
 
-    // get current status of user: 'Eingestempelt' or 'Ausgestempelt' : default is 'Ausgestempelt'
+    // get current status of user from localstorage: 'Eingestempelt' or 'Ausgestempelt' : default is 'Ausgestempelt' 
     getCurrentUserStatus(): User["currentStatus"] {
-        let currentUser = this.currentUser;
-        if(currentUser){
-            if(currentUser.currentStatus) {
-                return currentUser.currentStatus;
+        const storedStatus = localStorage.getItem("currentStatus");
+        if (storedStatus === "Eingestempelt" || storedStatus === "Ausgestempelt") {
+            if (this.currentUser) {
+                this.currentUser.currentStatus = storedStatus as User["currentStatus"];
             }
+            return storedStatus;
         }
-        return 'Ausgestempelt';;
-    }    
+    
+        return "Ausgestempelt"; // Fallback
+    }
 }

@@ -33,7 +33,7 @@
   import { TimeRecord, RecordType } from '../models/TimeRecord';
   import type { currentUserStatus } from '../models/User';
 
-  const isClockedIn = ref(false); 
+  const isClockedIn = ref(localStorage.getItem('currentStatus') === 'Eingestempelt'); // Check if the user is clocked in or out
   const emit = defineEmits(['update-time-record']); // Emit event to update time record
 
   // Singeltons
