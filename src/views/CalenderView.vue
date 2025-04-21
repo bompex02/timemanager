@@ -21,22 +21,35 @@
       <div
         v-for="day in daysInMonth"
         :key="day.toDateString()"
-        class="text-center p-2 rounded-lg cursor-pointer hover:bg-blue-100"
+        class="text-center p-2 rounded-lg cursor-pointer hover:bg-blue-300"
         :class="{
-          'bg-blue-500 text-white': isToday(day),
-          'bg-blue-200': isSelected(day),
-          'border-2 border-blue-500': isSelected(day)
+          'bg-blue-800 text-white': isToday(day),
+          'bg-blue-400': isSelected(day),
+          'border border-gray-300': !isToday(day) && !isSelected(day),
         }"
         @click="selectDay(day)"
       >
         {{ day.getDate() }}
+        <br v-if="workdayService.getWorkdayForUserByDate(day) !== undefined" />
+        {{
+          workdayService.getWorkdayForUserByDate(day) !== undefined
+            ? workdayService.getHomeOfficeForUserByDay(day) === true
+              ? '🏠'
+              : workdayService.getHomeOfficeForUserByDay(day) === false
+              ? '🏢'
+              : ''
+            : ''
+        }}
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { WorkdayService } from '../services/WorkdayService';
 import { ref, computed } from 'vue';
+
+const workdayService = WorkdayService.getInstance();
 
 // State
 const currentDate = ref(new Date());

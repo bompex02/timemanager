@@ -104,6 +104,12 @@ export class WorkdayService {
             .slice(-14); // only last 14 days (2 weeks)
     }
 
+    // gets workday for the current user on the specific date
+    // returns the workday object or undefined if not found
+    getWorkdayForUserByDate(date: Date): Workday | undefined {
+        return this.workdays.find(workday => workday.date.getTime() === date.getTime());
+    }
+
     // creates a new workday object
     createWorkday(date: Date, hoursWorked: number, homeOffice: boolean): Workday {
         let workday = {
