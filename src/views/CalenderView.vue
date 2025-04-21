@@ -2,9 +2,9 @@
   <div class="p-4">
     <!-- Header -->
     <div class="flex items-center justify-between mb-4">
-      <i class="pi pi-chevron-left cursor-pointer text-xl" @click="previousMonth"></i>
+      <i class="pi pi-chevron-left cursor-pointer text-xl" @click="jumpToPreviousMonth"></i>
       <h2 class="text-xl font-semibold">{{ displayMonthAndYear }}</h2>
-      <i class="pi pi-chevron-right cursor-pointer text-xl" @click="nextMonth"></i>
+      <i class="pi pi-chevron-right cursor-pointer text-xl" @click="jumpToNextMonth"></i>
     </div>
 
     <!-- Calendar Grid -->
@@ -65,12 +65,12 @@ const daysInMonth = computed(() => {
 });
 
 // jump to previous month
-function previousMonth() {
+function jumpToPreviousMonth() {
   currentDate.value = new Date(currentDate.value.setMonth(currentDate.value.getMonth() - 1));
 }
 
 // jump to next month
-function nextMonth() {
+function jumpToNextMonth() {
   currentDate.value = new Date(currentDate.value.setMonth(currentDate.value.getMonth() + 1));
 }
 

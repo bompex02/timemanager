@@ -16,8 +16,8 @@
           </h3>
           
           <!-- homeoffice/office badge with spacing -->
-          <InfoBadge v-if="workdayService.getHomeOfficeForDay(dateService.parseDateFromString(dateKey))" text="🏠 Homeoffice" :state="workdayService.getHomeOfficeForDay(dateService.parseDateFromString(dateKey))" class="ml-4"/>
-          <InfoBadge v-else text="🏢 Office" :state="workdayService.getHomeOfficeForDay(dateService.parseDateFromString(dateKey))" class="ml-4"/>
+          <InfoBadge v-if="workdayService.getHomeOfficeForUserByDay(dateService.parseDateFromString(dateKey))" text="🏠 Homeoffice" :state="workdayService.getHomeOfficeForUserByDay(dateService.parseDateFromString(dateKey))" class="ml-4"/>
+          <InfoBadge v-else text="🏢 Office" :state="workdayService.getHomeOfficeForUserByDay(dateService.parseDateFromString(dateKey))" class="ml-4"/>
         </div>
 
         <!-- list of records -->
@@ -57,7 +57,7 @@
   
   // load records from service and groups them by date
   const fetchGroupedRecords = async () => {
-    const userId = await userService.getCurrentUser()?.id || '';
+    const userId = userService.getCurrentUser()?.id || '';
     const grouped = await timeRecordService.getGroupedRecordsForUser(userId);
 
     sortedGroupedRecords.value = Object.keys(grouped)

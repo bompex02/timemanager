@@ -39,8 +39,7 @@
         const month = today.getMonth();
         const year = today.getFullYear();
 
-        workMonth.value = await workMonthService.getWorkMonth(year, month);
-
+        workMonth.value = await workMonthService.getWorkMonthByUser(year, month);
     });
 
 

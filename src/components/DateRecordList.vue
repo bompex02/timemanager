@@ -24,11 +24,15 @@
   import { TimeRecordService } from '../services/TimeRecordService';
   import { DateService } from '../services/DateService';
   import { TimeRecord } from '../models/TimeRecord';
+  import { UserService } from '../services/UserService';
 
   const date = defineProps<{ date: Date, title: string }>();
 
   const timeRecordService = TimeRecordService.getInstance();
   const dateService = DateService.getInstance();
+  const userService = UserService.getInstance();
+
+  const currentUserId = userService.getCurrentUser()?.id || '';
   
   const allRecords = await timeRecordService.getAllRecords();
 
@@ -39,9 +43,9 @@
     // ----------------------------- FOR DEBUG ONLY! ---------------------------------
     console.log("🔍 Filter Datum:", date.date);
     console.log('All Records:', allRecords);
-    console.log('Todays Records:', timeRecordService.getRecordsByDate(date.date));
+    console.log('Todays Records:', timeRecordService.getRecordsForDateByUser(currentUserId, date.date));
     // -------------------------------------------------------------------------------
-    todayRecords.value = await timeRecordService.getRecordsByDate(date.date);
+    todayRecords.value = await timeRecordService.getRecordsForDateByUser(currentUserId, date.date);
   }
 
   fetchTodayRecords();

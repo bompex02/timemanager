@@ -6,6 +6,7 @@
 
 // interface for the workday object
 export interface Workday {
+    userId: string; 
     date: Date;
     hoursWorked: number;
     homeOffice: boolean;
@@ -13,6 +14,7 @@ export interface Workday {
 
 // interface for the workmonth object
 export interface WorkMonth {
+    userId: string;
     year: number;
     month: number;
     hoursWorked: number;

@@ -59,9 +59,6 @@ export class TimeRecordService {
       }
 
       const response = await fetch(`${BASE_URL}/records/user/${userId}`);
-
-      console.log("Response Status:", response.status); // Logs status code
-      console.log("Response Headers:", response.headers); // Logs response headers
       
       if (!response.ok) {
         const errorText = await response.text(); // detailed error message
@@ -75,8 +72,28 @@ export class TimeRecordService {
     }
   }
 
+  async getAllRecordsForUserByDay(userId: string, date: Date): Promise<TimeRecord[]> {
+    try {
+      if (!userId) {
+        throw new Error('Fehler beim Abrufen der TimeRecords: keine UserId angegeben');
+      }
+
+      const response = await fetch(`${BASE_URL}/records/user/${userId}`);
+
+      if (!response.ok) {
+        const errorText = await response.text(); // detailed error message        
+        throw new Error(`Fehler beim Abrufen der TimeRecords: ${response.status} - ${errorText}`);
+      }
+  
+      return await response.json();
+    } catch (error) {
+      console.error("API Fehler:", error);
+      throw new Error("Fehler beim Abrufen der TimeRecords");
+    }
+  }
+
   // fetches all TimeRecords for a specific user for a specific date from the backend API via userId param and filters them by date
-  async getRecordsForUserByDate(userId: string, date: Date): Promise<TimeRecord[]> {
+  async getHoursWorkedForUserByDay(userId: string, date: Date): Promise<TimeRecord[]> {
     // fetch all records for the user
     const records = await this.getAllRecordsForUser(userId);
     
@@ -98,11 +115,13 @@ export class TimeRecordService {
   
 
   // returns all time records and groups them by date
-  async getRecordsByDate(date: Date): Promise<TimeRecord[]> {
-    const all = await this.getAllRecords();
+  async getRecordsForDateByUser(userId: string, date: Date): Promise<TimeRecord[]> {
+    if (!userId) {
+      throw new Error('Fehler beim Abrufen der gruppierten TimeRecords: keine UserId angegeben');
+    }
+    const all = await this.getAllRecordsForUser(userId);
     if (!all) {
-      throw new Error('Fehler beim Abrufen der gruppierten TimeRecords: keine TimeRecords gefunden');
-      return [];
+      throw new Error('Fehler beim Abrufen der gruppierten TimeRecords: keine TimeRecords gefunden'); 
     }
     const dayStart = new Date(date);
     dayStart.setHours(0, 0, 0, 0);
@@ -116,9 +135,9 @@ export class TimeRecordService {
     });
   }
 
-  // returns all timerecords for the current week
-  async getRecordsInCurrentWeek(): Promise<TimeRecord[]> {
-    const all = await this.getAllRecords();
+  // returns all timerecords for the current week for the current user
+  async getRecordsInCurrentWeekByUser(userId: string): Promise<TimeRecord[]> {
+    const all = await this.getAllRecordsForUser(userId);
     const start = dateService.getStartOfWeek(new Date());
     const end = dateService.getEndOfWeek(new Date());
 
@@ -132,8 +151,6 @@ export class TimeRecordService {
   // groups all time records by date for specific user and returns them as an object with date keys and arrays of TimeRecord objects
   async getGroupedRecordsForUser(userId: string): Promise<Record<string, TimeRecord[]>> {
     const records = await this.getAllRecordsForUser(userId);
-
-    console.log("All Records from record service:", records);
 
     // sort records by date
     return records.reduce((acc: Record<string, TimeRecord[]>, record) => {

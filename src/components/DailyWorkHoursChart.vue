@@ -32,13 +32,7 @@
   const dateService = DateService.getInstance();
 
   // Workdays of the last 14 days for the chart (no weekends)
-  const workdays = ref<Workday[]>([]);
-
-  onMounted(() => {
-    workdayService.generateDummyWorkdays(); // Dummy-Daten generieren
-    workdays.value.splice(0, workdays.value.length, ...workdayService.getWorkdaysOfLast2Weeks());
-  });
-
+  const workdays = computed(() => workdayService.getWorkdaysOfLast2WeeksByUser());
 
   // chart options
   const chartOptions = computed(() => ({
@@ -72,7 +66,7 @@
     {
       name: 'Gearbeitete Stunden',
       data: workdays.value.map((workday) => ({
-        value: workday.hoursWorked,
+        value: workday.hoursWorked.toFixed(2), // format to 2 decimal places
         homeOffice: workday.homeOffice,
         itemStyle: {
           color: workday.homeOffice ? "#10B981" : "#4F46E5", // color switch between home office (green) and office (blue) 
