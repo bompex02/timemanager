@@ -139,7 +139,7 @@ export class WorkdayService {
             }
         }
 
-        return totalHours;
+        return parseFloat(totalHours.toFixed(2)); // return the total hours worked
     }
 
     // check, if the user worked from home on a specific day

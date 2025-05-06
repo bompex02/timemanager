@@ -1,5 +1,5 @@
 <template>
-  <div class="w-[350px] mx-auto p-6 bg-white shadow-lg rounded-2xl flex-shrink-0 flex-grow-0 m-2 max-h-[333px] border">
+  <div class="w-[350px] mx-auto p-6 bg-white shadow-lg rounded-2xl flex-shrink-0 flex-grow-0 m-2 max-h-[333px]">
     <h2 class="text-xl text-center font-semibold text-gray-800 mb-4">{{ title }}</h2>
 
     <!-- checks if there are todays records -->
@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue';
+  import { ref, onMounted, watch } from 'vue';
   import { TimeRecordService } from '../services/TimeRecordService';
   import { DateService } from '../services/DateService';
   import { TimeRecord } from '../models/TimeRecord';
@@ -34,7 +34,18 @@
 
   const currentUserId = userService.getCurrentUser()?.id || '';
   
-  const allRecords = await timeRecordService.getAllRecords();
+  //const allRecords = await timeRecordService.getAllRecords();
+  const allRecords = ref<TimeRecord[]>([]);
+
+  watch(() => date.date, async () => {
+    await fetchTodayRecords();
+  });
+
+  // existierender Code
+  onMounted(async () => {
+    allRecords.value = await timeRecordService.getAllRecords();
+    await fetchTodayRecords();
+  });
 
   const todayRecords = ref<TimeRecord[]>([]);
   
@@ -47,8 +58,6 @@
     // -------------------------------------------------------------------------------
     todayRecords.value = await timeRecordService.getRecordsForDateByUser(currentUserId, date.date);
   }
-
-  fetchTodayRecords();
 
 
   function getDisplayDate(date: Date): string {

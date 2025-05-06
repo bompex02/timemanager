@@ -43,7 +43,7 @@
   import { TimeRecordService } from '../services/TimeRecordService';
   import { DateService } from '../services/DateService';
   import { WorkdayService } from '../services/WorkdayService';
-  import { RecordType, TimeRecord } from '../models/TimeRecord';
+  import { TimeRecord } from '../models/TimeRecord';
   import InfoBadge from './InfoBadge.vue';
   import { UserService } from '../services/UserService';
 
