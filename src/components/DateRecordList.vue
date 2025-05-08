@@ -28,37 +28,30 @@
 
   const date = defineProps<{ date: Date, title: string }>();
 
+  const emit = defineEmits(['update-time-record']);
+
   const timeRecordService = TimeRecordService.getInstance();
   const dateService = DateService.getInstance();
   const userService = UserService.getInstance();
 
   const currentUserId = userService.getCurrentUser()?.id || '';
   
-  //const allRecords = await timeRecordService.getAllRecords();
   const allRecords = ref<TimeRecord[]>([]);
 
   watch(() => date.date, async () => {
     await fetchTodayRecords();
   });
 
-  // existierender Code
   onMounted(async () => {
-    allRecords.value = await timeRecordService.getAllRecords();
-    await fetchTodayRecords();
+    const userId = userService.getCurrentUser()?.id || '';
+    fetchTodayRecords();
   });
 
-  const todayRecords = ref<TimeRecord[]>([]);
-  
   const fetchTodayRecords = async () => {
-
-    // ----------------------------- FOR DEBUG ONLY! ---------------------------------
-    console.log("🔍 Filter Datum:", date.date);
-    console.log('All Records:', allRecords);
-    console.log('Todays Records:', timeRecordService.getRecordsForDateByUser(currentUserId, date.date));
-    // -------------------------------------------------------------------------------
-    todayRecords.value = await timeRecordService.getRecordsForDateByUser(currentUserId, date.date);
+    todayRecords.value = await timeRecordService.getRecordsForUserByDay(currentUserId, date.date);
   }
 
+  const todayRecords = ref<TimeRecord[]>([]);
 
   function getDisplayDate(date: Date): string {
     const normalizedDate = dateService.normalizeDate(date);
@@ -66,5 +59,17 @@
 
     return normalizedDate === today ? "heute" : normalizedDate;
   }
+
+  // Reagiere auf das Event, wenn ein neuer TimeRecord erstellt wird
+  const addTimeRecord = (newRecord: TimeRecord) => {
+    todayRecords.value.unshift(newRecord); // Füge den neuen Eintrag sofort hinzu
+  }
+
+  defineExpose({
+    addTimeRecord
+  });
+
+  // Lausche auf das Event 'update-time-record', das von TimeRecording ausgelöst wird
+  emit('update-time-record', addTimeRecord);
 
 </script>
