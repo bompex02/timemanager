@@ -16,8 +16,8 @@
           </h3>
           
           <!-- homeoffice/office badge with spacing -->
-          <InfoBadge v-if="workdayService.getHomeOfficeForUserByDay(dateService.parseDateFromString(dateKey))" text="🏠 Homeoffice" :state="workdayService.getHomeOfficeForUserByDay(dateService.parseDateFromString(dateKey))" class="ml-4"/>
-          <InfoBadge v-else text="🏢 Office" :state="workdayService.getHomeOfficeForUserByDay(dateService.parseDateFromString(dateKey))" class="ml-4"/>
+          <InfoBadge v-if="getHomeOfficeStatus(dateKey)" text="🏠 Homeoffice" :state="getHomeOfficeStatus(dateKey)" class="ml-4"/>
+          <InfoBadge v-else text="🏢 Office" :state="getHomeOfficeStatus(dateKey)" class="ml-4"/>
         </div>
 
         <!-- list of records -->
@@ -67,8 +67,14 @@
         return acc;
       }, {} as Record<string, TimeRecord[]>);
   };
-  
+
   // calls method to load records and groups them by date
   fetchGroupedRecords();
+
+  // computed method to check if a date is a home office day
+  const getHomeOfficeStatus = (dateKey: string): boolean => {
+    const date = dateService.parseDateFromString(dateKey);
+    return workdayService.getHomeOfficeForUserByDay(date);
+  };
 
 </script>

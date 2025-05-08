@@ -2,6 +2,7 @@ import { reactive, ref } from "vue";
 import { User } from "../models/User";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
+import { DateService } from "../services/DateService";
 import type { currentUserStatus } from "../models/User";
 
 export class UserService {
@@ -10,6 +11,8 @@ export class UserService {
     private currentUser: User | null = null;
     public currentStatus = ref<currentUserStatus>('Ausgestempelt');
     private auth = auth;
+
+    private dateService = DateService.getInstance();
 
     constructor() {
         // Sync with Firebase auth state
@@ -28,6 +31,8 @@ export class UserService {
             } else {
                 this.setCurrentUser(null);
             }
+            // set current status after auth state is settled
+            this.currentStatus.value = this.getCurrentUserStatus();
         });
     }
 
@@ -102,23 +107,46 @@ export class UserService {
 
     // sets or updates the status of the current user and saves it to localStorage
     setCurrentUserStatus(status: User["currentStatus"]): void {
+        const today = this.dateService.getCurrentDate().toISOString();
+
+        const statusWithDate = JSON.stringify({ status, date: today });
+
         if (this.currentUser) {
             this.currentUser.currentStatus = status;
-            localStorage.setItem("currentStatus", status);
+            localStorage.setItem("currentStatus", statusWithDate);
         }
         this.currentStatus.value = status;
     }
 
     // get current status of user from localstorage: 'Eingestempelt' or 'Ausgestempelt' : default is 'Ausgestempelt' 
     getCurrentUserStatus(): User["currentStatus"] {
-        const storedStatus = localStorage.getItem("currentStatus");
-        if (storedStatus === "Eingestempelt" || storedStatus === "Ausgestempelt") {
-            if (this.currentUser) {
-                this.currentUser.currentStatus = storedStatus as User["currentStatus"];
+        const stored = localStorage.getItem("currentStatus");
+    
+        if (stored) {
+            try {
+                const { status, date } = JSON.parse(stored);
+                const today = new Date();
+                const savedDate = new Date(date);
+    
+                // Check if the saved date is today
+                // Compare year, month, and day to check if they are the same
+                const isSameDay = today.getFullYear() === savedDate.getFullYear()
+                    && today.getMonth() === savedDate.getMonth()
+                    && today.getDate() === savedDate.getDate();
+    
+                // if the saved date is today, return the status
+                if (isSameDay && (status === "Eingestempelt" || status === "Ausgestempelt")) {
+                    if (this.currentUser) {
+                        this.currentUser.currentStatus = status;
+                    }
+                    return status;
+                }
+            } catch (e) {
+                console.warn("Fehler beim Parsen von currentStatus aus localStorage:", e);
             }
-            return storedStatus;
         }
     
-        return "Ausgestempelt"; // Fallback
+        // fallback to default value 'Ausgestempelt'
+        return "Ausgestempelt";
     }
 }

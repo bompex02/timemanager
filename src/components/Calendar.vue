@@ -25,7 +25,7 @@
           :class="{
             'bg-blue-800 text-white': isToday(day),
             'bg-blue-400': isSelected(day),
-            'border border-gray-300': !isToday(day) && !isSelected(day),
+            'border border-gray-300': true,
           }"
           @click="selectDay(day)"
         >
@@ -44,14 +44,22 @@
 </template>
   
 <script setup lang="ts">
-  import { ref, computed } from 'vue'
+  import { ref, computed, onMounted } from 'vue'
   import { WorkdayService } from '../services/WorkdayService'
+  import { UserService } from '../services/UserService'
   
   const emit = defineEmits(['day-selected'])
   
   const workdayService = WorkdayService.getInstance()
+  const userService = UserService.getInstance()
+
   const currentDate = ref(new Date())
   const selectedDate = ref<Date | null>(null)
+
+  onMounted(async () => {
+  const userId = userService.getCurrentUser()?.id || ''
+  await workdayService.getWorkdaysForUser(userId) 
+})
   
   const weekDays = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa']
   const displayMonthAndYear = computed(() =>

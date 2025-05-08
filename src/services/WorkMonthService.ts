@@ -32,7 +32,7 @@ export class WorkMonthService {
           // check if the date is a weekday (Monday to Friday)
             // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
           if (date.getDay() !== 0 && date.getDay() !== 6) {
-            const records = await timeRecordService.getRecordsForDateByUser(userId, date);
+            const records = await timeRecordService.getRecordsForUserByDay(userId, date);
       
             // sort records by timestamp
             const sorted = records.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());

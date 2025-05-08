@@ -1,13 +1,13 @@
 <template>
   <div class="flex flex-col gap-6">
-    <!-- Kalender oben -->
+    <!-- calendar component -->
     <Calendar @day-selected="handleDaySelected" />
 
-    <!-- Inhalte nebeneinander -->
-    <div class="flex flex-wrap justify-center gap-4">
+    <!-- selected day info components -->
+    <div class="flex flex-wrap justify-center gap-4 min-h-[200px] transition-all duration-300">
       <SelectedCalendarDayInfo :info="selectedWorkdayInfo" />
       <DateRecordList
-        v-if="selectedWorkdayInfo?.hoursWorked"
+        v-if="selectedWorkdayInfo?.homeOffice !== null && selectedWorkdayInfo?.homeOffice !== undefined"
         :key="selectedWorkdayInfo.date.toISOString()"
         :date="selectedWorkdayInfo.date"
         title="Einträge"

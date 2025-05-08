@@ -4,6 +4,9 @@ import { TimeRecordService } from "./TimeRecordService";
 import { DateService } from "./DateService";
 import { UserService } from "./UserService";
 
+// base url for the backend API
+const BASE_URL = 'http://localhost:3000';
+
 const timeRecordService = TimeRecordService.getInstance();
 const dateService = DateService.getInstance();
 const userService = UserService.getInstance();
@@ -47,37 +50,72 @@ export class WorkdayService {
 
     // fetches all workdays for a specific user from the backend API via userId param
     private async fetchWorkdaysFromApiForUser(userId: string): Promise<Workday[]> {
-        const groupedRecords = await timeRecordService.getGroupedRecordsForUser(userId);
+        const records = await this.getWorkdaysForUser(userId); // Workday[]
     
-        // get the grouped records for the user and map them to workdays 
-        const workdays: Workday[] = await Promise.all(Object.keys(groupedRecords).map(async dateKey => {
-            const recordsForDay = groupedRecords[dateKey];
-            const date = dateService.parseDateFromString(dateKey)
-    
-            // getting the total hours worked and home office status for the user on that day
-            let totalHoursWorked = 0;
-            let homeOffice = false;
-            for (const record of recordsForDay) {
-                if(totalHoursWorked === 0) {
-                    totalHoursWorked = await this.getHoursWorkedForUserByDay(record.timestamp);
-                }
-                homeOffice = this.getHomeOfficeForUserByDay(record.timestamp);
-            }
-    
-            // returns the workday object
+        // map the records to workdays
+        // for each record, get the hours worked and home office status
+        const workdays: Workday[] = await Promise.all(records.map(async (record) => {
+            const date = new Date(record.date); // already ISO string, convert to Date
+            const hoursWorked = await this.getHoursWorkedForUserByDay(date);
+            const homeOffice = record.homeOffice ?? false;
+
             return {
                 userId: userId,
-                date: new Date(date),
-                hoursWorked: totalHoursWorked,
+                date: date,
+                hoursWorked: hoursWorked,
                 homeOffice: homeOffice,
             };
         }));
+        console.log("Workdays from API:", workdays); // log the workdays from the API
     
-        // returns all build workdays for the user
         return workdays;
     }
     
 
+    // creates and returns a new workday object 
+    ceateWorkday(date: Date, hoursWorked: number, homeOffice: boolean): Workday {
+        let workday = {
+            userId: this.currentUser?.id || '', 
+            date: date,
+            hoursWorked: hoursWorked,
+            homeOffice: homeOffice
+        };
+        return workday;
+    }
+
+    // fetches all workdays for a specific user from the backend API via userId param
+    // returns an array of workdays for the user
+    public async getWorkdaysForUser(userId: string): Promise<Workday[]> {
+        try {
+            if (!userId) {
+                throw new Error('Fehler beim Abrufen der Arbeitstage: keine UserId angegeben');
+            }
+        
+            const response = await fetch(`${BASE_URL}/workdays/user/${userId}`);
+            
+            if (!response.ok) {
+                const errorText = await response.text(); // detailed error message
+                throw new Error(`Fehler beim Abrufen der Arbeitstage: ${response.status} - ${errorText}`);
+            }
+        
+            const data = await response.json();
+
+            // convert the date string to a Date object
+            // map the data to workdays
+            const parsedData: Workday[] = data.map((w: any) => ({
+                ...w,
+                date: new Date(w.date),
+            }));
+
+            // clear the existing workdays array and add the new workdays from the API
+            this.workdays.splice(0, this.workdays.length, ...parsedData);
+            return parsedData;
+        } catch (error) {
+            console.error("API Fehler:", error);
+            throw new Error("Fehler beim Abrufen der Workdays");
+        }
+    }
+    
     // gets workdays for a specific user by month and year
     getWorkdaysForUserByMonth(year: number, month: number): Workday[] {
         const startOfMonth = new Date(year, month, 1);
@@ -106,12 +144,20 @@ export class WorkdayService {
 
     // gets workday for the current user on the specific date
     // returns the workday object or undefined if not found
-    getWorkdayForUserByDate(date: Date): Workday | undefined {
-        return this.workdays.find(workday => workday.date.getTime() === date.getTime());
-    }
+    public getWorkdayForUserByDate(date: Date): Workday | undefined {
+        return this.workdays.find(entry => {
+          const entryDate = new Date(entry.date);
+          return (
+            entryDate.getFullYear() === date.getFullYear() &&
+            entryDate.getMonth() === date.getMonth() &&
+            entryDate.getDate() === date.getDate()
+          );
+        });
+      }
+      
 
     // creates a new workday object
-    createWorkday(date: Date, hoursWorked: number, homeOffice: boolean): Workday {
+    createWorkdayForCurrentUser(date: Date, hoursWorked: number, homeOffice: boolean): Workday {
         let workday = {
             userId: this.currentUser?.id || '', 
             date: date,
@@ -121,10 +167,26 @@ export class WorkdayService {
         return workday;
     }
 
+    // add new workday object to the mongoDB via the backend API
+    async addWorkday(workday: Workday): Promise<void> {
+        const response = await fetch(`${BASE_URL}/workdays`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(workday),
+        });
+
+        console.log("Workday added:", workday); // log the added workday
+    
+        if (!response.ok) {
+            console.error("Fehler beim Hinzufügen eines Workdays:", response.statusText);
+            throw new Error('Fehler beim Hinzufügen eines Workdays');
+        }
+    }
+
     // gets hours worked for a specific user by day
     async getHoursWorkedForUserByDay(date: Date): Promise<number> {
         const userId = this.currentUser?.id || ''; // get the current user id
-        const records = await timeRecordService.getRecordsForDateByUser(userId, date);
+        const records = await timeRecordService.getRecordsForUserByDay(userId, date);
 
         if (records.length < 2) return 0; // min 2 records needed to calculate hours worked
 
@@ -142,11 +204,24 @@ export class WorkdayService {
         return parseFloat(totalHours.toFixed(2)); // return the total hours worked
     }
 
+    // update a workday object in the mongoDB via the backend API
+    // returns the updated workday object
+    async updateWorkday(workday: Workday): Promise<void> {
+        const response = await fetch(`${BASE_URL}/workdays/${workday.userId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(workday),
+        });
+        if (!response.ok) {
+            console.error("Fehler beim Aktualisieren des Workdays:", response.statusText);
+            throw new Error('Fehler beim Aktualisieren des Workdays');
+        }
+    }
+
     // check, if the user worked from home on a specific day
     // returns true if the user worked from home, false otherwise
-    getHomeOfficeForUserByDay(date: Date): boolean {
-        const workday = this.workdays.find(workday => workday.date.getTime() === date.getTime());
-        if (workday) return workday.homeOffice;
-        else return false;
-    }
+    public getHomeOfficeForUserByDay(date: Date): boolean | null {
+        const workday = this.getWorkdayForUserByDate(date);
+        return workday ? workday.homeOffice : null;
+    }  
 }
