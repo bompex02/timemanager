@@ -72,26 +72,6 @@ export class TimeRecordService {
     }
   }
 
-  async getAllRecordsForUserByDay(userId: string, date: Date): Promise<TimeRecord[]> {
-    try {
-      if (!userId) {
-        throw new Error('Fehler beim Abrufen der TimeRecords: keine UserId angegeben');
-      }
-
-      const response = await fetch(`${BASE_URL}/records/user/${userId}`);
-
-      if (!response.ok) {
-        const errorText = await response.text(); // detailed error message        
-        throw new Error(`Fehler beim Abrufen der TimeRecords: ${response.status} - ${errorText}`);
-      }
-  
-      return await response.json();
-    } catch (error) {
-      console.error("API Fehler:", error);
-      throw new Error("Fehler beim Abrufen der TimeRecords");
-    }
-  }
-
   // fetches all TimeRecords for a specific user for a specific date from the backend API via userId param and filters them by date
   async getHoursWorkedForUserByDay(userId: string, date: Date): Promise<TimeRecord[]> {
     // fetch all records for the user
@@ -112,10 +92,9 @@ export class TimeRecordService {
     return filteredRecords;
   }
   
-  
 
   // returns all time records and groups them by date
-  async getRecordsForDateByUser(userId: string, date: Date): Promise<TimeRecord[]> {
+  async getRecordsForUserByDay(userId: string, date: Date): Promise<TimeRecord[]> {
     if (!userId) {
       throw new Error('Fehler beim Abrufen der gruppierten TimeRecords: keine UserId angegeben');
     }
