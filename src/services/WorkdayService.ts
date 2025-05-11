@@ -220,8 +220,12 @@ export class WorkdayService {
 
     // check, if the user worked from home on a specific day
     // returns true if the user worked from home, false otherwise
-    public getHomeOfficeForUserByDay(date: Date): boolean | null {
+    public getHomeOfficeForUserByDay(date: Date): boolean {
         const workday = this.getWorkdayForUserByDate(date);
-        return workday ? workday.homeOffice : null;
+        if(workday) {
+            return workday.homeOffice;
+        } else {
+            return false; // default value if no workday found
+        }
     }  
 }

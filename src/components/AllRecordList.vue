@@ -16,8 +16,8 @@
           </h3>
           
           <!-- homeoffice/office badge with spacing -->
-          <InfoBadge v-if="getHomeOfficeStatus(dateKey)" text="🏠 Homeoffice" :state="getHomeOfficeStatus(dateKey)" class="ml-4"/>
-          <InfoBadge v-else text="🏢 Office" :state="getHomeOfficeStatus(dateKey)" class="ml-4"/>
+          <InfoBadge v-if="getHomeOfficeStatus(dateKey)" text="🏠 Homeoffice" :state="getHomeOfficeStatus(dateKey) ? 'homeoffice' : 'office'" class="ml-4"/>
+          <InfoBadge v-else text="🏢 Office" :state="getHomeOfficeStatus(dateKey) ? 'homeoffice' : 'office'" class="ml-4"/>
         </div>
 
         <!-- list of records -->

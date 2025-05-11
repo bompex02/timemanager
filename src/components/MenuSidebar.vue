@@ -23,7 +23,7 @@
         to="/timerecording"
         class="flex items-center gap-x-2 w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900 cursor-pointer">
         <div class="grid mr-4 place-items-center">
-          <i class="pi pi-shopping-cart"></i>
+          <i class="pi pi-clock"></i>
         </div>
         Zeiterfassung
       </router-link>
@@ -33,19 +33,19 @@
         to="/calender"
         class="flex items-center gap-x-2 w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900 cursor-pointer">
         <div class="grid mr-4 place-items-center">
-          <i class="pi pi-inbox"></i>
+          <i class="pi pi-calendar"></i>
         </div>
         Kalender        
       </router-link>
 
       <router-link
-        @click="handleClick('reports')"
-        to="/reports"
+        @click="handleClick('projects')"
+        to="/projects"
         class="flex items-center gap-x-2 w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900 cursor-pointer">
         <div class="grid mr-4 place-items-center">
-          <i class="pi pi-users"></i>
+          <i class="pi pi-briefcase"></i>
         </div>
-        Berichte
+        Projekte
         <!-- Für die kleine Zahl oben neben dem Button -->
         <div class="grid ml-auto place-items-center justify-self-end">
           <div
@@ -71,7 +71,7 @@
         to="/login"
         class="mt-auto flex items-bottom gap-x-2 w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900 cursor-pointer">
         <div class="grid mr-4 place-items-center">
-          <i class="pi pi-log-in"></i>
+          <i class="pi pi-sign-in"></i>
         </div>
         Log In
       </router-link>
