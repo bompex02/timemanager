@@ -3,7 +3,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import DashboardView from '@/views/DashboardView.vue'
 import TimerecordingView from '@/views/TimerecordingView.vue' 
 import CalenderView from '@/views/CalenderView.vue'
-import ReportsView from '@/views/ReportsView.vue'
+import ProjectsView from '@/views/ProjectsView.vue'
 import SettingsView from '@/views/SettingsView.vue'
 import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
@@ -38,9 +38,9 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
-      path: '/reports',
-      name: 'reports',
-      component: ReportsView,
+      path: '/projects',
+      name: 'projects',
+      component: ProjectsView,
       meta: { requiresAuth: true },
     },
     {
