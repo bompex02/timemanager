@@ -321,3 +321,128 @@ app.get('/workdays/user/:userId/:date', async (req, res) => {
         res.status(500).json({ message: 'Serverfehler', error: error.message });
     }
 });
+
+// gets all records from the mongoDb collection 'projects'
+app.get('/projects', async (req, res) => {
+    try {
+        const db = await getDb();
+        const projects = await db.collection('projects').find().toArray();
+
+        if(!projects || projects.length === 0) {
+            return res.status(404).json({ message: 'Keine Einträge gefunden' });
+        }
+
+        res.json(projects);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Serverfehler', error: error.message });
+    }
+});
+
+// fetches a specific project from the mongoDb collection 'projects' by id
+// returns the project if found, otherwise returns 404
+app.get('/projects/:id', async (req, res) => {
+    const { id } = req.params;
+
+    // check if the id is valid, if not, return 400
+    if (!ObjectId.isValid(id)) {
+        return res.status(400).json({ message: 'Ungültige ID' });
+    }
+
+    try {
+        const db = await getDb();
+        const project = await db.collection('projects').findOne({ _id: ObjectId.createFromHexString(id) });
+
+        // if no record is found, return 404
+        if (!project) {
+            return res.status(404).json({ message: 'Kein Eintrag gefunden' });
+        }
+
+        res.json(project);
+
+    } catch (error) {
+        console.error('Fehler beim Abrufen:', error);
+        res.status(500).json({ message: 'Serverfehler', error: error.message });
+    }
+});
+
+// adds a new project to the mongoDb collection 'projects' and returns the added project
+// returns 201 if the project is added successfully, otherwise returns 500
+app.post('/projects', async (req, res) => {
+    const project = req.body;
+
+    try {
+        const db = await getDb();
+        const result = await db.collection('projects').insertOne(project);
+        
+        if (result.acknowledged) {
+            return res.status(201).json(project);
+        } else {
+            return res.status(500).json({ message: 'Fehler beim Hinzufügen des Projekts in MongoDB' });
+        }
+    } catch (error) {
+        console.error('Fehler beim Hinzufügen:', error);
+        return res.status(500).json({ message: 'Serverfehler', error: error.message });
+    }
+});
+
+// updates a project in the mongoDb collection 'projects' by id
+// returns 200 if the project is updated successfully, otherwise returns 500
+app.put('/projects/:id', async (req, res) => {
+    const { id } = req.params;
+    const project = req.body;
+
+    try {
+        const db = await getDb();
+        const result = await db.collection('projects').updateOne({ _id: ObjectId.createFromHexString(id) }, { $set: project });
+        
+        if (result.modifiedCount === 1) {
+            return res.status(200).json(project);
+        } else {
+            return res.status(500).json({ message: 'Fehler beim Aktualisieren des Projekts in MongoDB' });
+        }
+    } catch (error) {
+        console.error('Fehler beim Aktualisieren:', error);
+        return res.status(500).json({ message: 'Serverfehler', error: error.message });
+    }
+});
+
+// deletes a project in the mongoDb collection 'projects' by id
+// returns 200 if the project is deleted successfully, otherwise returns 500
+app.delete('/projects/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const db = await getDb();
+        const result = await db.collection('projects').deleteOne({ _id: ObjectId.createFromHexString(id) });
+        
+        if (result.deletedCount === 1) {
+            return res.status(200).json({ message: 'Projekt erfolgreich gelöscht' });
+        } else {
+            return res.status(500).json({ message: 'Fehler beim Löschen des Projekts in MongoDB' });
+        }
+    } catch (error) {
+        console.error('Fehler beim Löschen:', error);
+        return res.status(500).json({ message: 'Serverfehler', error: error.message });
+    }
+});
+
+// gets all records from the mongoDb collection 'projects' for a specific user by userId
+// returns the projects if found, otherwise returns 404
+app.get('/projects/user/:userId', async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+        const db = await getDb();
+        const projects = await db.collection('projects').find({ userId }).toArray();
+
+        if (!projects || projects.length === 0) {
+            return res.status(404).json({ message: 'Keine Projekte für diesen Benutzer gefunden' });
+        }
+
+        res.json(projects);
+    } catch (error) {
+        console.error('Fehler beim Abrufen der Projekte für Nutzer:', error);
+        res.status(500).json({ message: 'Serverfehler', error: error.message });
+    }
+});

@@ -92,6 +92,11 @@ export class WorkdayService {
             }
         
             const response = await fetch(`${BASE_URL}/workdays/user/${userId}`);
+
+            // check if the response is empty (404), if so, return an empty array
+            if (response.status === 404) {
+                return [];
+            }
             
             if (!response.ok) {
                 const errorText = await response.text(); // detailed error message

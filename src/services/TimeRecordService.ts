@@ -38,6 +38,10 @@ export class TimeRecordService {
   async getAllRecords(): Promise<TimeRecord[]> {
     try {
       const response = await fetch(`${BASE_URL}/records`);
+
+      if (response.status === 404) {
+        return []; // return an empty array if no records are found
+      }
       
       if (!response.ok) {
         const errorText = await response.text(); // detailed error message
@@ -59,6 +63,10 @@ export class TimeRecordService {
       }
 
       const response = await fetch(`${BASE_URL}/records/user/${userId}`);
+
+      if(response.status === 404) {
+        return []; // return an empty array if no records are found
+      }
       
       if (!response.ok) {
         const errorText = await response.text(); // detailed error message
