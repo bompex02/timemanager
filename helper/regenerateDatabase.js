@@ -105,7 +105,7 @@ async function regenerateAllData() {
               userId,
               date: new Date(dateStr).toISOString(),
               hoursWorked,
-              homeoffice: Math.random() < 0.5,
+              homeOffice: Math.random() < 0.5,
             },
           }
         });
