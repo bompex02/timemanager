@@ -2,6 +2,8 @@ import { MongoClient } from 'mongodb';
 import { randomInt } from 'crypto';
 import dotenv from 'dotenv';
 
+dotenv.config({ path: '../.env' });
+
 dotenv.config();
 
 const uri = process.env.MONGODB_CONNECTION_STRING;
