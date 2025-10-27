@@ -37,40 +37,16 @@ export class WorkdayService {
           if (!this.currentUser) throw new Error("Kein Benutzer angemeldet!");
 
            // fetches all workdays for the current user from the backend API and sets them to the reactive workdays array
-          const workdaysFromApi = await this.fetchWorkdaysFromApiForUser(this.currentUser.id);
+          const workdaysFromApi = await this.getWorkdaysForUser(this.currentUser.id);
       
           // clear the existing workdays array and add the new workdays from the API
           this.workdays.splice(0, this.workdays.length, ...workdaysFromApi);
       
-          console.log("Alle Arbeitstage für User:", this.workdays);
         } catch (error) {
           console.error("Fehler beim Laden der Arbeitstage:", error);
         }
       }
 
-    // fetches all workdays for a specific user from the backend API via userId param
-    private async fetchWorkdaysFromApiForUser(userId: string): Promise<Workday[]> {
-        const records = await this.getWorkdaysForUser(userId); // Workday[]
-    
-        // map the records to workdays
-        // for each record, get the hours worked and home office status
-        const workdays: Workday[] = await Promise.all(records.map(async (record) => {
-            const date = new Date(record.date); // already ISO string, convert to Date
-            const hoursWorked = await this.getHoursWorkedForUserByDay(date);
-            const homeOffice = record.homeOffice ?? false;
-
-            return {
-                userId: userId,
-                date: date,
-                hoursWorked: hoursWorked,
-                homeOffice: homeOffice,
-            };
-        }));
-        console.log("Workdays from API:", workdays); // log the workdays from the API
-    
-        return workdays;
-    }
-    
 
     // creates and returns a new workday object 
     ceateWorkday(date: Date, hoursWorked: number, homeOffice: boolean): Workday {
@@ -228,6 +204,7 @@ export class WorkdayService {
     public getHomeOfficeForUserByDay(date: Date): boolean {
         const workday = this.getWorkdayForUserByDate(date);
         if(workday) {
+            console.log("HomeOffice status for", date.toDateString(), "is", workday.homeOffice);
             return workday.homeOffice;
         } else {
             return false; // default value if no workday found
