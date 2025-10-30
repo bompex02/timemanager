@@ -155,8 +155,6 @@ export class WorkdayService {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(workday),
         });
-
-        console.log("Workday added:", workday); // log the added workday
     
         if (!response.ok) {
             console.error("Fehler beim Hinzufügen eines Workdays:", response.statusText);
@@ -204,7 +202,6 @@ export class WorkdayService {
     public getHomeOfficeForUserByDay(date: Date): boolean {
         const workday = this.getWorkdayForUserByDate(date);
         if(workday) {
-            console.log("HomeOffice status for", date.toDateString(), "is", workday.homeOffice);
             return workday.homeOffice;
         } else {
             return false; // default value if no workday found

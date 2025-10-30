@@ -170,5 +170,27 @@ export class ProjectService {
         }
     }
 
+    async getProjectCountForUser(userId: string): Promise<number> {
+        try {
+            if (!userId) {
+                throw new Error('Fehler beim Abrufen der Projektanzahl: keine UserId angegeben');
+            }
 
+            const response = await fetch(`${BASE_URL}/projects/user/${userId}/count`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text(); // detailed error message
+                throw new Error(`Fehler beim Abrufen der Projektanzahl: ${response.status} - ${errorText}`);
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error("API Fehler:", error);
+            throw new Error("Fehler beim Abrufen der Projektanzahl");
+        }
+    }
 }

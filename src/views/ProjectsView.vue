@@ -67,7 +67,6 @@ const projects = ref<Project[]>([]);
 // get all projects for the current user on component mount
 onMounted(async () => {
   const allProjects = await projectService.getAllProjectsForUser(currentUserId);
-  console.log('All projects for user:', allProjects); // DEBUG
   projects.value = allProjects;
 });
 

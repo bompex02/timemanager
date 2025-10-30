@@ -50,7 +50,7 @@
         <div class="grid ml-auto place-items-center justify-self-end">
           <div
             class="relative grid items-center px-2 py-1 font-sans text-xs font-bold uppercase rounded-full select-none whitespace-nowrap bg-blue-gray-500/20 text-blue-gray-900 cursor-pointer">
-            <span class="">14</span>
+            <span class="">{{projectCount}}</span>
           </div>
         </div>
         <!---->
@@ -91,16 +91,21 @@
 
 <script setup>
 import 'primeicons/primeicons.css'
+import { ref, onMounted } from 'vue'
 import { UserService } from '../services/UserService'
 import { AuthService } from '../services/AuthService';
+import { ProjectService } from '../services/ProjectService';
 import { useRouter } from 'vue-router'
 
 const userService = UserService.getInstance();
 const authService = AuthService.getInstance();
+const projectService = ProjectService.getInstance();
 
 const router = useRouter();
 
-// Logs the clicked button for debug in the browser console 
+const projectCount = ref(0);
+
+// Logs the clicked button for debug in the browser console
 const handleClick = (componentName) => {
   console.log('Button Clicked: => ', componentName)
 }
@@ -110,5 +115,13 @@ const handleLogOut = () => {
   console.log('Logout User: ', userService.currentUser)
   authService.logOutUser(router);
 }
+
+onMounted(async () => {
+  try {
+    projectCount.value = await projectService.getProjectCountForUser(userService.getCurrentUser().id);
+  } catch (error) {
+    console.error('Error fetching project count:', error);
+  }
+});
 
 </script>
