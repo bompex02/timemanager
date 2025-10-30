@@ -8,7 +8,7 @@
         <div class="flex items-center gap-2">
             <InfoBadge :text="project?.state ?? ''" :state="project?.state ?? ''" />
             <button @click="toggleMenu" class="text-gray-500 hover:text-gray-700">
-            <i class="pi pi-ellipsis-v"></i>
+            <i class="pi pi-ellipsis-v cursor-pointer"></i>
           </button>
         </div>
       </div>
@@ -26,7 +26,7 @@
         </button>
         <button
           class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-          @click="$emit('delete', project.id)"
+          @click="$emit('delete', project._id)"
         >
           🗑️ Löschen
         </button>

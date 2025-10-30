@@ -23,13 +23,13 @@
       <div class="flex flex-col gap-2">
         <button
           @click="toggleClock('in')"
-          class="w-full py-2 text-white font-medium rounded-lg transition bg-green-600 hover:bg-green-700">
+          class="w-full py-2 text-white font-medium rounded-lg transition bg-green-600 hover:bg-green-700 cursor-pointer">
           Einstempeln
         </button>
         
         <button
           @click="toggleClock('out')"
-          class="w-full py-2 text-white font-medium rounded-lg transition bg-red-600 hover:bg-red-700">
+          class="w-full py-2 text-white font-medium rounded-lg transition bg-red-600 hover:bg-red-700 cursor-pointer">
           Ausstempeln
         </button>
       </div>

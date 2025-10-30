@@ -7,6 +7,7 @@ export enum ProjectState {
 
 export class Project {
     id: number;
+    _id?: string // mongoDB ObjectId as string (only set from MongoDB)
     name: string;
     description: string;
     state: ProjectState;
