@@ -446,3 +446,19 @@ app.get('/projects/user/:userId', async (req, res) => {
         res.status(500).json({ message: 'Serverfehler', error: error.message });
     }
 });
+
+// gets the count of projects from the mongoDb collection 'projects' for a specific user by userId
+// returns the count, otherwise returns 500
+app.get('/projects/user/:userId/count', async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+        const db = await getDb();
+        const count = await db.collection('projects').countDocuments({ userId });
+        
+        res.json(count);
+    } catch (error) {
+        console.error('Fehler beim Abrufen der Projekte für Nutzer:', error);
+        res.status(500).json({ message: 'Serverfehler', error: error.message });
+    }
+});
