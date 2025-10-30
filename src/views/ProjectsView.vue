@@ -26,6 +26,7 @@ import AddProject from '../components/AddProject.vue'
 import { Project,ProjectState } from '../models/Project';
 import { ProjectService } from '../services/ProjectService';
 import { UserService } from '../services/UserService';
+import { projectAddedEvent } from '../eventBus';
 
 const userService = UserService.getInstance()
 const projectService = ProjectService.getInstance()
@@ -57,7 +58,7 @@ const handleSaveProject = async (projectData: { name: string; description: strin
   await projectService.addProject(newProject);
   projects.value.push(newProject)
   console.log('Neues Projekt gespeichert:', newProject); // DEBUG
-  // close the add project component
+  projectAddedEvent.value++;  // increse value from event bus to notify other components
   showAddProject.value = false
 }
 

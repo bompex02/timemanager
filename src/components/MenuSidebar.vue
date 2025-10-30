@@ -91,11 +91,12 @@
 
 <script setup>
 import 'primeicons/primeicons.css'
-import { ref, onMounted } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { UserService } from '../services/UserService'
 import { AuthService } from '../services/AuthService';
 import { ProjectService } from '../services/ProjectService';
 import { useRouter } from 'vue-router'
+import { projectAddedEvent } from '../eventBus';
 
 const userService = UserService.getInstance();
 const authService = AuthService.getInstance();
@@ -116,12 +117,20 @@ const handleLogOut = () => {
   authService.logOutUser(router);
 }
 
-onMounted(async () => {
+async function fetchProjectCount() {
   try {
     projectCount.value = await projectService.getProjectCountForUser(userService.getCurrentUser().id);
   } catch (error) {
     console.error('Error fetching project count:', error);
   }
+}
+
+onMounted(fetchProjectCount);
+
+watch(projectAddedEvent, async () => {
+  // every time a project is added, fetch the new count
+  await fetchProjectCount();
 });
+
 
 </script>
