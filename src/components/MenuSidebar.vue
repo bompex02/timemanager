@@ -96,7 +96,7 @@ import { UserService } from '../services/UserService'
 import { AuthService } from '../services/AuthService';
 import { ProjectService } from '../services/ProjectService';
 import { useRouter } from 'vue-router'
-import { projectAddedEvent } from '../eventBus';
+import { projectCountEvent } from '../eventBus';
 
 const userService = UserService.getInstance();
 const authService = AuthService.getInstance();
@@ -127,7 +127,7 @@ async function fetchProjectCount() {
 
 onMounted(fetchProjectCount);
 
-watch(projectAddedEvent, async () => {
+watch(projectCountEvent, async () => {
   // every time a project is added, fetch the new count
   await fetchProjectCount();
 });

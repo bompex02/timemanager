@@ -2,7 +2,7 @@
   <div class="p-6">
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-2xl font-bold">Meine Projekte</h1>
-      <button class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700" @click="showAddProjectComponent" ><i class="pi pi-plus pr-1"></i>Projekt hinzufügen</button>
+      <button class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 cursor-pointer" @click="showAddProjectComponent" ><i class="pi pi-plus pr-1"></i>Projekt hinzufügen</button>
     </div>
 
     <!-- Project Cards -->
@@ -11,6 +11,7 @@
         v-for="project in projects"
         :key="project.id"
         :project="project"
+        @delete="handleDeleteProject"
       />
     </div>
   </div>
@@ -26,7 +27,7 @@ import AddProject from '../components/AddProject.vue'
 import { Project,ProjectState } from '../models/Project';
 import { ProjectService } from '../services/ProjectService';
 import { UserService } from '../services/UserService';
-import { projectAddedEvent } from '../eventBus';
+import { projectCountEvent } from '../eventBus';
 
 const userService = UserService.getInstance()
 const projectService = ProjectService.getInstance()
@@ -37,7 +38,6 @@ const currentUserId = userService.getCurrentUser()?.id || '';
 const showAddProject = ref(false)
 
 const showAddProjectComponent = () => {
-  console.log('Projekt hinzufügen angeklickt')
   showAddProject.value = true
 }
 
@@ -57,10 +57,20 @@ const handleSaveProject = async (projectData: { name: string; description: strin
   // add the new project object to the backend API  
   await projectService.addProject(newProject);
   projects.value.push(newProject)
-  console.log('Neues Projekt gespeichert:', newProject); // DEBUG
-  projectAddedEvent.value++;  // increse value from event bus to notify other components
+  projectCountEvent.value++;  // increse value from event bus to notify other components
   showAddProject.value = false
 }
+
+const handleDeleteProject = async (projectId: string) => {
+  try {
+    await projectService.deleteProject(projectId);
+    // only show projects which are not deleted
+    projects.value = projects.value.filter(p => p._id !== projectId);
+    projectCountEvent.value--; // decrese value from event bus to notify other components
+  } catch (error) {
+    console.error('Fehler beim Löschen des Projekts:', error);
+  }
+};
 
 // all projects for the current user
 const projects = ref<Project[]>([]);

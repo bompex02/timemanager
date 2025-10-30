@@ -414,7 +414,7 @@ app.delete('/projects/:id', async (req, res) => {
 
     try {
         const db = await getDb();
-        const result = await db.collection('projects').deleteOne({ _id: ObjectId.createFromHexString(id) });
+        const result = await db.collection('projects').deleteOne({ _id: id });
         
         if (result.deletedCount === 1) {
             return res.status(200).json({ message: 'Projekt erfolgreich gelöscht' });
