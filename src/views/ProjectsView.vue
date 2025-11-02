@@ -12,6 +12,8 @@
         :key="project.id"
         :project="project"
         @delete="handleDeleteProject"
+        @edit="handleEditProject"
+        @statusChange="handleStatusChange"
       />
     </div>
   </div>
@@ -48,7 +50,6 @@ const handleSaveProject = async (projectData: { name: string; description: strin
 
   // new project object to push into mongoDB via the backend API
   const newProject = new Project(
-    allProjects.length + 1, 
     projectData.name, 
     projectData.description, 
     projectData.state, 
@@ -65,10 +66,22 @@ const handleDeleteProject = async (projectId: string) => {
   try {
     await projectService.deleteProject(projectId);
     // only show projects which are not deleted
-    projects.value = projects.value.filter(p => p._id !== projectId);
+    projects.value = projects.value.filter(p => p.id !== projectId);
     projectCountEvent.value--; // decrese value from event bus to notify other components
   } catch (error) {
     console.error('Fehler beim Löschen des Projekts:', error);
+  }
+};
+
+const handleEditProject = (project: Project) => {
+  console.log('edit project', project)
+  // TODO: implement edit project functionality
+}
+
+const handleStatusChange = (payload: { projectId: string; newState: ProjectState }) => {
+  const project = projects.value.find(p => p.id === payload.projectId);
+  if (project) {
+    project.state = payload.newState;
   }
 };
 
@@ -79,6 +92,7 @@ const projects = ref<Project[]>([]);
 onMounted(async () => {
   const allProjects = await projectService.getAllProjectsForUser(currentUserId);
   projects.value = allProjects;
+  console.log('Loaded projects:', allProjects);
 });
 
 </script>

@@ -394,7 +394,7 @@ app.put('/projects/:id', async (req, res) => {
 
     try {
         const db = await getDb();
-        const result = await db.collection('projects').updateOne({ _id: ObjectId.createFromHexString(id) }, { $set: project });
+        const result = await db.collection('projects').updateOne({ _id: new ObjectId(id) }, { $set: project });
         
         if (result.modifiedCount === 1) {
             return res.status(200).json(project);
@@ -414,7 +414,7 @@ app.delete('/projects/:id', async (req, res) => {
 
     try {
         const db = await getDb();
-        const result = await db.collection('projects').deleteOne({ _id: id });
+        const result = await db.collection('projects').deleteOne({ _id: new ObjectId(id) });
         
         if (result.deletedCount === 1) {
             return res.status(200).json({ message: 'Projekt erfolgreich gelöscht' });

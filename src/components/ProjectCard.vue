@@ -26,7 +26,7 @@
         </button>
         <button
           class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-          @click="$emit('delete', project._id)"
+          @click="$emit('delete', project.id)"
         >
           🗑️ Löschen
         </button>
@@ -48,7 +48,10 @@
   import { ref } from 'vue'
   import InfoBadge from '../components/InfoBadge.vue'
   import { Project, ProjectState } from '../models/Project'
+  import { ProjectService } from '../services/ProjectService'
   
+  const productService = ProjectService.getInstance()
+
   const props = defineProps<{
     project: Project
   }>()
@@ -62,9 +65,12 @@
     s => s !== props.project.state
   )
   
+
   const changeStatus = (newState: ProjectState) => {
-    emit('statusChange', { id: props.project.id, newState })
+    if (newState === props.project.state || props.project.id === undefined) return;
+    productService.updateProject(props.project.id, { state: newState });
     menuOpen.value = false
+    emit('statusChange', { projectId: props.project.id, newState })
   }
   </script>
   

@@ -6,15 +6,13 @@ export enum ProjectState {
 }
 
 export class Project {
-    id: number;
-    _id?: string // mongoDB ObjectId as string (only set from MongoDB)
+    id?: string; // mongoDB ObjectId as string (only set from MongoDB)
     name: string;
     description: string;
     state: ProjectState;
     userId: string;
 
-    constructor(id: number, name: string, description: string, state : ProjectState, userId: string) {
-        this.id = id,
+    constructor(name: string, description: string, state : ProjectState, userId: string) {
         this.name = name,
         this.description = description,
         this.state = state,
