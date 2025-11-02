@@ -2,7 +2,7 @@
   <div class="p-6">
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-2xl font-bold">Meine Projekte</h1>
-      <button class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 cursor-pointer" @click="showAddProjectComponent" ><i class="pi pi-plus pr-1"></i>Projekt hinzufügen</button>
+      <button class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 cursor-pointer" @click="showAddProjectComponent()" ><i class="pi pi-plus pr-1"></i>Projekt hinzufügen</button>
     </div>
 
     <!-- Project Cards -->
@@ -12,15 +12,19 @@
         :key="project.id"
         :project="project"
         @delete="handleDeleteProject"
-        @edit="handleEditProject"
+        @edit="handleEditProject(project)"
         @statusChange="handleStatusChange"
       />
     </div>
   </div>
 
   <!-- Add Project Component (is only visible when showAddProject is true) -->
-  <AddProject v-if="showAddProject" @closeComponent="showAddProject = false" @saveProject="handleSaveProject" />
-</template>
+  <AddProject
+    v-if="showAddProject"
+    :project="selectedProject"
+    @closeComponent="closeAddProjectComponent"
+    @saveProject="handleSaveProject"
+/></template>
   
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
@@ -39,15 +43,19 @@ const currentUserId = userService.getCurrentUser()?.id || '';
 // bool reference to show/hide the add project component
 const showAddProject = ref(false)
 
-const showAddProjectComponent = () => {
+const selectedProject = ref<Project | null>(null)
+
+const showAddProjectComponent = (project?: Project) => {
+  selectedProject.value = project || null
   showAddProject.value = true
 }
 
-const handleSaveProject = async (projectData: { name: string; description: string; state: ProjectState }) => {
-  // get all projects for the current user
-  // and create a new project with the next id
-  const allProjects = await projectService.getAllProjectsForUser(currentUserId);
+const closeAddProjectComponent = () => {
+  showAddProject.value = false
+  selectedProject.value = null
+}
 
+const handleSaveProject = async (projectData: { name: string; description: string; state: ProjectState }) => {
   // new project object to push into mongoDB via the backend API
   const newProject = new Project(
     projectData.name, 
@@ -59,7 +67,7 @@ const handleSaveProject = async (projectData: { name: string; description: strin
   await projectService.addProject(newProject);
   projects.value.push(newProject)
   projectCountEvent.value++;  // increse value from event bus to notify other components
-  showAddProject.value = false
+  closeAddProjectComponent();
 }
 
 const handleDeleteProject = async (projectId: string) => {
@@ -74,9 +82,9 @@ const handleDeleteProject = async (projectId: string) => {
 };
 
 const handleEditProject = (project: Project) => {
-  console.log('edit project', project)
-  // TODO: implement edit project functionality
+  showAddProjectComponent(project)
 }
+
 
 const handleStatusChange = (payload: { projectId: string; newState: ProjectState }) => {
   const project = projects.value.find(p => p.id === payload.projectId);

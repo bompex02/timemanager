@@ -22,14 +22,32 @@
   </template>
   
   <script setup lang="ts">
-  import { ref } from 'vue'
-  import { ProjectState } from '../models/Project'
+  import { ref, watch } from 'vue'
+  import { Project, ProjectState } from '../models/Project'
+
+  const props = defineProps<{ project?: Project | null }>()
   
   const emit = defineEmits(['saveProject', 'closeComponent'])
   
   const name = ref('')
   const description = ref('')
   const state = ref<ProjectState | ''>('')
+
+  watch(
+  () => props.project,
+  (p) => {
+    if (p) {
+      name.value = p.name
+      description.value = p.description
+      state.value = p.state
+    } else {
+      name.value = ''
+      description.value = ''
+      state.value = ProjectState.Active
+    }
+  },
+  { immediate: true }
+)
   
   const submit = () => {
     if (!name.value || !description.value || !state.value) return
