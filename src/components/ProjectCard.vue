@@ -16,7 +16,7 @@
       <!-- Optionen Dropdown -->
       <div
         v-if="menuOpen"
-        class="absolute right-4 top-12 bg-white border rounded-xl shadow z-10 w-40"
+        class="absolute right-4 top-12 bg-white border rounded-xl shadow z-10 w-40 overflow-hidden"
       >
         <button
           class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
@@ -33,19 +33,20 @@
         <div class="border-t my-1"></div>
         <div class="px-4 py-2 text-xs text-gray-400">Status ändern</div>
         <button
-          v-for="s in statusOptions"
-          :key="s"
-          class="block w-full text-left px-4 py-1 text-sm hover:bg-gray-100"
-          @click="changeStatus(s)"
-        >
-          {{ s }}
-        </button>
+        v-for="s in statusOptions"
+        :key="s"
+        class="block w-full text-left px-4 py-1 text-sm transition-colors duration-150"
+        :class="[Project.getProjectStateColorClass(s), Project.getProjectStateHoverColorClass(s)]"
+        @click="changeStatus(s)"
+      >
+        {{ s }}
+      </button>
       </div>
     </div>
   </template>
   
   <script setup lang="ts">
-  import { ref } from 'vue'
+  import { ref, computed } from 'vue'
   import InfoBadge from '../components/InfoBadge.vue'
   import { Project, ProjectState } from '../models/Project'
   import { ProjectService } from '../services/ProjectService'
@@ -61,10 +62,10 @@
   const menuOpen = ref(false)
   const toggleMenu = () => (menuOpen.value = !menuOpen.value)
   
-  const statusOptions = Object.values(ProjectState).filter(
-    s => s !== props.project.state
+  const statusOptions = computed(() =>
+    Object.values(ProjectState).filter(s => s !== props.project.state)
   )
-  
+
 
   const changeStatus = (newState: ProjectState) => {
     if (newState === props.project.state || props.project.id === undefined) return;
