@@ -50,7 +50,7 @@ export class WorkdayService {
 
     // creates and returns a new workday object 
     ceateWorkday(date: Date, hoursWorked: number, homeOffice: boolean): Workday {
-        let workday = {
+        const workday = {
             userId: this.currentUser?.id || '', 
             date: date,
             hoursWorked: hoursWorked,
@@ -139,7 +139,7 @@ export class WorkdayService {
 
     // creates a new workday object
     createWorkdayForCurrentUser(date: Date, hoursWorked: number, homeOffice: boolean): Workday {
-        let workday = {
+        const workday = {
             userId: this.currentUser?.id || '', 
             date: date,
             hoursWorked: hoursWorked,

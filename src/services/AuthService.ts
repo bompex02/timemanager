@@ -22,7 +22,7 @@ export class AuthService {
     async registerUser(email: string, password: string): Promise<void> {
         return createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
-                let appUser = new User(
+                const appUser = new User(
                     userCredential.user.uid, 
                     email, 
                     password, 
@@ -44,7 +44,7 @@ export class AuthService {
     async logInUser(email: string, password: string, router?: any): Promise<void> {
         return signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {  
-                let appUser = new User(
+                const appUser = new User(
                     userCredential.user.uid,
                     email,
                     password,
