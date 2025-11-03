@@ -27,7 +27,7 @@
 
   const props = defineProps<{ project?: Project | null }>()
   
-  const emit = defineEmits(['saveProject', 'closeComponent'])
+  const emit = defineEmits(['saveProject', 'closeComponent', 'saveEditProject'])
   
   const name = ref('')
   const description = ref('')
@@ -51,6 +51,14 @@
   
   const submit = () => {
     if (!name.value || !description.value || !state.value) return
+    if (props.project) {
+      emit('saveEditProject', {
+        id: props.project.id,
+        name: name.value,
+        description: description.value,
+        state: state.value
+      })
+    } else
     emit('saveProject', {
       name: name.value,
       description: description.value,

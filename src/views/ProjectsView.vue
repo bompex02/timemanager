@@ -24,6 +24,7 @@
     :project="selectedProject"
     @closeComponent="closeAddProjectComponent"
     @saveProject="handleSaveProject"
+    @saveEditProject="handleSaveEditProject"
 /></template>
   
 <script setup lang="ts">
@@ -69,6 +70,46 @@ const handleSaveProject = async (projectData: { name: string; description: strin
   projectCountEvent.value++;  // increse value from event bus to notify other components
   closeAddProjectComponent();
 }
+
+const handleSaveEditProject = async (projectData: { id: string; name: string; description: string; state: ProjectState }) => {
+  const projectIndex = projects.value.findIndex(p => p.id === projectData.id);
+  if (projectIndex === -1) return; // project not found
+
+  // get existing project data and create a copy for comparison
+  const existingProject = Object.assign(
+    new Project('', '', ProjectState.Active, ''),
+    projects.value[projectIndex]
+  );
+
+  // build updated project object for comparison
+  const updatedProject = new Project(
+    projectData.name,
+    projectData.description,
+    projectData.state,
+    existingProject.userId
+  );
+
+  // check for project changes
+  const updateData = existingProject.getProjectChanges(updatedProject)
+
+  // if no changes, close component and return
+  if (Object.keys(updateData).length === 0) {
+    closeAddProjectComponent();
+    return;
+  }
+
+  // update project via backend API
+  await projectService.updateProject(projectData.id, updateData);
+
+  // refresh local project list
+  projects.value[projectIndex] = {
+    ...existingProject,
+    ...updateData,
+  };
+
+  closeAddProjectComponent();
+};
+
 
 const handleDeleteProject = async (projectId: string) => {
   try {

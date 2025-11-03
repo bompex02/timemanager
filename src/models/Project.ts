@@ -18,6 +18,17 @@ export class Project {
         this.state = state,
         this.userId = userId
     } 
+
+    // compares the current Project instance with an updated Project instance and returns the changed fields
+    public getProjectChanges(updated: Project): Partial<Project> {
+      const changes: Partial<Project> = {};
+
+      if (this.name !== updated.name) changes.name = updated.name;
+      if (this.description !== updated.description) changes.description = updated.description;
+      if (this.state !== updated.state) changes.state = updated.state;
+
+      return changes;
+    }
     
    public static getProjectStateColorClass(state: ProjectState): string {
     switch (state) {
