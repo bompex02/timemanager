@@ -32,5 +32,5 @@ coverage
 
 *.tsbuildinfo
 
-# helper script
-helper/regenerateDataBase.js
+# firebase service account key
+helper/serviceAccountKey.json
