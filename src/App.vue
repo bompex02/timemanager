@@ -1,7 +1,7 @@
 <!-- App.vue -->
 <template>
   <div class="sidebar-container">
-    <MenuSidebar />
+    <Navbar />
   </div>
   <div class="content-container bg-white">
     <RouterView />
@@ -9,7 +9,7 @@
 </template>
 
 <script setup>
-import MenuSidebar from './components/MenuSidebar.vue'
+import Navbar from './components/navbar/Navbar.vue'
 import { RouterView } from 'vue-router'
 import { UserService } from './services/UserService';
 
