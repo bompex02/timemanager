@@ -8,9 +8,9 @@
     </div>
     <div class="flex w-full items-center">
       <p class="flex-1">
-        (CurrentUserPlaceholer)
+        (CurrentUserPlaceholder)
       </p>
-      <div class="">
+      <div>
         <button @click="handleLogOut" class="hover:bg-gray-300 p-2 rounded-lg">
           <ArrowRightStartOnRectangleIcon class="size-6" />
         </button>
