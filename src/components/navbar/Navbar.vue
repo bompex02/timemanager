@@ -12,8 +12,8 @@
       </div>
     </div>
     <div class="flex w-full items-center">
-      <p class="flex-1">
-        (CurrentUserPlaceholder)
+      <p class="flex-1 truncate">
+        {{userService.getCurrentUser().id}}
       </p>
       <div>
         <button @click="handleLogOut" class="hover:bg-gray-300 p-2 rounded-lg">
