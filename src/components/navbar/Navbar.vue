@@ -2,8 +2,13 @@
   <div class="h-full flex flex-col p-4 w-[20rem] shadow-lg shadow-gray-500">
     <div class="flex-1 flex flex-col gap-3">
       <p class="pb-5 select-none">Timemanager</p>
-      <div class="w-full flex flex-col" v-for="item in MenuItems" :key="item">
-        <router-link :to="item.path" class="select-none w-full p-2 rounded-lg" :class="[route.path === item.path ? 'bg-gray-300 hover:bg-gray-200 shadow-inner' : 'hover:bg-gray-300']">{{item.text}}</router-link>
+      <div class="w-full flex items-center" v-for="item in MenuItems" :key="item">
+        <router-link :to="item.path" class="select-none w-full p-2 rounded-lg flex gap-2" :class="[route.path === item.path ? 'bg-gray-300 group-[]:bg-gray-300 hover:bg-gray-200 shadow-inner' : 'hover:bg-gray-300']">
+          <p>{{ item.text }}</p>
+          <p v-if="item.path === '/projects'" class="ml-8">
+            {{ projectCount }}
+          </p>
+        </router-link>
       </div>
     </div>
     <div class="flex w-full items-center">
