@@ -54,6 +54,7 @@ const handleClick = (componentName) => {
 const handleLogOut = () => {
   console.log('Logout User: ', userService.currentUser)
   authService.logOutUser(router);
+  router.push('/login')
 }
 
 async function fetchProjectCount() {

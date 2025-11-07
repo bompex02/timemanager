@@ -1,6 +1,6 @@
 <!-- App.vue -->
 <template>
-  <div class="sidebar-container">
+  <div class="sidebar-container" v-if="!$route.meta.hideLayout">
     <Navbar />
   </div>
   <div class="content-container bg-white">
