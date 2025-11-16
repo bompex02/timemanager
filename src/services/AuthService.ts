@@ -19,19 +19,19 @@ export class AuthService {
     }
 
     // register new user with username + password via firebase auth
-    async registerUser(email: string, password: string): Promise<void> {
+    async registerUser(email: string, password: string, firstName: string, lastName: string): Promise<void> {
         return createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
-                const appUser = new User(
-                    userCredential.user.uid, 
-                    email, 
-                    password, 
-                    "user", // default role
-                    "default", // default department
-                    "Ausgestempelt" // default status
-                );           
+                const appUser = new User({
+                    id: userCredential.user.uid,
+                    email,
+                    password,
+                    firstName,
+                    lastName,
+                });        
+                userService.setCurrentUser(appUser); // Set current user;
                 userService.addUser(appUser);
-                console.log("User registered successfully", userCredential);
+                console.log("User registered successfully", appUser);
             })
             .catch((error) => {
                 console.error("Error registering user", error);
@@ -42,26 +42,27 @@ export class AuthService {
 
     // login user with username + password via firebase auth
     async logInUser(email: string, password: string, router?: any): Promise<void> {
-        return signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {  
-                const appUser = new User(
-                    userCredential.user.uid,
-                    email,
-                    password,
-                    "user", // default role
-                    "default", // default department
-                    "Ausgestempelt" // default status
-                );
-                userService.setCurrentUser(appUser); // Set current user;        
-                console.log("User registered successfully", userCredential);
+    return signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+
+            const appUser = new User({
+                id: userCredential.user.uid,
+                email,
+                password,
+            });
+
+            userService.setCurrentUser(appUser);
+            console.log("User logged in successfully", userCredential);
+
+            if (router) {
                 router.push('/dashboard');
-            })
-            .catch((error) => {
-                console.error("Error registering user", error);
-                throw error;
             }
-        );
-    }
+        })
+        .catch((error) => {
+            console.error("Error logging in user", error);
+            throw error;
+        });
+}
 
     // logout user via firebase auth and reset current user in userService
     // param router is nullable (optional)
