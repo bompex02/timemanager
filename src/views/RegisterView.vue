@@ -4,13 +4,25 @@
       <h1 class="text-2xl font-bold mb-6 text-center text-black">Register</h1>
 
       <div class="flex flex-col gap-2 mb-4">
-        <label for="name" class="text-black">Name</label>
+        <label for="firstName" class="text-black">Vorname</label>
         <input
-          id="name"
-          v-model="name"
+          id="firstName"
+          v-model="firstName"
           type="text"
           class="border border-black rounded-md px-3 py-2 text-black"
-          autocomplete="name"
+          autocomplete="Vorname"
+          required
+        />
+      </div>
+
+      <div class="flex flex-col gap-2 mb-4">
+        <label for="lastName" class="text-black">Nachname</label>
+        <input
+          id="lastName"
+          v-model="lastName"
+          type="text"
+          class="border border-black rounded-md px-3 py-2 text-black"
+          autocomplete="Nachname"
           required
         />
       </div>
@@ -51,7 +63,7 @@
         />
       </div>
 
-      <div class="border-t h-[1px] my-6 border-black"></div>
+      <div class="border-t h-px my-6 border-black"></div>
 
       <div class="flex flex-col gap-2">
         <button @click.prevent="registerUser" type="submit"
@@ -71,7 +83,8 @@ import { AuthService } from '../services/AuthService';
 const authService = AuthService.getInstance();
 const router = useRouter();
 
-const name = ref('');
+const firstName = ref('');
+const lastName = ref('');
 const email = ref('');
 const password = ref('');
 const passwordConfirmation = ref('');
@@ -86,7 +99,7 @@ const registerUser = async () => {
 
   // if passwords match, register user via authService
     try {
-    await authService.registerUser(email.value, password.value);
+    await authService.registerUser(email.value, password.value, firstName.value, lastName.value);
     router.push('/dashboard'); // after successful registration, redirect to dashboard
   } catch (error) {
     console.error('Registrierung fehlgeschlagen', error);

@@ -13,7 +13,7 @@
     </div>
     <div class="flex w-full items-center">
       <p class="flex-1 truncate">
-        {{userService.getCurrentUser().id}}
+        {{ userDisplayName }}
       </p>
       <div>
         <button @click="handleLogOut" class="hover:bg-gray-300 p-2 rounded-lg">
@@ -45,10 +45,7 @@ const route = useRoute()
 
 const projectCount = ref(0);
 
-// Logs the clicked button for debug in the browser console
-const handleClick = (componentName) => {
-  console.log('Button Clicked: => ', componentName)
-}
+const userDisplayName = ref('');
 
 // Logs out the user via authService
 const handleLogOut = () => {
@@ -59,17 +56,31 @@ const handleLogOut = () => {
 
 async function fetchProjectCount() {
   try {
-    projectCount.value = await projectService.getProjectCountForUser(userService.getCurrentUser().id);
+    if (userService.getCurrentUser()){
+      projectCount.value = await projectService.getProjectCountForUser(userService.getCurrentUser().id);
+    }
   } catch (error) {
     console.error('Error fetching project count:', error);
   }
 }
 
-onMounted(fetchProjectCount);
+function getUserDisplayName() {
+  const currentUser = userService.getCurrentUser();
+  if (currentUser) {
+    userDisplayName.value = currentUser.getDisplayName();
+  }
+}
+
+onMounted(() => {
+  // fetch initial project count on component mount
+  fetchProjectCount();
+  getUserDisplayName();
+});
 
 watch(projectCountEvent, async () => {
   // every time a project is added, fetch the new count
   await fetchProjectCount();
+  getUserDisplayName();
 });
 
 

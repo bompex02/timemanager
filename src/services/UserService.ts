@@ -5,6 +5,8 @@ import { auth } from "../config/firebaseConfig";
 import { DateService } from "../services/DateService";
 import type { currentUserStatus } from "../models/User";
 
+const BASE_URL = 'http://localhost:3000';
+
 export class UserService {
     private static instance: UserService;
     private users = reactive<User[]>([]);
@@ -15,26 +17,23 @@ export class UserService {
     private dateService = DateService.getInstance();
 
     constructor() {
-        // Sync with Firebase auth state
-        onAuthStateChanged(this.auth, (firebaseUser) => {
-            if (firebaseUser) {
-                // Convert Firebase user to our User model
-                const user = new User(
-                    firebaseUser.uid,
-                    firebaseUser.email || '',
-                    '', // password not available from Firebase auth
-                    'user', // default role
-                    '', // empty department by default
-                    'Ausgestempelt' // default status
-                );
-                this.setCurrentUser(user);
-            } else {
-                this.setCurrentUser(null);
-            }
-            // set current status after auth state is settled
-            this.currentStatus.value = this.getCurrentUserStatus();
-        });
-    }
+    onAuthStateChanged(this.auth, (firebaseUser) => {
+        if (firebaseUser) {
+            const user = new User({
+                id: firebaseUser.uid,
+                email: firebaseUser.email || '',
+                password: '' // Password is not available from Firebase user
+            });
+
+            this.setCurrentUser(user);
+        } else {
+            this.setCurrentUser(null);
+        }
+
+        // currentStatus aus localStorage lesen
+        this.currentStatus.value = this.getCurrentUserStatus();
+    });
+}
 
 
     static getInstance(): UserService {
@@ -55,38 +54,110 @@ export class UserService {
     }
 
     // get all users
-    getUsers(): User[] {
-        return this.users;
+    async getUsers(): Promise<User[]> {
+        if(this.users.length !== 0) {
+            return this.users;
+        } else {
+            const response = await fetch(`${BASE_URL}/users`);
+
+            if(response.status === 404) {
+                return []; // return an empty array if no records are found
+            }
+      
+            if (!response.ok) {
+                const errorText = await response.text(); // detailed error message
+                throw new Error(`Fehler beim Abrufen der Users: ${response.status} - ${errorText}`);
+            }
+        
+            return await response.json();
+        }
     }
 
     // get user by id
-    getUserById(id: string): User | undefined {
-        return this.users.find(user => user.id === id);
+    async getUserById(id: string): Promise<User | any> {
+        if(this.users.find(user => user.id === id)) {
+            return this.users.find(user => user.id === id);
+        } else {
+            const response = await fetch(`${BASE_URL}/users/${id}`);
+            if(response.status === 404) {
+                return []; // return an empty array if no records are found
+            }
+      
+            if (!response.ok) {
+                const errorText = await response.text(); // detailed error message
+                throw new Error(`Fehler beim Abrufen des Users: ${response.status} - ${errorText}`);
+            }
+        
+            return await response.json();
+        }
     }
 
     // add new user to list 
-    addUser(user: User): void {
+    async addUser(user: User): Promise<void> {
+        console.log("Adding user:", user);
         this.users.push(user);
+        const response = await fetch(`${BASE_URL}/users`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(user),
+        });
+
+        if (!response.ok) {
+            throw new Error('Fehler beim Hinzufügen eines Users');
+        }
     }
 
     // update user
-    updateUser(user: User): void {
+    async updateUser(user: User): Promise<void> {
         const index = this.users.findIndex(u => u.id === user.id);
         if (index !== -1) {
             this.users[index] = user;
         }
+        const response = await fetch(`${BASE_URL}/users/${user.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(user),
+        });
+        if (!response.ok) {
+            console.error("Fehler beim Aktualisieren des Users:", response.statusText);
+            throw new Error('Fehler beim Aktualisieren des Users');
+        }
     }
 
     // delete user by id
-    deleteUser (id: string): void {
+    async deleteUser (id: string): Promise<void> {
         this.users = this.users.filter(user => user.id !== id);
+        const response = await fetch(`${BASE_URL}/users/${id}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+        });
+        if (!response.ok) {
+            console.error("Fehler beim Löschen des Users:", response.statusText);
+            throw new Error('Fehler beim Löschen des Users');
+        }
     }
 
     // set current user
-    setCurrentUser(user: User | null): void {
-        this.currentUser = user;
-        if (user) {
-            localStorage.setItem('currentUser', JSON.stringify(user));
+    setCurrentUser(user: User | any | null): void {
+        if (user instanceof User) {
+            this.currentUser = user;
+        } else if (user) {
+            this.currentUser = new User({
+                id: user.id,
+                email: user.email,
+                password: user.password ?? '',
+                role: user.role,
+                department: user.department,
+                currentStatus: user.currentStatus,
+                firstName: user.firstName,
+                lastName: user.lastName
+            });
+        } else {
+            this.currentUser = null;
+        }
+
+        if (this.currentUser) {
+            localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
         } else {
             localStorage.removeItem('currentUser');
         }
@@ -95,18 +166,33 @@ export class UserService {
     // Get the current user
     getCurrentUser(): User | null {
         const storedUser = localStorage.getItem('currentUser');
+
         if (storedUser) {
             try {
-                this.currentUser = JSON.parse(storedUser) as User;
+                const parsed = JSON.parse(storedUser);
+
+                this.currentUser = new User({
+                    id: parsed.id,
+                    email: parsed.email,
+                    password: parsed.password ?? '',
+                    role: parsed.role,
+                    department: parsed.department,
+                    currentStatus: parsed.currentStatus,
+                    firstName: parsed.firstName,
+                    lastName: parsed.lastName
+                });
+
             } catch (e) {
+                console.warn("Fehler beim Parsen von currentUser aus localStorage:", e);
                 localStorage.removeItem('currentUser');
+                this.currentUser = null;
             }
         }
         return this.currentUser;
     }
 
     // sets or updates the status of the current user and saves it to localStorage
-    setCurrentUserStatus(status: User["currentStatus"]): void {
+    setCurrentUserStatus(status: currentUserStatus): void {
         const today = this.dateService.getCurrentDate().toISOString();
 
         const statusWithDate = JSON.stringify({ status, date: today });
@@ -119,7 +205,7 @@ export class UserService {
     }
 
     // get current status of user from localstorage: 'Eingestempelt' or 'Ausgestempelt' : default is 'Ausgestempelt' 
-    getCurrentUserStatus(): User["currentStatus"] {
+    getCurrentUserStatus(): currentUserStatus {
         const stored = localStorage.getItem("currentStatus");
     
         if (stored) {
