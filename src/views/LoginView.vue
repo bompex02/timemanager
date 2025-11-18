@@ -1,42 +1,9 @@
 <template>
-  <div class="flex items-center justify-center w-full h-screen bg-white">
-    <div class="w-full max-w-md p-8 bg-white shadow-lg rounded-lg">
-      <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img class="mx-auto h-10 w-auto" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company" />
-        <h2 class="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">Einloggen</h2>
-      </div>
-
-      <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form class="space-y-6" action="#" method="POST">
-          <div>
-            <label for="email" class="block text-sm font-medium text-gray-900">Email</label>
-            <div class="mt-2">
-              <input v-model="email" type="email" name="email" id="email" autocomplete="email" required class="block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-indigo-600 sm:text-sm" />
-            </div>
-          </div>
-
-          <div>
-            <div class="flex items-center justify-between">
-              <label for="password" class="block text-sm font-medium text-gray-900">Passwort</label>
-              <div class="text-sm">
-                <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">Passwort vergessen?</a>
-              </div>
-            </div>
-            <div class="mt-2">
-              <input v-model="password" type="password" name="password" id="password" autocomplete="current-password" required class="block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-indigo-600 sm:text-sm" />
-            </div>
-          </div>
-
-          <div>
-            <button @click="logInUser" type="button" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus:outline-indigo-600">Sign in</button>
-          </div>
-        </form>
-
-        <p class="mt-10 text-center text-sm text-gray-500">
-          Noch keinen Account?
-          <a href="/register" class="font-semibold text-indigo-600 hover:text-indigo-500">Erstelle deinen Account</a>
-        </p>
-      </div>
+  <div class="bg-[url('@/assets/images/background-login.jpg')] bg-cover bg-center h-screen grid grid-cols-5">
+    <div class="col-start-4 col-span-2 p-4 bg-primary text-white">
+      <h1>Timemanager</h1>
+      <p class="heading-1">Sign in</p>
+      <p class="font-extralight">wjwj</p>
     </div>
   </div>
 </template>
