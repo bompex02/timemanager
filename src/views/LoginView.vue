@@ -3,7 +3,11 @@
     <div class="col-start-4 col-span-2 p-4 bg-primary text-white">
       <h1>Timemanager</h1>
       <p class="heading-1">Sign in</p>
-      <p class="font-extralight">wjwj</p>
+      email
+      <input class="border-2" v-model="email"  />
+      password
+      <input class="border-2" v-model="password" />
+      <button class="col-span-4 border-2" @click="logInUser">Sign In</button>
     </div>
   </div>
 </template>
