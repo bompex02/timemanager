@@ -7,7 +7,8 @@
   </div>
   <AllRecordList class="col-span-2 row-span-2 w-full mt-4" />
   <div>
-    <BaseInput label="test" />
+    <BaseInput v-model="value" label="test" />
+    {{ value }}
   </div>  
  </div>
 </template>
@@ -17,5 +18,8 @@
   import DailyWorkHoursChart from '../components/DailyWorkHoursChart.vue';
   import ComparisonWorkhoursChart from '../components/ComparisonWorkhoursChart.vue';
   import BaseInput from '@/components/base/Input.vue'
+  import { ref } from 'vue';
+
+  const value = ref()
 </script>
  
