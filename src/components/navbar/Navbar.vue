@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full flex flex-col p-4 w-[20rem] shadow-lg shadow-gray-500">
+  <div class="flex flex-col p-4 w-[20rem] h-screen shadow-r-lg shadow-gray-500">
     <div class="flex-1 flex flex-col gap-3">
       <p class="pb-5 select-none">Timemanager</p>
       <div class="w-full flex items-center" v-for="item in MenuItems" :key="item">
