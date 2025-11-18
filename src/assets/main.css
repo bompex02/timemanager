@@ -3,3 +3,15 @@
 html{
     background-color: white;
 }
+
+@theme {
+    --color-primary: #282828;
+}
+
+@utility heading-1 { @apply text-4xl font-extrabold tracking-tight; }
+
+@layer base {
+    h1 {
+        @apply heading-1;
+    }
+}
