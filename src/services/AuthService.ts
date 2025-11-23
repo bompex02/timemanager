@@ -42,26 +42,38 @@ export class AuthService {
 
     // login user with username + password via firebase auth
     async logInUser(email: string, password: string, router?: any): Promise<void> {
-    return signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
 
-            const appUser = new User({
-                id: userCredential.user.uid,
-                email,
-                password,
-            });
+            // Try to fetch the full user profile (including firstName/lastName) from backend
+            let storedUser: any = null;
+            try {
+                storedUser = await userService.getUserById(userCredential.user.uid);
+            } catch (e) {
+                // If backend fetch fails, we'll fallback to basic user created from auth
+                console.warn('Could not fetch full user profile from backend:', e);
+            }
 
-            userService.setCurrentUser(appUser);
-            console.log("User logged in successfully", userCredential);
+            if (storedUser && storedUser.id) {
+                userService.setCurrentUser(storedUser);
+                console.log('User logged in successfully (profile loaded)', storedUser);
+            } else {
+                const appUser = new User({
+                    id: userCredential.user.uid,
+                    email,
+                    password,
+                });
+                userService.setCurrentUser(appUser);
+                console.log('User logged in successfully (basic)', appUser);
+            }
 
             if (router) {
                 router.push('/dashboard');
             }
-        })
-        .catch((error) => {
-            console.error("Error logging in user", error);
+        } catch (error) {
+            console.error('Error logging in user', error);
             throw error;
-        });
+        }
 }
 
     // logout user via firebase auth and reset current user in userService

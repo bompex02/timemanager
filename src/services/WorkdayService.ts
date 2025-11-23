@@ -1,4 +1,4 @@
-import { reactive } from "vue";
+import { reactive, watch } from "vue";
 import type { Workday } from "../models/WorkModels";
 import { TimeRecordService } from "./TimeRecordService";
 import { DateService } from "./DateService";
@@ -14,12 +14,24 @@ const userService = UserService.getInstance();
 export class WorkdayService {
     private static instance: WorkdayService;
     private workdays = reactive<Workday[]>([]); // reactive array of workdays
-    private currentUser = userService.getCurrentUser(); 
+    private currentUser = userService.currentUser.value;
 
     constructor() {
-        if (!this.currentUser) {
-            throw new Error("Kein Benutzer angemeldet!");
+        // If a user is already present, load workdays immediately.
+        if (this.currentUser) {
+            this.loadUserWorkdays();
         }
+
+        // Watch for changes to the current user and load/clear workdays accordingly
+        watch(() => userService.currentUser.value, (newUser) => {
+            this.currentUser = newUser;
+            if (newUser) {
+                this.loadUserWorkdays();
+            } else {
+                // clear workdays when user logs out
+                this.workdays.splice(0, this.workdays.length);
+            }
+        });
     }
 
     // Singleton pattern

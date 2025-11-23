@@ -10,7 +10,7 @@ const BASE_URL = 'http://localhost:3000';
 export class UserService {
     private static instance: UserService;
     private users = reactive<User[]>([]);
-    private currentUser: User | null = null;
+    public currentUser = ref<User | null>(null);
     public currentStatus = ref<currentUserStatus>('Ausgestempelt');
     private auth = auth;
 
@@ -24,8 +24,13 @@ export class UserService {
                 email: firebaseUser.email || '',
                 password: '' // Password is not available from Firebase user
             });
-
-            this.setCurrentUser(user);
+            const $db_user = this.getUserById(firebaseUser.uid).then((dbUser) => {
+                if (dbUser && dbUser.id) {
+                    this.setCurrentUser(dbUser);
+                } else {
+                    this.setCurrentUser(user);
+                }
+            });
         } else {
             this.setCurrentUser(null);
         }
@@ -139,10 +144,12 @@ export class UserService {
 
     // set current user
     setCurrentUser(user: User | any | null): void {
+        let newCurrent: User | null = null;
+
         if (user instanceof User) {
-            this.currentUser = user;
+            newCurrent = user;
         } else if (user) {
-            this.currentUser = new User({
+            newCurrent = new User({
                 id: user.id,
                 email: user.email,
                 password: user.password ?? '',
@@ -152,12 +159,13 @@ export class UserService {
                 firstName: user.firstName,
                 lastName: user.lastName
             });
-        } else {
-            this.currentUser = null;
         }
 
-        if (this.currentUser) {
-            localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+        // update reactive ref so components can react to changes
+        this.currentUser.value = newCurrent;
+
+        if (newCurrent) {
+            localStorage.setItem('currentUser', JSON.stringify(newCurrent));
         } else {
             localStorage.removeItem('currentUser');
         }
@@ -170,8 +178,7 @@ export class UserService {
         if (storedUser) {
             try {
                 const parsed = JSON.parse(storedUser);
-
-                this.currentUser = new User({
+                const restored = new User({
                     id: parsed.id,
                     email: parsed.email,
                     password: parsed.password ?? '',
@@ -181,14 +188,16 @@ export class UserService {
                     firstName: parsed.firstName,
                     lastName: parsed.lastName
                 });
+                this.currentUser.value = restored;
 
             } catch (e) {
                 console.warn("Fehler beim Parsen von currentUser aus localStorage:", e);
                 localStorage.removeItem('currentUser');
-                this.currentUser = null;
+                this.currentUser.value = null;
             }
         }
-        return this.currentUser;
+        // ensure reactive ref matches and return
+        return this.currentUser.value;
     }
 
     // sets or updates the status of the current user and saves it to localStorage
@@ -197,9 +206,11 @@ export class UserService {
 
         const statusWithDate = JSON.stringify({ status, date: today });
 
-        if (this.currentUser) {
-            this.currentUser.currentStatus = status;
+        if (this.currentUser.value) {
+            this.currentUser.value.currentStatus = status;
             localStorage.setItem("currentStatus", statusWithDate);
+            // persist updated currentUser to localStorage as well
+            localStorage.setItem('currentUser', JSON.stringify(this.currentUser.value));
         }
         this.currentStatus.value = status;
     }
@@ -222,8 +233,10 @@ export class UserService {
     
                 // if the saved date is today, return the status
                 if (isSameDay && (status === "Eingestempelt" || status === "Ausgestempelt")) {
-                    if (this.currentUser) {
-                        this.currentUser.currentStatus = status;
+                    if (this.currentUser.value) {
+                        this.currentUser.value.currentStatus = status;
+                        // also persist to localStorage
+                        localStorage.setItem('currentUser', JSON.stringify(this.currentUser.value));
                     }
                     return status;
                 }
