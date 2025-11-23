@@ -482,7 +482,22 @@ app.get('/users/:id', async (req, res) => {
 
     try {
         const db = await getDb();
-        const user = await db.collection('users').findOne({ _id: id });
+        let user = null;
+
+        // Try to find by MongoDB _id first (if id looks like an ObjectId)
+        if (ObjectId.isValid(id)) {
+            try {
+                user = await db.collection('users').findOne({ _id: ObjectId.createFromHexString(id) });
+            } catch (e) {
+                // fall through to next lookup
+                console.warn('Failed to query by _id, falling back to id field lookup', e);
+            }
+        }
+
+        // If not found by _id, try to find by the `id` field (e.g., Firebase uid stored as `id`)
+        if (!user) {
+            user = await db.collection('users').findOne({ id: id });
+        }
         if (!user) {
             return res.status(404).json({ message: 'Benutzer nicht gefunden' });
         }
@@ -499,6 +514,16 @@ app.post('/users', async (req, res) => {
 
     try {
         const db = await getDb();
+        // If a Firebase uid is provided on the `id` field, use it as the MongoDB _id
+        if (user && user.id) {
+            // set _id to the firebase uid so future lookups can use a single canonical id
+            try {
+                user._id = user.id;
+            } catch (e) {
+                // ignore
+            }
+        }
+
         const result = await db.collection('users').insertOne(user);
         // check if the user is added successfully
         if (result.acknowledged) {
@@ -519,7 +544,16 @@ app.delete('/users/:id', async (req, res) => {
 
     try {
         const db = await getDb();
-        const result = await db.collection('users').deleteOne({ _id: id });
+        let result = null;
+
+        if (ObjectId.isValid(id)) {
+            result = await db.collection('users').deleteOne({ _id: ObjectId.createFromHexString(id) });
+        }
+
+        // if no result yet or nothing deleted, try deleting by `id` field (firebase uid)
+        if (!result || result.deletedCount === 0) {
+            result = await db.collection('users').deleteOne({ id: id });
+        }
         
         if (result.deletedCount === 1) {
             return res.status(200).json({ message: 'User erfolgreich gelöscht' });
@@ -539,7 +573,16 @@ app.put('/users/:id', async (req, res) => {
 
     try {
         const db = await getDb();
-        const result = await db.collection('users').updateOne({ _id: id }, { $set: user });
+        let result = null;
+
+        if (ObjectId.isValid(id)) {
+            result = await db.collection('users').updateOne({ _id: ObjectId.createFromHexString(id) }, { $set: user });
+        }
+
+        // if not updated by _id, try updating by `id` field (firebase uid)
+        if (!result || result.matchedCount === 0) {
+            result = await db.collection('users').updateOne({ id: id }, { $set: user });
+        }
         
         if (result.modifiedCount === 1) {
             return res.status(200).json({ message: 'User erfolgreich aktualisiert' });

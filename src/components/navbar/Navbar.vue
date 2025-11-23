@@ -49,7 +49,7 @@ const userDisplayName = ref('');
 
 // Logs out the user via authService
 const handleLogOut = () => {
-  console.log('Logout User: ', userService.currentUser)
+  console.log('Logout User: ', userService.currentUser.value)
   authService.logOutUser(router);
   router.push('/login')
 }
@@ -64,23 +64,29 @@ async function fetchProjectCount() {
   }
 }
 
-function getUserDisplayName() {
-  const currentUser = userService.getCurrentUser();
+function updateDisplayName(currentUser) {
   if (currentUser) {
     userDisplayName.value = currentUser.getDisplayName();
+  } else {
+    userDisplayName.value = '';
   }
 }
 
 onMounted(() => {
   // fetch initial project count on component mount
   fetchProjectCount();
-  getUserDisplayName();
+  const currentUser = userService.getCurrentUser();
+  updateDisplayName(currentUser);
+});
+
+// react to changes in the current user so the navbar display name updates immediately
+watch(() => userService.currentUser.value, (newUser) => {
+  updateDisplayName(newUser);
 });
 
 watch(projectCountEvent, async () => {
   // every time a project is added, fetch the new count
   await fetchProjectCount();
-  getUserDisplayName();
 });
 
 
