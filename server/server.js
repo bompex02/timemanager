@@ -462,3 +462,135 @@ app.get('/projects/user/:userId/count', async (req, res) => {
         res.status(500).json({ message: 'Serverfehler', error: error.message });
     }
 });
+
+
+// gets all users from the mongoDb collection 'users'
+app.get('/users', async (req, res) => {
+    try {
+        const db = await getDb();
+        const users = await db.collection('users').find().toArray();
+        res.json(users);
+    } catch (error) {
+        console.error('Fehler beim Abrufen der Benutzer:', error);
+        res.status(500).json({ message: 'Serverfehler', error: error.message });
+    }
+});
+
+// gets a specific user from the mongoDb collection 'users' by id
+app.get('/users/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const db = await getDb();
+        let user = null;
+
+        // Try to find by MongoDB _id first (if id looks like an ObjectId)
+        if (ObjectId.isValid(id)) {
+            try {
+                user = await db.collection('users').findOne({ _id: ObjectId.createFromHexString(id) });
+            } catch (e) {
+                // fall through to next lookup
+                console.warn('Failed to query by _id, falling back to id field lookup', e);
+            }
+        }
+
+        // If not found by _id, try to find by the `id` field (e.g., Firebase uid stored as `id`)
+        if (!user) {
+            user = await db.collection('users').findOne({ id: id });
+        }
+        if (!user) {
+            return res.status(404).json({ message: 'Benutzer nicht gefunden' });
+        }
+        res.json(user);
+    } catch (error) {
+        console.error('Fehler beim Abrufen des Benutzers:', error);
+        res.status(500).json({ message: 'Serverfehler', error: error.message });
+    }
+});
+
+// adds a new user to the mongoDb collection 'users'
+app.post('/users', async (req, res) => {
+    const user = req.body;
+
+    try {
+        const db = await getDb();
+        // If a Firebase uid is provided on the `id` field, use it as the MongoDB _id
+        if (user && user.id) {
+            // set _id to the firebase uid so future lookups can use a single canonical id
+            try {
+                user._id = user.id;
+            } catch (e) {
+                // ignore
+            }
+        }
+
+        const result = await db.collection('users').insertOne(user);
+        // check if the user is added successfully
+        if (result.acknowledged) {
+            res.status(201).json(user);
+        } else {
+            res.status(500).json({ message: 'Fehler beim Hinzufügen des Users in MongoDB' });
+        }
+
+    } catch (error) {
+        console.error('Fehler beim Hinzufügen:', error);
+        res.status(500).json({ message: 'Serverfehler', error: error.message });
+    }
+});
+
+// deletes a user from the mongoDb collection 'users' by id
+app.delete('/users/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const db = await getDb();
+        let result = null;
+
+        if (ObjectId.isValid(id)) {
+            result = await db.collection('users').deleteOne({ _id: ObjectId.createFromHexString(id) });
+        }
+
+        // if no result yet or nothing deleted, try deleting by `id` field (firebase uid)
+        if (!result || result.deletedCount === 0) {
+            result = await db.collection('users').deleteOne({ id: id });
+        }
+        
+        if (result.deletedCount === 1) {
+            return res.status(200).json({ message: 'User erfolgreich gelöscht' });
+        } else {
+            return res.status(500).json({ message: 'Fehler beim Löschen des User in MongoDB' });
+        }
+    } catch (error) {
+        console.error('Fehler beim Löschen:', error);
+        return res.status(500).json({ message: 'Serverfehler', error: error.message });
+    }
+});
+
+// updates a user in the mongoDb collection 'users' by id
+app.put('/users/:id', async (req, res) => {
+    const { id } = req.params;
+    const user = req.body;
+
+    try {
+        const db = await getDb();
+        let result = null;
+
+        if (ObjectId.isValid(id)) {
+            result = await db.collection('users').updateOne({ _id: ObjectId.createFromHexString(id) }, { $set: user });
+        }
+
+        // if not updated by _id, try updating by `id` field (firebase uid)
+        if (!result || result.matchedCount === 0) {
+            result = await db.collection('users').updateOne({ id: id }, { $set: user });
+        }
+        
+        if (result.modifiedCount === 1) {
+            return res.status(200).json({ message: 'User erfolgreich aktualisiert' });
+        } else {
+            return res.status(500).json({ message: 'Fehler beim Aktualisieren des User in MongoDB' });
+        }
+    } catch (error) {
+        console.error('Fehler beim Aktualisieren:', error);
+        return res.status(500).json({ message: 'Serverfehler', error: error.message });
+    }
+});

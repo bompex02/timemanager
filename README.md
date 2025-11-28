@@ -22,7 +22,7 @@ To get started with the Time Manager application, follow these steps:
 2. **Install dependencies**:
    Make sure you have [Node.js](https://nodejs.org/) installed. Then run:
    ```bash
-   npm install
+   pnpm install
    ```
 
 3. **Set up your Firebase project**:
@@ -40,7 +40,7 @@ To get started with the Time Manager application, follow these steps:
 4. **Run the application**:
    Start the development server:
    ```bash
-   npm run dev
+   pnpm run dev
    ```
 
 5. **Open your browser**:

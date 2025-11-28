@@ -1,33 +1,18 @@
 import { MongoClient } from 'mongodb';
 import { randomInt } from 'crypto';
 import dotenv from 'dotenv';
-import admin from 'firebase-admin';
-import fs from "fs";
 
 dotenv.config({ path: '../.env' });
 
-const serviceAccount = JSON.parse(fs.readFileSync("serviceAccountKey.json", "utf8"));
+dotenv.config();
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
-
-// mongodb connection
 const uri = process.env.MONGODB_CONNECTION_STRING;
-const client = new MongoClient(uri);
-const DB_NAME = 'timemanager';
 
-// get all user UIDs from Firebase Auth
-const listAllUserUIDs = async () => {
-  const uids = [];
-  let nextPageToken;
-  do {
-    const res = await admin.auth().listUsers(1000, nextPageToken);
-    res.users.forEach((u) => uids.push(u.uid));
-    nextPageToken = res.pageToken;
-  } while (nextPageToken);
-  return uids;
-};
+const client = new MongoClient(uri);
+
+const DB_NAME = 'timemanager';
+const USERS = ['DtgouehyVjaHHxFTnscyEXEmlvJ2', 'ykCZaAbIWSaZHIDcpSznAytXp0h1', 'dZhuDsoivdQGoAlyTjkljvNZBN62'];
+const ENTRIES_PER_USER = 176;
 
 const getMidnightToday = () => {
   const date = new Date();
@@ -39,10 +24,6 @@ const isWeekday = (date) => date.getDay() !== 0 && date.getDay() !== 6;
 
 async function regenerateAllData() {
   try {
-    console.log('🔄 Lade alle Benutzer aus Firebase...');
-    const USERS = await listAllUserUIDs();
-    console.log(`👥 ${USERS.length} Benutzer gefunden.`);
-
     await client.connect();
     const db = client.db(DB_NAME);
 
@@ -60,7 +41,6 @@ async function regenerateAllData() {
     const workdayOps = [];
     const projectOps = [];
 
-    const ENTRIES_PER_USER = 176;
     let recordId = 1;
 
     for (const userId of USERS) {
@@ -165,6 +145,7 @@ async function regenerateAllData() {
       await projects.bulkWrite(projectOps);
       console.log(`✅ ${projectOps.length} Testprojekte erstellt.`);
     }
+
   } catch (err) {
     console.error('❌ Fehler:', err);
   } finally {
