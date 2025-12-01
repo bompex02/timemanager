@@ -1,11 +1,11 @@
 <template>
   <div class="bg-[url('@/assets/images/background-login.jpg')] bg-cover bg-center h-screen grid grid-cols-5">
-    <div class="col-start-4 col-span-2 p-4 bg-primary">
+    <div class="col-start-4 col-span-2 flex flex-col gap-2 p-4 bg-primary">
       <h1>Timemanager</h1>
       <p class="heading-1">Sign in</p>
-      <BaseInput label="email" v-model="email"  />
-      <BaseInput label="password" v-model="password" />
-      <button class="col-span-4 border-2" @click="logInUser">Sign In</button>
+      <BaseInput label="E-Mail" v-model="email"  />
+      <BaseInput label="Passwort" v-model="password" />
+      <BaseButton class="w-1/5 mt-2" @click="logInUser">Anmelden</BaseButton>
     </div>
   </div>
 </template>
@@ -17,6 +17,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { AuthService } from '../services/AuthService'
 import BaseInput from '@/components/base/Input.vue'
+import BaseButton from '@/components/base/Button.vue'
 
 const email = ref('')
 const password = ref('')
