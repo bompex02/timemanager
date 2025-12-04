@@ -1,5 +1,6 @@
 import { reactive, ref } from "vue";
 import { User } from "../models/User";
+import { RoleService } from "../services/RoleService";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
 import { DateService } from "../services/DateService";
@@ -73,8 +74,13 @@ export class UserService {
                 const errorText = await response.text(); // detailed error message
                 throw new Error(`Fehler beim Abrufen der Users: ${response.status} - ${errorText}`);
             }
-        
-            return await response.json();
+
+            const data = await response.json();
+            if (!Array.isArray(data)) {
+                return [];
+            }
+
+            return data.map((d: any) => User.fromDBObject(d));
         }
     }
 
@@ -93,7 +99,10 @@ export class UserService {
                 throw new Error(`Fehler beim Abrufen des Users: ${response.status} - ${errorText}`);
             }
         
-            return await response.json();
+            const data = await response.json();
+            const user = User.fromDBObject(data);
+            
+            return user;
         }
     }
 
@@ -143,22 +152,13 @@ export class UserService {
     }
 
     // set current user
-    setCurrentUser(user: User | any | null): void {
+    async setCurrentUser(user: User | any | null): Promise<void> {
         let newCurrent: User | null = null;
 
         if (user instanceof User) {
             newCurrent = user;
         } else if (user) {
-            newCurrent = new User({
-                id: user.id,
-                email: user.email,
-                password: user.password ?? '',
-                role: user.role,
-                department: user.department,
-                currentStatus: user.currentStatus,
-                firstName: user.firstName,
-                lastName: user.lastName
-            });
+            newCurrent = User.fromDBObject(user);
         }
 
         // update reactive ref so components can react to changes
@@ -178,17 +178,7 @@ export class UserService {
         if (storedUser) {
             try {
                 const parsed = JSON.parse(storedUser);
-                const restored = new User({
-                    id: parsed.id,
-                    email: parsed.email,
-                    password: parsed.password ?? '',
-                    role: parsed.role,
-                    department: parsed.department,
-                    currentStatus: parsed.currentStatus,
-                    firstName: parsed.firstName,
-                    lastName: parsed.lastName
-                });
-                this.currentUser.value = restored;
+                this.currentUser.value = User.fromDBObject(parsed);
 
             } catch (e) {
                 console.warn("Fehler beim Parsen von currentUser aus localStorage:", e);

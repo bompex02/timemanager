@@ -26,6 +26,7 @@ export class AuthService {
                     id: userCredential.user.uid,
                     email,
                     password,
+                    roleId: 2, // roleId 2  = normal user (default)
                     firstName,
                     lastName,
                 });        
