@@ -52,11 +52,7 @@ export class ProjectService {
             }
 
             const data = await response.json();
-
-            return data.map((p: any) => ({
-                ...p,
-                id: p._id,   // Mongo-ID
-            }));
+            return data.map((d: any) => Project.fromDBObject(d));
         } catch (error) {
             console.error("API Fehler:", error);
             throw new Error("Fehler beim Abrufen der Projekte");
@@ -64,7 +60,7 @@ export class ProjectService {
     }
 
     // fetch a single Project from the mongodb via the backend API and return it as a Project object
-    async getProjectById(projectId: string): Promise<Project> {
+    async getProjectById(projectId: string): Promise<Project | null> {
         try {
             const response = await fetch(`${BASE_URL}/projects/${projectId}`, {
                 method: 'GET',
@@ -72,24 +68,19 @@ export class ProjectService {
             });
 
             if (response.status === 404) {
-                throw new Error('Projekt nicht gefunden');
+                return null; // return null if no project is found
             }
 
             if (!response.ok) {
-                const errorText = await response.text();
-                console.error("Fehler beim Abrufen des Projekts:", errorText);
-                throw new Error('Fehler beim Abrufen des Projekts');
+                const errorText = await response.text(); // detailed error message
+                throw new Error(`Fehler beim Abrufen des Projekts: ${response.status} - ${errorText}`);
             }
 
-            const p = await response.json();
-
-            return {
-                ...p,
-                id: p._id, // Mongo-ID
-            };
+            const data = await response.json();
+            return Project.fromDBObject(data);
         } catch (error) {
-            console.error("Fehler beim Abrufen des Projekts:", error);
-            throw error;
+            console.error("API Fehler:", error);
+            throw new Error("Fehler beim Abrufen des Projekts");
         }
     }
 
@@ -115,12 +106,9 @@ export class ProjectService {
                 throw new Error(`Fehler beim Abrufen der Projekte: ${response.status} - ${errorText}`);
             }
 
-            const data = await response.json();
 
-            return data.map((p: any) => ({
-                ...p,
-                id: p._id,   // Mongo-ID
-            }));
+            const data = await response.json();
+            return data.map((d: any) => Project.fromDBObject(d));
         } catch (error) {
             console.error("API Fehler:", error);
             throw new Error("Fehler beim Abrufen der Projekte");
@@ -150,11 +138,7 @@ export class ProjectService {
             }
 
             const data = await response.json();
-
-            return data.map((p: any) => ({
-                ...p,
-                id: p._id,   // Mongo-ID
-            }));
+            return data.map((d: any) => Project.fromDBObject(d));
         } catch (error) {
             console.error("API Fehler:", error);
             throw new Error("Fehler beim Abrufen der Projekte");
@@ -162,11 +146,11 @@ export class ProjectService {
     }
 
     // update a Project in the mongodb via the backend API
-    async updateProject(id: string, updateData: Partial<Project>): Promise<void> {
-        const response = await fetch(`${BASE_URL}/projects/${id}`, {
+    async updateProject(project: Project): Promise<void> {
+        const response = await fetch(`${BASE_URL}/projects/${project.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(updateData),
+            body: JSON.stringify(project),
         });
         if (!response.ok) {
             console.error("Fehler beim Aktualisieren des Projekts:", response.statusText);

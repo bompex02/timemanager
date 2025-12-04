@@ -594,3 +594,92 @@ app.put('/users/:id', async (req, res) => {
         return res.status(500).json({ message: 'Serverfehler', error: error.message });
     }
 });
+
+// gets all roles from the mongoDb collection 'roles'
+app.get('/roles', async (req, res) => {
+    try {
+        const db = await getDb();
+        const roles = await db.collection('roles').find().toArray();
+        res.json(roles);
+    } catch (error) {
+        console.error('Fehler beim Abrufen der Rollen:', error);
+        res.status(500).json({ message: 'Serverfehler', error: error.message });
+    }
+});
+
+// gets a specific role from the mongoDb collection 'roles' by id
+app.get('/roles/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const db = await getDb();
+        const role = await db.collection('roles').findOne({ _id: parseInt(id) });
+
+        if (!role) {
+            return res.status(404).json({ message: 'Rolle nicht gefunden' });
+        }
+
+        res.json(role);
+    } catch (error) {
+        console.error('Fehler beim Abrufen der Rolle:', error);
+        res.status(500).json({ message: 'Serverfehler', error: error.message });
+    }
+});
+
+// adds a new role to the mongoDb collection 'roles'
+app.post('/roles', async (req, res) => {
+    const role = req.body;
+
+    try {
+        const db = await getDb();
+        const result = await db.collection('roles').insertOne(role);
+        
+        if (result.acknowledged) {
+            return res.status(201).json(role);
+        } else {
+            return res.status(500).json({ message: 'Fehler beim Hinzufügen der Rolle in MongoDB' });
+        }
+    } catch (error) {
+        console.error('Fehler beim Hinzufügen der Rolle:', error);
+        return res.status(500).json({ message: 'Serverfehler', error: error.message });
+    }
+});
+
+// updates a role in the mongoDb collection 'roles' by id
+app.put('/roles/:id', async (req, res) => {
+    const { id } = req.params;
+    const role = req.body;
+
+    try {
+        const db = await getDb();
+        const result = await db.collection('roles').updateOne({ _id: parseInt(id) }, { $set: role });
+        
+        if (result.modifiedCount === 1) {
+            return res.status(200).json(role);
+        } else {
+            return res.status(500).json({ message: 'Fehler beim Aktualisieren der Rolle in MongoDB' });
+        }
+    } catch (error) {
+        console.error('Fehler beim Aktualisieren der Rolle:', error);
+        return res.status(500).json({ message: 'Serverfehler', error: error.message });
+    }
+});
+
+// deletes a role in the mongoDb collection 'roles' by id
+app.delete('/roles/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const db = await getDb();
+        const result = await db.collection('roles').deleteOne({ _id: parseInt(id) });
+        
+        if (result.deletedCount === 1) {
+            return res.status(200).json({ message: 'Rolle erfolgreich gelöscht' });
+        } else {
+            return res.status(500).json({ message: 'Fehler beim Löschen der Rolle in MongoDB' });
+        }
+    } catch (error) {
+        console.error('Fehler beim Löschen der Rolle:', error);
+        return res.status(500).json({ message: 'Serverfehler', error: error.message });
+    }
+});

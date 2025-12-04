@@ -30,16 +30,19 @@ async function regenerateAllData() {
     const timeRecords = db.collection('timeRecords');
     const workdays = db.collection('workdays');
     const projects = db.collection('projects');
+    const roles = db.collection('roles');
 
     // Clean up existing data
     await timeRecords.deleteMany({});
     await workdays.deleteMany({});
     await projects.deleteMany({});
-    console.log('🗑️  Alte Daten in TimeRecords, Workdays und Projects gelöscht.');
+    await roles.deleteMany({});
+    console.log('🗑️  Alte Daten in TimeRecords, Workdays, Projects und Roles gelöscht.');
 
     const timeRecordOps = [];
     const workdayOps = [];
     const projectOps = [];
+    const rolesOps = [];
 
     let recordId = 1;
 
@@ -130,6 +133,28 @@ async function regenerateAllData() {
       }
     }
 
+    // Create default roles 
+    rolesOps.push({
+      insertOne: {
+        document: {
+          _id: 1,
+          name: 'admin',
+          permissions: [],
+          createdAt: new Date().toISOString(),
+        }
+      }
+    });
+    rolesOps.push({
+      insertOne: {
+        document: {
+          _id: 2,
+          name: 'user',
+          permissions: [],
+          createdAt: new Date().toISOString(),
+        }
+      }
+    });
+
     // Perform all scripts
     if (timeRecordOps.length) {
       await timeRecords.bulkWrite(timeRecordOps);
@@ -144,6 +169,11 @@ async function regenerateAllData() {
     if (projectOps.length) {
       await projects.bulkWrite(projectOps);
       console.log(`✅ ${projectOps.length} Testprojekte erstellt.`);
+    }
+
+    if (rolesOps.length) {
+      await roles.bulkWrite(rolesOps);
+      console.log(`✅ ${rolesOps.length} Rollen erstellt.`);
     }
 
   } catch (err) {

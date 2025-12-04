@@ -4,15 +4,22 @@ export enum RecordType {
 }
 
 export class TimeRecord {
-    id: number;
     userId: string;
     recordType: RecordType;
     timestamp: Date;
 
-    constructor(id: number, userId: string, recordType: RecordType, timestamp: Date) {
-        this.id = id,
+    constructor(userId: string, recordType: RecordType, timestamp: Date) {
         this.userId = userId,
         this.recordType = recordType,
         this.timestamp = timestamp
-    }       
+    } 
+    
+    // Create a TimeRecord instance from a database (MongoDB) document
+    static fromDBObject(doc: any): TimeRecord {
+        const userId = String(doc.userId ?? '');
+        const recordType = (doc.recordType ?? '') as RecordType;
+        const timestamp = new Date(doc.timestamp ?? Date.now());
+
+        return new TimeRecord(userId, recordType, timestamp);
+    }
 }
