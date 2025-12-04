@@ -27,10 +27,6 @@ export class RoleService {
         }
 
       const data = await response.json();
-      if (!Array.isArray(data)) {
-        return [];
-      }
-
       return data.map((d: any) => Role.fromDBObject(d));
     }
 

@@ -76,10 +76,6 @@ export class UserService {
             }
 
             const data = await response.json();
-            if (!Array.isArray(data)) {
-                return [];
-            }
-
             return data.map((d: any) => User.fromDBObject(d));
         }
     }
@@ -100,9 +96,7 @@ export class UserService {
             }
         
             const data = await response.json();
-            const user = User.fromDBObject(data);
-            
-            return user;
+            return User.fromDBObject(data);            
         }
     }
 

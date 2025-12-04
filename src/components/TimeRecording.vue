@@ -107,7 +107,6 @@
       }
 
       const record = new TimeRecord(
-        allRecords.length + 1, // ID
         userId, 
         RecordType.Einstempeln,
         currentDateTime
@@ -127,7 +126,6 @@
       isClockedIn.value = false;
       
       const record = new TimeRecord(
-        allRecords.length + 1, // ID
         userId, 
         RecordType.Ausstempeln, 
         currentDateTime 

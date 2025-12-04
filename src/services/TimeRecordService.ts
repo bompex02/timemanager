@@ -48,7 +48,8 @@ export class TimeRecordService {
         throw new Error(`Fehler beim Abrufen der TimeRecords: ${response.status} - ${errorText}`);
       }
   
-      return await response.json();
+      const data = await response.json();
+      return data.map((item: any) => TimeRecord.fromDBObject(item));
     } catch (error) {
       console.error("API Fehler:", error);
       throw new Error("Fehler beim Abrufen der TimeRecords");
@@ -73,7 +74,8 @@ export class TimeRecordService {
         throw new Error(`Fehler beim Abrufen der TimeRecords: ${response.status} - ${errorText}`);
       }
   
-      return await response.json();
+      const data = await response.json();
+      return data.map((item: any) => TimeRecord.fromDBObject(item));
     } catch (error) {
       console.error("API Fehler:", error);
       throw new Error("Fehler beim Abrufen der TimeRecords");

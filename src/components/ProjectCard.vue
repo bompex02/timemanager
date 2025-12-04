@@ -26,7 +26,7 @@
         </button>
         <button
           class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-          @click="$emit('delete', project._id)"
+          @click="$emit('delete', project.id)"
         >
           🗑️ Löschen
         </button>

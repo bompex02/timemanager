@@ -1,4 +1,4 @@
-export enum RoleType { // Ab mit dir ins Backend (DB Table anlegen!)
+export enum RoleType {
     ADMIN = 'admin',
     //MANAGER = 'manager',
     USER = 'user',
@@ -45,7 +45,7 @@ export class Role {
 
     // Create a Role instance from a database (MongoDB) document
     static fromDBObject(doc: any): Role {
-        const id = String(doc._id ?? doc.id ?? '');
+        const id = String(doc._id ?? '');
         const name = (doc.name ?? doc.role ?? '') as RoleType;
         const description = doc.description ?? '';
         const permissions: Permission[] = (doc.permissions ?? []).map((p: any) => ({
