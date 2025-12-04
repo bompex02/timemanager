@@ -4,7 +4,7 @@ export class User {
     id: string;
     email: string;
     password: string;
-    role?: string;
+    roleId?: number;
     department?: string;
     currentStatus?: currentUserStatus;
     firstName?: string;
@@ -14,7 +14,7 @@ export class User {
         id: string;
         email: string;
         password: string;
-        role?: string;
+        roleId?: number;
         department?: string;
         currentStatus?: currentUserStatus;
         firstName?: string;
@@ -23,7 +23,7 @@ export class User {
         this.id = params.id;
         this.email = params.email;
         this.password = params.password;
-        this.role = params.role;
+        this.roleId = params.roleId;
         this.department = params.department;
         this.currentStatus = params.currentStatus;
         this.firstName = params.firstName;
@@ -36,5 +36,21 @@ export class User {
         } else {
             return this.email;
         }
+    }
+}
+
+// Create a User instance from a database (MongoDB) document
+export namespace User {
+    export function fromDBObject(doc: any): User {
+        return new User({
+            id: String(doc._id ?? doc.id ?? ''),
+            email: doc.email ?? '',
+            password: doc.password ?? '',
+            roleId: doc.roleId ? Number(doc.roleId) : undefined,
+            department: doc.department,
+            currentStatus: doc.currentStatus,
+            firstName: doc.firstName,
+            lastName: doc.lastName,
+        });
     }
 }
