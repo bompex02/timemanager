@@ -14,7 +14,6 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
-    'vue/multi-word-component-names': 'off',
     '@typescript-eslint/no-unused-vars': ['warn'],
   },
 }
