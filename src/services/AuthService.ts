@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updatePassword } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
 import { UserService } from "./UserService";
 import { showSuccess, showError } from '../services/ToastService';

@@ -231,4 +231,13 @@ export class UserService {
         // fallback to default value 'Ausgestempelt'
         return "Ausgestempelt";
     }
+
+    // save user preferences (like dark mode) to backend
+    async saveUserPreferences(userId: string, preferences: any): Promise<void> {
+        const response = await fetch(`${BASE_URL}/users/${userId}/preferences`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(preferences),
+        });
+    }
 }
