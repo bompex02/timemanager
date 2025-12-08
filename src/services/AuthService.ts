@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updatePassword } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
 import { UserService } from "./UserService";
 import { User } from "../models/User";
@@ -91,5 +91,20 @@ export class AuthService {
                 throw error;
             }
         );
+    }
+
+    async changeUserPassword(newPassword: string): Promise<void> {
+        const user = auth.currentUser;
+        if (user) {
+            return updatePassword(user, newPassword)
+                .then(() => {
+                    console.log("User password updated successfully");
+                })
+                .catch((error) => {
+                    console.error("Error updating user password", error);
+                    throw error;
+                }
+            );
+        }
     }
 }
