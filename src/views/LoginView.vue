@@ -4,17 +4,18 @@
       <p class="text-white text-[80px] text-5xl py-4">Timemanager</p>
       <div class="bg-primary h-1/2 w-full rounded-lg flex flex-col p-4">
         <BaseTabBar v-model="selectedTab" :tabs="['Sign In', 'Register']" />
-        <template v-if="selectedTab === 0">
-          <div class="flex flex-col gap-4 h-full px-4 py-10">
+          <div class="flex flex-col gap-2 h-full px-4 py-10">
+            <div class="flex flex-row" v-if="selectedTab === 1">
+              <BaseInput label="Vorname" />
+              <BaseInput label="Nachname" />
+            </div>
             <BaseInput label="E-Mail" />
             <span class="relative flex flex-col last:items-end">
-              <BaseInput label="Passwort" />
-              <p class="text-xs hover:underline select-none items-end">Passwort vergessen?</p>
+              <BaseInput label="Passwort" type="password" />
+              <p class="text-xs hover:underline select-none flex justify-end px-2 pt-0.5">Passwort vergessen?</p>
             </span>
-            <BaseButton class="w-32 flex">Sign In</BaseButton>
+            <BaseButton class="w-32">{{selectedTab === 0 ? 'Sign In' : 'Register'}}</BaseButton>
           </div>
-        </template>
-        <template v-else-if="selectedTab === 1"></template>
       </div>
     </div>
   </div>
