@@ -14,28 +14,14 @@
 import Navbar from './components/navbar/Navbar.vue'
 import { RouterView } from 'vue-router'
 import { UserService } from './services/UserService';
-import { onMounted, computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { computed } from 'vue';
 
-const router = useRouter()
 const user = UserService.getInstance()
 
 const containerStyling = computed(() => {
   if (!user.currentUser) 
     return 'flex-1'
   return 'w-[calc(100%-20rem)]'
-})
-
-async function checkForLoggedInUser() {
-  if (!user.currentUser)
-    router.push({path: '/login'})
-  else
-    console.log('Nutzer ist eingeloggt')
-
-}
-
-onMounted(() => {
-  checkForLoggedInUser()
 })
 </script>
 
