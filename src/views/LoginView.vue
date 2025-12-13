@@ -1,7 +1,7 @@
 <template>
   <div class="bg-[url('@/assets/images/background-login.jpg')] bg-cover bg-center h-screen relative bg-zinc-300 bg-blend-multiply">
     <div class="h-full w-auto min-w-1/4 rounded-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-95 p-4 flex flex-col justify-center items-center last:gap-2">
-      <img src="@/assets/images/logo.png" />
+      <img src="@/assets/images/logoAlt2.png" />
       <div class="h-auto w-full rounded-xl bg-white/20 backdrop-blur-xl border border-white/40 shadow-lg flex flex-col p-4 overflow-auto">
         <BaseTabBar v-model="selectedTab" :tabs="['Sign In', 'Register']" />
           <div class="flex flex-col gap-2 h-full px-4 py-10">
