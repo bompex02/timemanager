@@ -9,10 +9,10 @@
 <script setup lang="ts">
 import { EyeIcon } from '@heroicons/vue/24/solid';
 
-const props = withDefaults(defineProps<{
+const props = defineProps<{
     label?: string,
-    variant: 'primary' | 'password', 
-}>(), {variant: 'primary'})
+    variant: 'primary', 
+}>()
 
 defineOptions({
   inheritAttrs: false,
