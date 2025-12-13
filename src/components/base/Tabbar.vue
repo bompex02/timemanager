@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TabsRoot, TabsList, TabsTrigger } from 'reka-ui'
+import { TabsRoot, TabsList, TabsTrigger, TabsIndicator } from 'reka-ui'
 import {ref, computed} from 'vue'
 
 const props = withDefaults(defineProps<{
@@ -36,7 +36,7 @@ const bar = ref<HTMLDivElement | undefined>()
           :class="dense ? 'gap-x-2' : 'gap-x-4'"
           tabindex="-1"
         >
-          <TabsIndicator class="absolute bottom-0 left-0 h-1 w-(--reka-tabs-indicator-size) translate-x-(--reka-tabs-indicator-position) bg-blue-500 transition-[translate] duration-400" />
+          <TabsIndicator class="absolute bottom-0 left-0 h-0.5 w-(--reka-tabs-indicator-size) translate-x-(--reka-tabs-indicator-position) bg-black transition-[translate] duration-400" />
           <TabsTrigger
             v-for="(tab, index) in tabsAsObjects"
             :key="tab.text"
@@ -45,7 +45,7 @@ const bar = ref<HTMLDivElement | undefined>()
             class="snap-start border-b-2 hover:bg-white rounded-t-lg border-white px-2 whitespace-nowrap transition-[font-weight] duration-400
               select-none not-disabled:hover:border-tab-hover focus:outline-hidden disabled:text-button-on-secondary-disabled
               data-[state=active]:border-tab-hover data-[state=active]:font-semibold"
-            :class="[dense ? 'py-2' : 'py-4', selectedIndex === index ? 'border-zinc-900': '']"
+            :class="[dense ? 'py-2' : 'py-4']"
           >
             {{ tab.text }}
           </TabsTrigger>
