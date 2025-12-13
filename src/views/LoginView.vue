@@ -6,15 +6,15 @@
         <BaseTabBar v-model="selectedTab" :tabs="['Sign In', 'Register']" />
           <div class="flex flex-col gap-2 h-full px-4 py-10">
             <div class="flex flex-row" v-if="selectedTab === 1">
-              <BaseInput label="Vorname" />
-              <BaseInput label="Nachname" />
+              <BaseInput v-model="input.firstName" variant="primary" label="Firstname" />
+              <BaseInput v-model="input.lastName" variant="primary" label="Lastname" />
             </div>
-            <BaseInput label="E-Mail" />
+            <BaseInput v-model="input.eMail" variant="primary" label="E-Mail" />
             <span class="relative flex flex-col last:items-end">
-              <BaseInput label="Passwort" type="password" />
+              <BaseInput v-model="input.password" variant="primary" label="Password" type="password" />
               <p class="text-xs hover:underline select-none flex justify-end px-2 pt-0.5">Passwort vergessen?</p>
             </span>
-            <BaseButton class="w-32" @click="() => {selectedTab === 0 ? logInUser : registerUser}">{{selectedTab === 0 ? 'Sign In' : 'Register'}}</BaseButton>
+            <BaseButton class="w-32" @click="selectedTab === 0 ? logInUser() : registerUser()">{{selectedTab === 0 ? 'Sign In' : 'Register'}}</BaseButton>
           </div>
       </div>
     </div>
@@ -42,26 +42,21 @@ const input = ref<User>({
   eMail: '',
   password: '',
 })
-
-function isFilled(value: string | undefined): boolean {
-  return (value && typeof value === 'string') as boolean
-}
 const allFilled = computed(() => Object.values(input.value).every(isFilled))
 
-const logInUser = (event: Event) => {
-    event.preventDefault(); // Prevent form submission
-    authService.logInUser(input.value.eMail, input.value.password, router);
-    // ----------------------FOR DEBUG ONLY!--------------------------
-    console.log('Login user: ' + input.value.eMail + ' ' + input.value.password)
-    // ---------------------------------------------------------------
+const isFilled = (value: string | undefined): boolean => {
+  return (value && typeof value === 'string') as boolean
 }
 
-async function registerUser(event: Event) {
-  if (!allFilled.value) {
-    console.log("Die Inputs sind leer")
-  }
-  console.log("Das sollte nicht passieren")
-  event?.preventDefault()
+const logInUser = () => {
+  if (!input.value.eMail || !input.value.password)
+    return
+  authService.logInUser(input.value.eMail, input.value.password, router)
+}
+
+const registerUser = () => {
+  if (!allFilled.value)
+    return
   authService.registerUser(input.value.eMail, input.value.password, input.value.firstName, input.value.lastName)
 
 }
