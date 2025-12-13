@@ -36,13 +36,13 @@ const bar = ref<HTMLDivElement | undefined>()
           :class="dense ? 'gap-x-2' : 'gap-x-4'"
           tabindex="-1"
         >
-          <TabsIndicator class="absolute bottom-0 left-0 h-0.5 w-(--reka-tabs-indicator-size) translate-x-(--reka-tabs-indicator-position) bg-black transition-[translate] duration-400" />
+          <TabsIndicator class="absolute bottom-0 left-0 h-0.5 w-(--reka-tabs-indicator-size) translate-x-(--reka-tabs-indicator-position) bg-white transition-[translate] duration-400" />
           <TabsTrigger
             v-for="(tab, index) in tabsAsObjects"
             :key="tab.text"
             :value="index"
             :disabled="tab.disabled"
-            class="snap-start border-b-2 hover:bg-white rounded-t-lg border-white px-2 whitespace-nowrap transition-[font-weight] duration-400
+            class="snap-start border-b-2 text-white hover:bg-white/5 rounded-t-lg border-zinc-400 px-2 whitespace-nowrap transition-[font-weight] duration-400
               select-none not-disabled:hover:border-tab-hover focus:outline-hidden disabled:text-button-on-secondary-disabled
               data-[state=active]:border-tab-hover data-[state=active]:font-semibold"
             :class="[dense ? 'py-2' : 'py-4']"
