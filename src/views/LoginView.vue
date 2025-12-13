@@ -2,7 +2,7 @@
   <div class="bg-[url('@/assets/images/background-login.jpg')] bg-cover bg-center h-screen relative">
     <div class="h-full w-auto rounded-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-95 p-4 flex flex-col justify-center items-center">
       <p class="text-white text-[80px] text-5xl py-4">Timemanager</p>
-      <div class="bg-primary h-1/2 w-full rounded-lg flex flex-col p-4">
+      <div class="bg-primary h-auto w-full rounded-lg flex flex-col p-4 overflow-auto">
         <BaseTabBar v-model="selectedTab" :tabs="['Sign In', 'Register']" />
           <div class="flex flex-col gap-2 h-full px-4 py-10">
             <div class="flex flex-row" v-if="selectedTab === 1">
@@ -14,7 +14,7 @@
               <BaseInput label="Passwort" type="password" />
               <p class="text-xs hover:underline select-none flex justify-end px-2 pt-0.5">Passwort vergessen?</p>
             </span>
-            <BaseButton class="w-32">{{selectedTab === 0 ? logInUser : registerUser }}</BaseButton>
+            <BaseButton class="w-32" @click="() => {selectedTab === 0 ? logInUser : registerUser}">{{selectedTab === 0 ? 'Sign In' : 'Register'}}</BaseButton>
           </div>
       </div>
     </div>
