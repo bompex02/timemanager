@@ -1,17 +1,17 @@
 <template>
   <div class="bg-[url('@/assets/images/background-login.jpg')] bg-cover bg-center h-screen relative">
-    <div class="h-full w-auto rounded-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-95 p-4 flex flex-col justify-center items-center">
+    <div class="h-full w-auto rounded-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-95 p-4 flex flex-col justify-center items-center last:gap-2">
       <p class="text-white text-[80px] text-5xl py-4">Timemanager</p>
       <div class="bg-primary h-auto w-full rounded-lg flex flex-col p-4 overflow-auto">
         <BaseTabBar v-model="selectedTab" :tabs="['Sign In', 'Register']" />
           <div class="flex flex-col gap-2 h-full px-4 py-10">
             <div class="flex flex-row" v-if="selectedTab === 1">
-              <BaseInput v-model="input.firstName" variant="primary" label="Firstname" />
-              <BaseInput v-model="input.lastName" variant="primary" label="Lastname" />
+              <BaseInput v-model="input.firstName" variant="primary" label="Firstname" required />
+              <BaseInput v-model="input.lastName" variant="primary" label="Lastname" required />
             </div>
-            <BaseInput v-model="input.eMail" variant="primary" label="E-Mail" />
+            <BaseInput v-model="input.eMail" variant="primary" label="E-Mail" required />
             <span class="relative flex flex-col last:items-end">
-              <BaseInput v-model="input.password" variant="primary" label="Password" type="password" />
+              <BaseInput v-model="input.password" variant="primary" label="Password" type="password" required />
               <p class="text-xs hover:underline select-none flex justify-end px-2 pt-0.5">Passwort vergessen?</p>
             </span>
             <BaseButton class="w-32" @click="selectedTab === 0 ? logInUser() : registerUser()">{{selectedTab === 0 ? 'Sign In' : 'Register'}}</BaseButton>
@@ -49,16 +49,19 @@ const isFilled = (value: string | undefined): boolean => {
 }
 
 const logInUser = () => {
-  if (!input.value.eMail || !input.value.password)
-    return
+  if (!input.value.eMail || !input.value.password) {
+   alert('Please fill in all required fields')
+   return
+  }
   authService.logInUser(input.value.eMail, input.value.password, router)
 }
 
 const registerUser = () => {
-  if (!allFilled.value)
+  if (!allFilled.value) {
+    alert('Please fill in all required fields')
     return
+  }
   authService.registerUser(input.value.eMail, input.value.password, input.value.firstName, input.value.lastName)
-
 }
 
 </script>
