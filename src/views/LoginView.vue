@@ -61,6 +61,7 @@ const registerUser = () => {
     return
   }
   authService.registerUser(input.value.eMail, input.value.password, input.value.firstName, input.value.lastName)
+  logInUser()
 }
 
 </script>
