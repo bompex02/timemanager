@@ -1,14 +1,16 @@
 <template>
   <div class="bg-[url('@/assets/images/background-login.jpg')] bg-cover bg-center h-screen relative bg-zinc-300 bg-blend-multiply">
-    <div class="h-full w-auto min-w-1/4 transition-transform ease-in-out duration-100 rounded-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-95 p-4 flex flex-col justify-center items-center last:gap-2">
+    <div class="h-full w-auto min-w-1/4 rounded-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-95 p-4 flex flex-col justify-center items-center last:gap-2">
       <img src="@/assets/images/logoAlt2.png" />
       <div class="h-auto w-full rounded-xl bg-white/20 backdrop-blur-xl border border-white/40 shadow-lg flex flex-col p-4 overflow-auto">
         <BaseTabBar v-model="selectedTab" :tabs="['Sign In', 'Register']" />
           <form class="flex flex-col gap-2 h-full px-4 py-10" @submit.prevent="handleSubmit">
-            <div class="flex flex-row" v-if="selectedTab === 1">
-              <BaseInput v-model="input.firstName" variant="primary" label="Firstname" required />
-              <BaseInput v-model="input.lastName" variant="primary" label="Lastname" required />
-            </div>
+            <Transition>
+              <div class="flex flex-row" v-if="selectedTab === 1">
+                <BaseInput v-model="input.firstName" variant="primary" label="Firstname" required />
+                <BaseInput v-model="input.lastName" variant="primary" label="Lastname" required />
+              </div>
+            </Transition>
             <BaseInput v-model="input.eMail" variant="primary" label="E-Mail" required />
             <span class="relative flex flex-col last:items-end">
               <BaseInput v-model="input.password" password variant="primary" label="Password" type="password" required />
@@ -86,3 +88,16 @@ const registerUser = async () => {
 }
 
 </script>
+
+<style scoped>
+/* we will explain what these classes do next! */
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.4s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+</style>
