@@ -4,7 +4,7 @@
   <template v-if="!$route.meta.hideLayout">
       <Navbar />
     </template>
-    <div class="bg-white" :class="containerStyling">
+    <div class="bg-white w-full" :class="containerStyling">
       <RouterView />
     </div>
   </div>
