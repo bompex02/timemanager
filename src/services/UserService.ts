@@ -23,7 +23,6 @@ export class UserService {
             const user = new User({
                 id: firebaseUser.uid,
                 email: firebaseUser.email || '',
-                password: '' // Password is not available from Firebase user
             });
             const $db_user = this.getUserById(firebaseUser.uid).then((dbUser) => {
                 if (dbUser && dbUser.id) {

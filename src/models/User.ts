@@ -3,7 +3,6 @@ export type currentUserStatus = 'Eingestempelt' | 'Ausgestempelt';
 export class User {
     id: string;
     email: string;
-    password: string;
     roleId?: number;
     department?: string;
     currentStatus?: currentUserStatus;
@@ -13,7 +12,6 @@ export class User {
     constructor(params: {
         id: string;
         email: string;
-        password: string;
         roleId?: number;
         department?: string;
         currentStatus?: currentUserStatus;
@@ -22,7 +20,6 @@ export class User {
     }) {
         this.id = params.id;
         this.email = params.email;
-        this.password = params.password;
         this.roleId = params.roleId;
         this.department = params.department;
         this.currentStatus = params.currentStatus;
@@ -45,7 +42,6 @@ export namespace User {
         return new User({
             id: String(doc._id ?? doc.id ?? ''),
             email: doc.email ?? '',
-            password: doc.password ?? '',
             roleId: doc.roleId ? Number(doc.roleId) : undefined,
             department: doc.department,
             currentStatus: doc.currentStatus,
