@@ -31,6 +31,7 @@ import { AuthService } from '../services/AuthService'
 import BaseInput from '@/components/base/Input.vue'
 import BaseButton from '@/components/base/Button.vue'
 import BaseTabBar from '@/components/base/Tabbar.vue'
+import { showError } from '../services/ToastService';
 
 const router = useRouter()
 const authService = AuthService.getInstance()
@@ -47,21 +48,29 @@ const isFilled = (value: string | undefined): boolean => {
   return (value && typeof value === 'string') as boolean
 }
 
-const logInUser = () => {
+const logInUser = async () => {
   if (!input.value.eMail || !input.value.password) {
-   alert('Please fill in all required fields')
+   showError('Bitte alle erforderlichen Felder ausfüllen')
    return
   }
-  authService.logInUser(input.value.eMail, input.value.password, router)
+  await authService.logInUser(input.value.eMail, input.value.password, router)
 }
 
-const registerUser = () => {
+const registerUser = async () => {
   if (!allFilled.value) {
-    alert('Please fill in all required fields')
+    showError('Bitte alle erforderlichen Felder ausfüllen')
     return
   }
-  authService.registerUser(input.value.eMail, input.value.password, input.value.firstName, input.value.lastName)
-  logInUser()
+  if (input.value.password!.length < 6) {
+    showError('Das Passwort muss mindestens 6 Zeichen lang sein')
+    return
+  }
+  try {
+    await authService.registerUser(input.value.eMail, input.value.password, input.value.firstName, input.value.lastName, router)
+    await logInUser()
+  } catch (error) {
+    console.error('❌ Fehler bei der Registrierung:', error)
+  }
 }
 
 </script>
