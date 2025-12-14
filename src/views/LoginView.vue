@@ -12,7 +12,7 @@
             <BaseInput v-model="input.eMail" variant="primary" label="E-Mail" required />
             <span class="relative flex flex-col last:items-end">
               <BaseInput v-model="input.password" password variant="primary" label="Password" type="password" required />
-              <p class="text-white text-xs hover:underline select-none flex justify-end px-2 pt-0.5">Passwort vergessen?</p>
+              <!-- <p class="text-white text-xs hover:underline select-none flex justify-end px-2 pt-0.5">Passwort vergessen?</p> -->
             </span>
             <BaseButton class="w-32" type="submit">{{selectedTab === 0 ? 'Sign In' : 'Register'}}</BaseButton>
           </form>
