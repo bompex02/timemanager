@@ -1,4 +1,4 @@
-# 🕒 Time Manager
+# 🕒 Chroniq
 
 A web application designed to help you manage your time effectively and efficiently. Built with Vue.js and Firebase, this application provides a user-friendly interface for tracking your time and activities.
 
