@@ -43,7 +43,6 @@ const input = ref<User>({
   password: '',
 })
 const allFilled = computed(() => Object.values(input.value).every(isFilled))
-
 const isFilled = (value: string | undefined): boolean => {
   return (value && typeof value === 'string') as boolean
 }

@@ -54,7 +54,7 @@ const router = createRouter({
       name: 'login',
       component: LoginView,
       meta: { 
-        title: 'Login - Timemanager',
+        title: 'Login',
         hideLayout: true
       },
     },
