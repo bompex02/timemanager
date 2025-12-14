@@ -1,27 +1,3 @@
-<script setup lang="ts">
-import { TabsRoot, TabsList, TabsTrigger, TabsIndicator } from 'reka-ui'
-import {ref, computed} from 'vue'
-
-const props = withDefaults(defineProps<{
-  tabs: Array<{ text: string, disabled?: boolean } | string>
-  dense?: boolean
-}>(), {
-  dense: false,
-})
-const selectedIndex = defineModel<number | undefined>()
-
-const tabsAsObjects = computed(() => {
-  return props.tabs.map((tab) => {
-    if (typeof tab === 'string') {
-      return { text: tab }
-    }
-    return tab
-  })
-})
-
-const bar = ref<HTMLDivElement | undefined>()
-</script>
-
 <template>
   <div class="flex items-center">
     <TabsRoot
@@ -54,3 +30,27 @@ const bar = ref<HTMLDivElement | undefined>()
     </TabsRoot>
   </div>
 </template>
+
+<script setup lang="ts">
+import { TabsRoot, TabsList, TabsTrigger, TabsIndicator } from 'reka-ui'
+import {ref, computed} from 'vue'
+
+const props = withDefaults(defineProps<{
+  tabs: Array<{ text: string, disabled?: boolean } | string>
+  dense?: boolean
+}>(), {
+  dense: false,
+})
+const selectedIndex = defineModel<number | undefined>()
+
+const tabsAsObjects = computed(() => {
+  return props.tabs.map((tab) => {
+    if (typeof tab === 'string') {
+      return { text: tab }
+    }
+    return tab
+  })
+})
+
+const bar = ref<HTMLDivElement | undefined>()
+</script>
