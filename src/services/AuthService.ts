@@ -1,6 +1,7 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
 import { UserService } from "./UserService";
+import { showSuccess, showError } from '../services/ToastService';
 import { User } from "../models/User";
 
 const userService = UserService.getInstance();
@@ -18,78 +19,103 @@ export class AuthService {
         return AuthService.instance;
     }
 
-    // register new user with username + password via firebase auth
-    async registerUser(email: string, password: string, firstName: string, lastName: string): Promise<void> {
-        return createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                const appUser = new User({
-                    id: userCredential.user.uid,
-                    email,
-                    password,
-                    roleId: 2, // roleId 2  = normal user (default)
-                    firstName,
-                    lastName,
-                });        
-                userService.setCurrentUser(appUser); // Set current user;
-                userService.addUser(appUser);
-                console.log("User registered successfully", appUser);
-            })
-            .catch((error) => {
-                console.error("Error registering user", error);
-                throw error;
-            }
-        );
-    }
-
-    // login user with username + password via firebase auth
-    async logInUser(email: string, password: string, router?: any): Promise<void> {
+    // register new user
+    async registerUser(email: string, password: string, firstName: string, lastName: string, router: any): Promise<void> {
         try {
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            // create user in Firebase Auth
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
-            // Try to fetch the full user profile (including firstName/lastName) from backend
-            let storedUser: any = null;
-            try {
-                storedUser = await userService.getUserById(userCredential.user.uid);
-            } catch (e) {
-                // If backend fetch fails, we'll fallback to basic user created from auth
-                console.warn('Could not fetch full user profile from backend:', e);
-            }
+            // generate user object
+            const appUser = new User({
+                id: userCredential.user.uid,
+                email,
+                roleId: 2, // roleId 2  = normal user (default)
+                firstName,
+                lastName,
+            });
 
-            if (storedUser && storedUser.id) {
-                userService.setCurrentUser(storedUser);
-                console.log('User logged in successfully (profile loaded)', storedUser);
-            } else {
-                const appUser = new User({
-                    id: userCredential.user.uid,
-                    email,
-                    password,
-                });
-                userService.setCurrentUser(appUser);
-                console.log('User logged in successfully (basic)', appUser);
-            }
+            // save user in backend database
+            await userService.addUser(appUser);
+            // set current user
+            userService.setCurrentUser(appUser);
+            
+            showSuccess(`Willkommen ${firstName}! Account erfolgreich erstellt.`);
+            console.log('✅ User erfolgreich registriert:', appUser);
+            await router.push('/dashboard');
 
-            if (router) {
-                router.push('/dashboard');
-            }
-        } catch (error) {
-            console.error('Error logging in user', error);
+        } catch (error: any) {
+            console.error('❌ Fehler bei Registrierung:', error);
+            
+            const errorMessage = this.getErrorMessage(error);
+            showError(errorMessage);
+            
             throw error;
         }
-}
+    }
 
-    // logout user via firebase auth and reset current user in userService
-    // param router is nullable (optional)
-    async logOutUser(router? : any): Promise<void> {
-        return signOut(auth)
-            .then(() => {
-                userService.setCurrentUser(null); // Set current user to null
-                console.log("User logged out successfully");
-                router.push('/login');
-            })
-            .catch((error) => {
-                console.error("Error logging out user", error);
-                throw error;
+    // login user
+    async logInUser(email: string, password: string, router: any): Promise<void> {       
+        try {
+            // connect to Firebase Auth
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+
+            // load user profile from backend
+            const storedUser = await userService.getUserById(userCredential.user.uid);
+            
+            if (!storedUser) {
+                throw new Error('Kein Benutzerprofil im Backend gefunden');
             }
-        );
+            
+            // set current user
+            userService.setCurrentUser(storedUser);
+            
+            showSuccess(`Willkommen zurück, ${storedUser.firstName}!`);
+            
+            await router.push('/dashboard');
+
+        } catch (error: any) {
+            console.error('❌ Fehler beim Login:', error);
+            
+            const errorMessage = this.getErrorMessage(error);
+                showError(errorMessage);
+            
+            throw error;
+        }
+    }
+
+    // logout user
+    async logOutUser(router: any): Promise<void> {
+        try {
+            await signOut(auth);
+            userService.setCurrentUser(null);
+            
+            console.log('✅ User erfolgreich ausgeloggt');
+            showSuccess('Erfolgreich ausgeloggt');
+
+            await router.push('/login');
+        } catch (error: any) {
+            console.error('❌ Fehler beim Logout:', error);
+            showError('Fehler beim Ausloggen');
+            throw error;
+        }
+    }
+
+    // helper to map Firebase Auth errors to user-friendly messages
+    private getErrorMessage(error: any): string {
+        const errorCode = error?.code || '';
+        
+        const errorMessages: Record<string, string> = {
+            'auth/invalid-credential': 'Email oder Passwort ist falsch',
+            'auth/user-not-found': 'Kein Benutzer mit dieser Email gefunden',
+            'auth/wrong-password': 'Falsches Passwort',
+            'auth/weak-password': 'Passwort muss mindestens 6 Zeichen lang sein',
+            'auth/email-already-in-use': 'Diese Email-Adresse wird bereits verwendet',
+            'auth/invalid-email': 'Ungültige Email-Adresse',
+            'auth/too-many-requests': 'Zu viele Versuche. Bitte später nochmal versuchen',
+            'auth/user-disabled': 'Dieser Account wurde deaktiviert',
+            'auth/network-request-failed': 'Netzwerkfehler. Bitte Verbindung prüfen',
+        };
+
+        return errorMessages[errorCode] || error?.message || 'Ein unbekannter Fehler ist aufgetreten';
     }
 }
