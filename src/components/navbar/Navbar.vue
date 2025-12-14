@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col p-4 w-[20rem] h-screen shadow-r-lg shadow-gray-500">
     <div class="flex-1 flex flex-col gap-3">
-      <p class="pb-5 select-none">Timemanager</p>
+      <p class="pb-5 select-none">Chroniq</p>
       <div class="w-full flex items-center" v-for="item in MenuItems" :key="item">
         <router-link :to="item.path" class="select-none relative w-full p-2 rounded-lg flex gap-2" :class="[route.path === item.path ? 'bg-gray-300 group-[]:bg-gray-300 hover:bg-gray-200 shadow-inner' : 'hover:bg-gray-300']">
           <p>{{ item.text }}</p>

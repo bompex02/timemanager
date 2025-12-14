@@ -19,8 +19,8 @@ export const getDb = async () => {
   if (!isConnected) {
     await client.connect();
     isConnected = true;
-    await client.db("timemanager").command({ ping: 1 });
+    await client.db("chroniq").command({ ping: 1 });
   }
 
-  return client.db('timemanager');
+  return client.db('chroniq');
 };

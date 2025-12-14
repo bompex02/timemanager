@@ -10,7 +10,7 @@ const uri = process.env.MONGODB_CONNECTION_STRING;
 
 const client = new MongoClient(uri);
 
-const DB_NAME = 'timemanager';
+const DB_NAME = 'chroniq';
 const USERS = ['DtgouehyVjaHHxFTnscyEXEmlvJ2', 'ykCZaAbIWSaZHIDcpSznAytXp0h1', 'dZhuDsoivdQGoAlyTjkljvNZBN62'];
 const ENTRIES_PER_USER = 176;
 

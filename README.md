@@ -15,8 +15,8 @@ To get started with the Time Manager application, follow these steps:
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/timemanager.git
-   cd timemanager
+   git clone https://github.com/yourusername/chroniq.git
+   cd chroniq
    ```
 
 2. **Install dependencies**:
