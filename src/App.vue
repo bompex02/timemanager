@@ -1,10 +1,12 @@
 <!-- App.vue -->
 <template>
-  <div class="sidebar-container" v-if="!$route.meta.hideLayout">
-    <Navbar />
-  </div>
-  <div class="content-container bg-white">
-    <RouterView />
+ <div class="flex">
+  <template v-if="!$route.meta.hideLayout">
+      <Navbar />
+    </template>
+    <div class="bg-white" :class="containerStyling">
+      <RouterView />
+    </div>
   </div>
 </template>
 
@@ -12,10 +14,15 @@
 import Navbar from './components/navbar/Navbar.vue'
 import { RouterView } from 'vue-router'
 import { UserService } from './services/UserService';
+import { computed } from 'vue';
 
-const userService = UserService.getInstance();
-console.log('Current User:', userService.getCurrentUser());
+const user = UserService.getInstance()
 
+const containerStyling = computed(() => {
+  if (!user.currentUser) 
+    return 'flex-1'
+  return 'w-[calc(100%-20rem)]'
+})
 </script>
 
 <style scoped>

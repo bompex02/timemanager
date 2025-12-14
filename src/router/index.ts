@@ -53,7 +53,10 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: LoginView,
-      meta: { hideLayout: true},
+      meta: { 
+        title: 'Login',
+        hideLayout: true
+      },
     },
     {
       path: '/register',
@@ -83,6 +86,11 @@ router.beforeEach(async (to, from, next) => {
   } else {
     next();
   }
+})
+
+router.afterEach((to) => {
+  if (to.meta.title)
+    document.title = to.meta.title as string;
 })
 
 export default router

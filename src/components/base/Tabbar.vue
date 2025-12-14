@@ -1,0 +1,56 @@
+<template>
+  <div class="flex items-center">
+    <TabsRoot
+      v-model="selectedIndex"
+      as-child
+    >
+      <TabsList as-child>
+        <div
+          ref="bar"
+          class="relative grid flex-1 snap-x snap-proximity grid-flow-col overflow-x-auto scroll-smooth scrollbar-hidden"
+          style="grid-auto-columns: 1fr"
+          :class="dense ? 'gap-x-2' : 'gap-x-4'"
+          tabindex="-1"
+        >
+          <TabsIndicator class="absolute bottom-0 left-0 h-0.5 w-(--reka-tabs-indicator-size) translate-x-(--reka-tabs-indicator-position) bg-white transition-[translate] duration-400" />
+          <TabsTrigger
+            v-for="(tab, index) in tabsAsObjects"
+            :key="tab.text"
+            :value="index"
+            :disabled="tab.disabled"
+            class="snap-start border-b-2 text-white hover:bg-white/5 rounded-t-lg border-zinc-400 px-2 whitespace-nowrap transition-[font-weight] duration-400
+              select-none not-disabled:hover:border-tab-hover focus:outline-hidden disabled:text-button-on-secondary-disabled
+              data-[state=active]:border-tab-hover data-[state=active]:font-semibold"
+            :class="[dense ? 'py-2' : 'py-4']"
+          >
+            {{ tab.text }}
+          </TabsTrigger>
+        </div>
+      </TabsList>
+    </TabsRoot>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { TabsRoot, TabsList, TabsTrigger, TabsIndicator } from 'reka-ui'
+import {ref, computed} from 'vue'
+
+const props = withDefaults(defineProps<{
+  tabs: Array<{ text: string, disabled?: boolean } | string>
+  dense?: boolean
+}>(), {
+  dense: false,
+})
+const selectedIndex = defineModel<number | undefined>()
+
+const tabsAsObjects = computed(() => {
+  return props.tabs.map((tab) => {
+    if (typeof tab === 'string') {
+      return { text: tab }
+    }
+    return tab
+  })
+})
+
+const bar = ref<HTMLDivElement | undefined>()
+</script>

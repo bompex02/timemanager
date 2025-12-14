@@ -1,41 +1,21 @@
 <template>
-  <div class="flex items-center justify-center w-full h-screen bg-white">
-    <div class="w-full max-w-md p-8 bg-white shadow-lg rounded-lg">
-      <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img class="mx-auto h-10 w-auto" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company" />
-        <h2 class="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">Einloggen</h2>
-      </div>
-
-      <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form class="space-y-6" action="#" method="POST">
-          <div>
-            <label for="email" class="block text-sm font-medium text-gray-900">Email</label>
-            <div class="mt-2">
-              <input v-model="email" type="email" name="email" id="email" autocomplete="email" required class="block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-indigo-600 sm:text-sm" />
+  <div class="bg-[url('@/assets/images/background-login.jpg')] bg-cover bg-center h-screen relative bg-zinc-300 bg-blend-multiply">
+    <div class="h-full w-auto min-w-1/4 rounded-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-95 p-4 flex flex-col justify-center items-center last:gap-2">
+      <img src="@/assets/images/logoAlt2.png" />
+      <div class="h-auto w-full rounded-xl bg-white/20 backdrop-blur-xl border border-white/40 shadow-lg flex flex-col p-4 overflow-auto">
+        <BaseTabBar v-model="selectedTab" :tabs="['Sign In', 'Register']" />
+          <div class="flex flex-col gap-2 h-full px-4 py-10">
+            <div class="flex flex-row" v-if="selectedTab === 1">
+              <BaseInput v-model="input.firstName" variant="primary" label="Firstname" required />
+              <BaseInput v-model="input.lastName" variant="primary" label="Lastname" required />
             </div>
+            <BaseInput v-model="input.eMail" variant="primary" label="E-Mail" required />
+            <span class="relative flex flex-col last:items-end">
+              <BaseInput v-model="input.password" variant="primary" label="Password" type="password" required />
+              <p class="text-xs hover:underline select-none flex justify-end px-2 pt-0.5">Passwort vergessen?</p>
+            </span>
+            <BaseButton class="w-32" @click="selectedTab === 0 ? logInUser() : registerUser()">{{selectedTab === 0 ? 'Sign In' : 'Register'}}</BaseButton>
           </div>
-
-          <div>
-            <div class="flex items-center justify-between">
-              <label for="password" class="block text-sm font-medium text-gray-900">Passwort</label>
-              <div class="text-sm">
-                <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">Passwort vergessen?</a>
-              </div>
-            </div>
-            <div class="mt-2">
-              <input v-model="password" type="password" name="password" id="password" autocomplete="current-password" required class="block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-indigo-600 sm:text-sm" />
-            </div>
-          </div>
-
-          <div>
-            <button @click="logInUser" type="button" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus:outline-indigo-600">Sign in</button>
-          </div>
-        </form>
-
-        <p class="mt-10 text-center text-sm text-gray-500">
-          Noch keinen Account?
-          <a href="/register" class="font-semibold text-indigo-600 hover:text-indigo-500">Erstelle deinen Account</a>
-        </p>
       </div>
     </div>
   </div>
@@ -44,20 +24,44 @@
   
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import type { User } from '../types/user'
 import { useRouter } from 'vue-router'
 import { AuthService } from '../services/AuthService'
+import BaseInput from '@/components/base/Input.vue'
+import BaseButton from '@/components/base/Button.vue'
+import BaseTabBar from '@/components/base/Tabbar.vue'
 
-const email = ref('')
-const password = ref('')
 const router = useRouter()
 const authService = AuthService.getInstance()
 
-const logInUser = (event: Event) => {
-    event.preventDefault(); // Prevent form submission
-    authService.logInUser(email.value, password.value, router);
-    // ----------------------FOR DEBUG ONLY!--------------------------
-    console.log('Login user: ' + email.value + ' ' + password.value)
-    // ---------------------------------------------------------------
+const selectedTab = ref(0)
+const input = ref<User>({
+  firstName: '',
+  lastName: '',
+  eMail: '',
+  password: '',
+})
+const allFilled = computed(() => Object.values(input.value).every(isFilled))
+const isFilled = (value: string | undefined): boolean => {
+  return (value && typeof value === 'string') as boolean
 }
+
+const logInUser = () => {
+  if (!input.value.eMail || !input.value.password) {
+   alert('Please fill in all required fields')
+   return
+  }
+  authService.logInUser(input.value.eMail, input.value.password, router)
+}
+
+const registerUser = () => {
+  if (!allFilled.value) {
+    alert('Please fill in all required fields')
+    return
+  }
+  authService.registerUser(input.value.eMail, input.value.password, input.value.firstName, input.value.lastName)
+  logInUser()
+}
+
 </script>
