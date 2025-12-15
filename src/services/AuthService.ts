@@ -119,4 +119,19 @@ export class AuthService {
 
         return errorMessages[errorCode] || error?.message || 'Ein unbekannter Fehler ist aufgetreten';
     }
+
+    async changeUserPassword(newPassword: string): Promise<void> {
+        const user = auth.currentUser;
+        if (user) {
+            return updatePassword(user, newPassword)
+                .then(() => {
+                    console.log("User password updated successfully");
+                })
+                .catch((error) => {
+                    console.error("Error updating user password", error);
+                    throw error;
+                }
+            );
+        }
+    }
 }
