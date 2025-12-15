@@ -595,6 +595,36 @@ app.put('/users/:id', async (req, res) => {
     }
 });
 
+// update only preferences of a user
+app.put('/users/:id/preferences', async (req, res) => {
+    const { id } = req.params;
+    const preferences = req.body || {};
+
+    try {
+        const db = await getDb();
+        const filters = [];
+
+        if (ObjectId.isValid(id)) {
+            filters.push({ _id: ObjectId.createFromHexString(id) });
+        }
+        filters.push({ id: id });
+
+        const result = await db.collection('users').updateOne(
+            { $or: filters },
+            { $set: { preferences } },
+        );
+
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ message: 'Benutzer nicht gefunden' });
+        }
+
+        return res.status(200).json({ message: 'Präferenzen gespeichert', preferences });
+    } catch (error) {
+        console.error('Fehler beim Speichern der Präferenzen:', error);
+        return res.status(500).json({ message: 'Serverfehler', error: error.message });
+    }
+});
+
 // gets all roles from the mongoDb collection 'roles'
 app.get('/roles', async (req, res) => {
     try {
