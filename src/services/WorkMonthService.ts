@@ -8,7 +8,6 @@ const userService = UserService.getInstance();
 
 export class WorkMonthService {
     private static instance: WorkMonthService;
-    private currentUser = userService.getCurrentUser();
 
     constructor() {} // Prevent direct instantiation
 
@@ -21,7 +20,11 @@ export class WorkMonthService {
 
     // Fetches the work month for the given year and month (async because of API calls)
     async getWorkMonthByUser(year: number, month: number): Promise<WorkMonth> {
-        const userId = this.currentUser?.id || '';
+        const currentUser = userService.getCurrentUser();
+        const userId = currentUser?.id || '';
+        const weeklyTargetHours = userService.getCurrentUserPreferences().targetHoursPerWeek;
+        const workingDaysPerWeek = 5;
+        const targetHoursPerDay = weeklyTargetHours / workingDaysPerWeek;
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         let hoursWorked = 0;
         let hoursShouldWork = 0;
@@ -54,7 +57,7 @@ export class WorkMonthService {
             // 
             const dailyHours = dailyMilliseconds / (1000 * 60 * 60); // convert milliseconds to hours
             hoursWorked += dailyHours;
-            hoursShouldWork += 8;
+            hoursShouldWork += targetHoursPerDay;
           }
         }
       
@@ -64,7 +67,7 @@ export class WorkMonthService {
             year,
             month,
             hoursWorked: parseFloat(hoursWorked.toFixed(2)),
-            hoursShouldWork
+            hoursShouldWork: parseFloat(hoursShouldWork.toFixed(2))
         };
     }
 }

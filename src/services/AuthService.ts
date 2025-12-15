@@ -2,7 +2,7 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, up
 import { auth } from "../config/firebaseConfig";
 import { UserService } from "./UserService";
 import { showSuccess, showError } from '../services/ToastService';
-import { User } from "../models/User";
+import { User, defaultUserPreferences } from "../models/User";
 
 const userService = UserService.getInstance();
 
@@ -32,6 +32,7 @@ export class AuthService {
                 roleId: 2, // roleId 2  = normal user (default)
                 firstName,
                 lastName,
+                preferences: { ...defaultUserPreferences },
             });
 
             // save user in backend database
