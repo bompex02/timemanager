@@ -49,9 +49,9 @@
   import { DateService } from '../services/DateService';
   import { WorkdayService } from '../services/WorkdayService';
   import { TimeRecord, RecordType } from '../models/TimeRecord';
-  import type { currentUserStatus } from '../models/User';
+  import type { WorkLocationPreference, currentUserStatus } from '../models/User';
 
-  const workLocation = ref<'office' | 'homeoffice'>('office'); // Default work location is office
+  const workLocation = ref<WorkLocationPreference>('office'); // Default work location is office
   const isClockedIn = ref(localStorage.getItem('currentStatus') === 'Eingestempelt'); // Check if the user is clocked in or out
   const emit = defineEmits(['update-time-record']); // Emit event to update time record
 
@@ -68,6 +68,8 @@
   onMounted(() => {
     currentUserStatus.value = userService.getCurrentUserStatus();
     console.log('Current User Status:', currentUserStatus.value);
+    const prefs = userService.getCurrentUserPreferences();
+    workLocation.value = prefs.defaultLocation;
   });
 
   // status of current user from the user service
