@@ -1,5 +1,23 @@
 export type currentUserStatus = 'Eingestempelt' | 'Ausgestempelt';
 
+export type WorkLocationPreference = 'office' | 'homeoffice';
+
+export interface UserPreferences {
+    darkMode: boolean;
+    defaultLocation: WorkLocationPreference;
+    targetHoursPerWeek: number;
+    exportFormat: 'csv' | 'xlsx';
+    exportDelimiter: 'comma' | 'semicolon';
+}
+
+export const defaultUserPreferences: UserPreferences = {
+    darkMode: false,
+    defaultLocation: 'office',
+    targetHoursPerWeek: 40,
+    exportFormat: 'csv',
+    exportDelimiter: 'semicolon',
+};
+
 export class User {
     id: string;
     email: string;
@@ -8,6 +26,7 @@ export class User {
     currentStatus?: currentUserStatus;
     firstName?: string;
     lastName?: string;
+    preferences?: UserPreferences;
 
     constructor(params: {
         id: string;
@@ -17,6 +36,7 @@ export class User {
         currentStatus?: currentUserStatus;
         firstName?: string;
         lastName?: string;
+        preferences?: UserPreferences;
     }) {
         this.id = params.id;
         this.email = params.email;
@@ -25,6 +45,7 @@ export class User {
         this.currentStatus = params.currentStatus;
         this.firstName = params.firstName;
         this.lastName = params.lastName;
+        this.preferences = params.preferences;
     }
 
     public getDisplayName(): string {
@@ -47,6 +68,10 @@ export namespace User {
             currentStatus: doc.currentStatus,
             firstName: doc.firstName,
             lastName: doc.lastName,
+            preferences: {
+                ...defaultUserPreferences,
+                ...(doc.preferences || {}),
+            },
         });
     }
 }

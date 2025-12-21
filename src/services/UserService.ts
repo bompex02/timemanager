@@ -1,6 +1,5 @@
 import { reactive, ref } from "vue";
-import { User } from "../models/User";
-import { RoleService } from "../services/RoleService";
+import { User, defaultUserPreferences, type UserPreferences } from "../models/User";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
 import { DateService } from "../services/DateService";
@@ -13,6 +12,7 @@ export class UserService {
     private users = reactive<User[]>([]);
     public currentUser = ref<User | null>(null);
     public currentStatus = ref<currentUserStatus>('Ausgestempelt');
+    private defaultPreferences: UserPreferences = { ...defaultUserPreferences };
     private auth = auth;
 
     private dateService = DateService.getInstance();
@@ -230,5 +230,35 @@ export class UserService {
     
         // fallback to default value 'Ausgestempelt'
         return "Ausgestempelt";
+    }
+
+    // save user preferences (like dark mode) to backend
+    async saveUserPreferences(userId: string, preferences: any): Promise<void> {
+        const response = await fetch(`${BASE_URL}/users/${userId}/preferences`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(preferences),
+        });
+        if (!response.ok) {
+            console.error("Fehler beim Speichern der User Preferences:", response.statusText);
+            throw new Error('Fehler beim Speichern der User Preferences');
+        }
+
+        // update currentUser preferences if applicable
+        if (this.currentUser.value && this.currentUser.value.id === userId) {
+            this.currentUser.value.preferences = preferences;
+            // persist updated currentUser to localStorage as well
+            localStorage.setItem('currentUser', JSON.stringify(this.currentUser.value));
+        }
+    }
+
+    // get current user preferences or default if not set
+    getCurrentUserPreferences(): UserPreferences {
+        const currentUser = this.getCurrentUser();
+        if (currentUser && currentUser.preferences) {
+            return currentUser.preferences;
+        } else {
+            return this.defaultPreferences;
+        }
     }
 }
