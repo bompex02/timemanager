@@ -16,9 +16,9 @@
         </div>
 
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2 mt-4">
-          <BaseInput v-model="form.firstName" variant="light" label="Vorname" required />
-          <BaseInput v-model="form.lastName" variant="light" label="Nachname" required />
-          <BaseInput v-model="form.email" type="email" variant="light" label="E-Mail" class="md:col-span-2" required />
+          <BaseInput v-model="userInputForm.firstName" variant="light" label="Vorname" required />
+          <BaseInput v-model="userInputForm.lastName" variant="light" label="Nachname" required />
+          <BaseInput v-model="userInputForm.email" type="email" variant="light" label="E-Mail" class="md:col-span-2" required />
         </div>
 
         <div class="flex justify-end gap-3 pt-5">
@@ -185,7 +185,7 @@ const preferences = reactive({
   exportDelimiter: 'semicolon',
 });
 
-const form = reactive({
+const userInputForm = reactive({
   id: '',
   email: '',
   firstName: '',
@@ -199,10 +199,10 @@ const password = reactive({ current: '', new: '', confirm: '' });
 function loadCurrentUser() {
   const current = userService.getCurrentUser();
   if (current) {
-    form.id = current.id || '';
-    form.email = current.email || '';
-    form.firstName = current.firstName || '';
-    form.lastName = current.lastName || '';
+    userInputForm.id = current.id || '';
+    userInputForm.email = current.email || '';
+    userInputForm.firstName = current.firstName || '';
+    userInputForm.lastName = current.lastName || '';
   }
 }
 
@@ -218,11 +218,11 @@ function loadPreferences() {
 async function saveProfile() {
   try {
     const updated = {
-      id: form.id,
-      email: form.email,
-      firstName: form.firstName,
-      lastName: form.lastName,
-      password: form.password || ''
+      id: userInputForm.id,
+      email: userInputForm.email,
+      firstName: userInputForm.firstName,
+      lastName: userInputForm.lastName,
+      password: userInputForm.password || ''
     };
 
     await userService.updateUser(updated);
@@ -235,12 +235,12 @@ async function saveProfile() {
 }
 async function savePreferences() {
   try {
-    if (!form.id) {
+    if (!userInputForm.id) {
       showError('Kein Benutzer angemeldet');
       return;
     }
 
-    await userService.saveUserPreferences(form.id, { ...preferences });
+    await userService.saveUserPreferences(userInputForm.id, { ...preferences });
     showSuccess('Präferenzen gespeichert');
   } catch (e) {
     console.error(e);
