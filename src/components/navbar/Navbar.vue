@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col p-4 w-[20rem] h-screen shadow-r-lg shadow-gray-500">
+  <div class="fixed inset-y-0 left-0 z-20 flex flex-col w-[20rem] p-4 bg-white shadow-r-lg shadow-gray-500 overflow-y-auto">
     <div class="flex-1 flex flex-col gap-3">
       <p class="pb-5 select-none">Chroniq</p>
       <div class="w-full flex items-center" v-for="item in MenuItems" :key="item">
