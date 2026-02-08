@@ -1,0 +1,115 @@
+test: This is the english test text
+email: email
+password: password
+login: Log in
+loginSuccess: Welcome back
+firstName: First name
+lastName: Last name
+register: Register
+registerSuccess: Registration successful
+signIn: Sign in
+signUp: Sign up
+dashboard: Dashboard
+dashboardSubtitle: Overview of your working time and entries
+dashboardDailyTitle: Worked hours per day
+dashboardDailySubtitle: Last 14 days (excluding weekends)
+dashboardMonthlyTitle: "Monthly comparison: worked vs. planned hours"
+dashboardMonthlySubtitle: {monthLabel}
+dashboardRecordsTitle: All entries
+dashboardRecordsSubtitle: Chronological overview of your entries
+dashboardEmptyDaily: No work times recorded for the last 14 days.
+dashboardEmptyMonthly: No work times recorded for this month.
+dashboardRecordsEmpty: No entries available
+dashboardHoursUnit: hours
+dashboardWorkedHours: Worked hours
+dashboardPlannedHours: Planned hours
+dashboardHomeOffice: Home office
+dashboardOffice: Office
+recordTypeEinstempeln: Clock in
+recordTypeAusstempeln: Clock out
+timeRecording: Time Tracking
+calendar: Calendar
+settings: Settings
+settingsAccountTitle: Account settings
+settingsProfileTitle: Profile
+settingsProfileSubtitle: Update your personal details
+settingsPreferencesTitle: Preferences
+settingsPreferencesSubtitle: Set theme, location, and exports
+settingsDarkModeTitle: Dark theme
+settingsDarkModeSubtitle: Save preferred theme
+settingsDarkModeToggle: Toggle dark mode
+settingsDefaultLocationLabel: Default work location
+settingsLocationOffice: Office
+settingsLocationOfficeSubtitle: Desk and team
+settingsLocationHomeoffice: Home office
+settingsLocationHomeofficeSubtitle: Flexible from home
+settingsTargetHoursLabel: Target hours per week (hours)
+settingsExportFormatLabel: Export format
+settingsExportFormatCsv: CSV
+settingsExportFormatXlsx: Excel (.xlsx)
+settingsExportDelimiterLabel: Delimiter (CSV)
+settingsExportDelimiterSemicolon: Semicolon (;)
+settingsExportDelimiterComma: Comma (,)
+settingsSavePreferences: Save preferences
+settingsSecurityTitle: Security
+settingsSecuritySubtitle: Change password
+settingsCurrentPasswordLabel: Current password
+settingsNewPasswordLabel: New password
+settingsConfirmPasswordLabel: Confirm new password
+reset: Reset
+save: Save
+saving: Saving...
+changing: Updating...
+changePassword: Change password
+projects: Projects
+projectsOverview: An overview of your projects
+ongoing: Ongoing
+archive: Archive
+activeProjects: Active projects
+inactiveProjects: Inactive projects
+completedProjects: Completed projects
+cancelledProjects: Cancelled projects
+noProjects: You currently have no projects
+createProjects: Create a project
+newProject: New Project
+addNewProject: Create a new project
+editProject: Edit project
+editProjectSubtitle: Update the project details
+projectName: Project name
+projectDescription: Description
+projectClient: Client
+projectState: Status
+projectStateActive: Active
+projectStateInactive: Inactive
+projectStateCompleted: Completed
+projectStateCancelled: Cancelled
+projectSave: Save
+projectCancel: Cancel
+projectEdit: Edit
+projectDelete: Delete
+projectDeleteConfirm: Delete this project?
+projectDeleteWarning: This action cannot be undone.
+projectLoadError: Project could not be loaded
+projectDeleteError: Project could not be deleted
+projectUpdateError: Project could not be saved
+emailAndPasswordRequired: Email and password are required
+allFieldsRequired: All fields are required
+loginError: Login failed
+loading: Loading
+toastSuccessTitle: Success
+toastErrorTitle: Error
+errorGeneric: Something went wrong
+authRequired: User not authenticated
+settingsProfileSaved: Profile saved
+settingsProfileSaveError: Failed to save profile
+settingsPreferencesSaved: Preferences saved
+settingsPreferencesSaveError: Failed to save preferences
+settingsPreferencesLoadError: Failed to load preferences
+passwordAllFieldsRequired: Please fill in all fields
+passwordMismatch: Passwords do not match
+passwordSameAsCurrent: New password must be different from the current password
+passwordChangeError: Failed to change password
+passwordChangeSuccess: Password changed successfully
+logoutSuccess: See you soon
+passwordRequired: Please enter a password
+passwordMinLength: Password must be at least 6 characters

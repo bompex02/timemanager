@@ -1,0 +1,45 @@
+{
+  "name": "@shared/types",
+  "version": "1.0.0",
+  "description": "Shared types for Chroniq",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./user": {
+      "types": "./src/user.ts",
+      "default": "./src/user.ts"
+    },
+    "./project": {
+      "types": "./src/project.ts",
+      "default": "./src/project.ts"
+    },
+    "./record": {
+      "types": "./src/record.ts",
+      "default": "./src/record.ts"
+    },
+    "./role": {
+      "types": "./src/role.ts",
+      "default": "./src/role.ts"
+    },
+    "./workday": {
+      "types": "./src/workday.ts",
+      "default": "./src/workday.ts"
+    }
+  },
+  "files": [
+    "src",
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}

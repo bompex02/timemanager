@@ -1,0 +1,115 @@
+test: Das ist der deutsche Test Text
+email: E-Mail
+password: Passwort
+login: Anmelden
+loginSuccess: Willkommen zurück
+lastName: Nachname
+firstName: Vorname
+register: Registrieren
+registerSuccess: Registrierung erfolgreich
+signIn: Anmeldung
+signUp: Registrierung
+dashboard: Dashboard
+dashboardSubtitle: Ubersicht zu deinen Arbeitszeiten und Eintragen
+dashboardDailyTitle: Gearbeitete Stunden pro Tag
+dashboardDailySubtitle: Letzte 14 Tage (ohne Wochenende)
+dashboardMonthlyTitle: "Monatlicher Vergleich: Geleistete vs. Geplante Stunden"
+dashboardMonthlySubtitle: {monthLabel}
+dashboardRecordsTitle: Alle Eintrage
+dashboardRecordsSubtitle: Chronologische Ubersicht deiner Eintrage
+dashboardEmptyDaily: Noch keine Arbeitszeiten fur die letzten 14 Tage vorhanden.
+dashboardEmptyMonthly: Noch keine Arbeitszeiten fur diesen Monat vorhanden.
+dashboardRecordsEmpty: Keine Eintrage vorhanden
+dashboardHoursUnit: Stunden
+dashboardWorkedHours: Geleistete Stunden
+dashboardPlannedHours: Geplante Stunden
+dashboardHomeOffice: Home-Office
+dashboardOffice: Office
+recordTypeEinstempeln: Einstempeln
+recordTypeAusstempeln: Ausstempeln
+timeRecording: Zeiterfassung
+calendar: Kalender
+settings: Einstellungen
+settingsAccountTitle: Kontoeinstellungen
+settingsProfileTitle: Profil
+settingsProfileSubtitle: Aktualisiere deine Stammdaten
+settingsPreferencesTitle: Präferenzen
+settingsPreferencesSubtitle: Bestimme Theme, Arbeitsort und Exporte
+settingsDarkModeTitle: Dunkles Design
+settingsDarkModeSubtitle: Bevorzugtes Theme speichern
+settingsDarkModeToggle: Dunkles Design umschalten
+settingsDefaultLocationLabel: Standard-Arbeitsort
+settingsLocationOffice: Büro
+settingsLocationOfficeSubtitle: Schreibtisch & Team
+settingsLocationHomeoffice: Homeoffice
+settingsLocationHomeofficeSubtitle: Flexibel von zuhause
+settingsTargetHoursLabel: Soll-Arbeitszeit pro Woche (Stunden)
+settingsExportFormatLabel: Export-Format
+settingsExportFormatCsv: CSV
+settingsExportFormatXlsx: Excel (.xlsx)
+settingsExportDelimiterLabel: Trennzeichen (CSV)
+settingsExportDelimiterSemicolon: Semikolon (;)
+settingsExportDelimiterComma: Komma (,)
+settingsSavePreferences: Präferenzen speichern
+settingsSecurityTitle: Sicherheit
+settingsSecuritySubtitle: Passwort ändern
+settingsCurrentPasswordLabel: Aktuelles Passwort
+settingsNewPasswordLabel: Neues Passwort
+settingsConfirmPasswordLabel: Neues Passwort bestätigen
+reset: Zurücksetzen
+save: Speichern
+saving: Speichert...
+changing: Ändert...
+changePassword: Passwort ändern
+projects: Projekte
+projectsOverview: Eine Übersicht deiner Projekte
+ongoing: Laufend
+archive: Archiv
+activeProjects: Aktive Projekte
+inactiveProjects: Inaktive Projekte
+completedProjects: Abgeschlossene Projekte
+cancelledProjects: Abgebrochene Projekte
+noProjects: Du hast aktuell noch keine Projekte
+createProjects: Projekt erstellen
+newProject: Neues Projekt
+addNewProject: Erstelle ein neues Projekt
+editProject: Projekt bearbeiten
+editProjectSubtitle: Aktualisiere die Projektdetails
+projectName: Projektname
+projectDescription: Beschreibung
+projectClient: Kunde
+projectState: Status
+projectStateActive: Aktiv
+projectStateInactive: Inaktiv
+projectStateCompleted: Abgeschlossen
+projectStateCancelled: Abgebrochen
+projectSave: Speichern
+projectCancel: Abbrechen
+projectEdit: Bearbeiten
+projectDelete: Löschen
+projectDeleteConfirm: Projekt wirklich löschen?
+projectDeleteWarning: Diese Aktion kann nicht rückgängig gemacht werden.
+projectLoadError: Projekt konnte nicht geladen werden
+projectDeleteError: Projekt konnte nicht gelöscht werden
+projectUpdateError: Projekt konnte nicht gespeichert werden
+emailAndPasswordRequired: Email und Passwort sind erforderlich
+allFieldsRequired: Alle Felder sind erforderlich
+loginError: Login fehlgeschlagen
+loading: Laden
+toastSuccessTitle: Erfolg
+toastErrorTitle: Fehler
+errorGeneric: Ein Fehler ist aufgetreten
+authRequired: Benutzer nicht authentifiziert
+settingsProfileSaved: Profil gespeichert
+settingsProfileSaveError: Fehler beim Speichern des Profils
+settingsPreferencesSaved: Präferenzen gespeichert
+settingsPreferencesSaveError: Fehler beim Speichern der Präferenzen
+settingsPreferencesLoadError: Fehler beim Laden der Präferenzen
+passwordAllFieldsRequired: Bitte alle Felder ausfüllen
+passwordMismatch: Passwörter stimmen nicht überein
+passwordSameAsCurrent: Neues Passwort darf nicht dem aktuellen Passwort entsprechen
+passwordChangeError: Fehler beim Ändern des Passworts
+passwordChangeSuccess: Passwort erfolgreich geändert
+logoutSuccess: Bis bald
+passwordRequired: Bitte ein Passwort angeben
+passwordMinLength: Passwort muss mindestens 6 Zeichen lang sein
