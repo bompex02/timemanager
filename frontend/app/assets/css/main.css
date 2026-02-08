@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+:root {
+    --bg-login: url('/images/background-login.jpg')
+}
+
+@theme {
+    --font-quantico: "Quantico", sans-serif;
+    /* Transparent versions of white */
+    --color-white-20: #3A3A3F;
+    --color-border: white;
+    /* input colors */
+    --color-input-on-active: var(--color-zinc-300);
+    /* button colors */
+    --color-button: #D9D9D9;
+    --color-button-hover: #C4C4C4;
+    /* Primary */
+    --color-primary-100: #E6EDF3;
+    --color-primary-200: #C9D6E2;
+    --color-primary-300: #8FA6B8;
+    --color-primary-400: #1F3648;
+    --color-primary-500: #162533;
+    /* Secondary */
+    --color-secondary-100: #DDE3F0;
+    --color-secondary-200: #A9B4D0;
+    --color-secondary-300: #4F628F;
+    --color-secondary-400: #020E2B;
+    --color-secondary-500: #010A1B;
+    /* Surface */
+    --color-surface-100: #F5F7FA; /* Page BG */
+    --color-surface-200: #FFFFFF; /* Cards */
+    --color-surface-300: #CBD5E1; /* Borders */
+    --color-surface-400: #1F2933;
+    --color-surface-500: #0D1820;
+    /* Text */
+    --color-text-100: #0D1820; /* Headings */
+    --color-text-200: #1F2933; /* Body */
+    --color-text-300: #374151; /* Muted */
+    --color-text-400: #64748B; /* Subtle */
+    --color-text-500: #94A3B8; 
+    /* Accent */
+    --color-accent-100: #DBEAFE;
+    --color-accent-200: #BFDBFE;
+    --color-accent-300: #93C5FD;
+    --color-accent-400: #3B82F6;
+    --color-accent-500: #2563EB;
+    /* else */
+    --color-danger: var(--color-red-500);
+    --color-disabled: #9CA3AF;
+} 
+
+@layer base {
+    [data-theme='night'] {
+        /* Primary */
+        --color-primary-100: #A9B4C0;
+        --color-primary-200: #6B7F94;
+        --color-primary-300: #3A5368;
+        --color-primary-400: #1F3648;
+        --color-primary-500: #162533;
+        /* Secondary */
+        --color-secondary-100: #4F628F;
+        --color-secondary-200: #2C3F6B;
+        --color-secondary-300: #020E2B;
+        --color-secondary-400: #010A1B;
+        --color-secondary-500: #030709;
+        /* Surface */
+        --color-surface-100: #0D1820; /* Page BG */
+        --color-surface-200: #121F2A; /* Cards */
+        --color-surface-300: #0D1820; /* Borders / Subtle */
+        --color-surface-400: #162533; /* Hover */
+        --color-surface-500: #1F3648; /* Strong */
+        /* Text */
+        --color-text-100: #FFFFFF;   /* Headings */
+        --color-text-200: #E6EDF3;   /* Body */
+        --color-text-300: #A9B4C0;   /* Muted */
+        --color-text-400: #6B7280;   /* Disabled */
+        --color-text-500: #CBD5E1;   /* Subtle light */
+        /* Accent */
+        --color-accent-100: #DBEAFE;
+        --color-accent-200: #BFDBFE; 
+        --color-accent-300: #93C5FD;
+        --color-accent-400: #3B82F6;
+        --color-accent-500: #2563EB;
+    }
+}
+
+@layer base {
+    body {
+        @apply text-text-100;
+    }
+    h1 {
+        @apply text-3xl font-semibold;
+    }
+    h2 {
+        @apply text-xl font-semibold text-text-100;
+    }
+    h3 {
+        @apply text-xl font-semibold;
+    }
+}
+
+@layer utilities {
+    .bg-login {
+        background-image: var(--bg-login);
+        background-size: cover;
+        background-position: center;
+        background-color: theme(--color-zinc-300);
+        background-blend-mode: multiply;
+    }
+
+    .glass-card {
+        background-color: rgb(255 255 255 / 0.15);
+        backdrop-filter: blur(16px);
+        border-radius: 0.75rem;
+    }
+    
+    .box {
+        @apply rounded-xl bg-surface-200 p-6 shadow-sm shadow-surface-300;
+    }
+}

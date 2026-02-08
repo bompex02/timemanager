@@ -1,3 +1,13 @@
 {
-  "recommendations": ["Vue.volar"]
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "oxc.oxc-vscode",
+    "bradlc.vscode-tailwindcss",
+    "EditorConfig.EditorConfig",
+    "Vue.volar",
+    "lokalise.i18n-ally"
+  ],
+  "unwantedRecommendations": [
+    "esbenp.prettier-vscode"
+  ]
 }
