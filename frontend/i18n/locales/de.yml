@@ -14,7 +14,7 @@ dashboardSubtitle: Ubersicht zu deinen Arbeitszeiten und Eintragen
 dashboardDailyTitle: Gearbeitete Stunden pro Tag
 dashboardDailySubtitle: Letzte 14 Tage (ohne Wochenende)
 dashboardMonthlyTitle: "Monatlicher Vergleich: Geleistete vs. Geplante Stunden"
-dashboardMonthlySubtitle: {monthLabel}
+dashboardMonthlySubtitle: { monthLabel }
 dashboardRecordsTitle: Alle Eintrage
 dashboardRecordsSubtitle: Chronologische Ubersicht deiner Eintrage
 dashboardEmptyDaily: Noch keine Arbeitszeiten fur die letzten 14 Tage vorhanden.
@@ -34,7 +34,7 @@ settingsAccountTitle: Kontoeinstellungen
 settingsProfileTitle: Profil
 settingsProfileSubtitle: Aktualisiere deine Stammdaten
 settingsPreferencesTitle: Präferenzen
-settingsPreferencesSubtitle: Bestimme Theme, Arbeitsort und Exporte
+settingsPreferencesSubtitle: Bestimme Theme, Arbeitsort, Sprache und Exporte
 settingsDarkModeTitle: Dunkles Design
 settingsDarkModeSubtitle: Bevorzugtes Theme speichern
 settingsDarkModeToggle: Dunkles Design umschalten

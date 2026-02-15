@@ -14,7 +14,7 @@ dashboardSubtitle: Overview of your working time and entries
 dashboardDailyTitle: Worked hours per day
 dashboardDailySubtitle: Last 14 days (excluding weekends)
 dashboardMonthlyTitle: "Monthly comparison: worked vs. planned hours"
-dashboardMonthlySubtitle: {monthLabel}
+dashboardMonthlySubtitle: { monthLabel }
 dashboardRecordsTitle: All entries
 dashboardRecordsSubtitle: Chronological overview of your entries
 dashboardEmptyDaily: No work times recorded for the last 14 days.
@@ -34,7 +34,7 @@ settingsAccountTitle: Account settings
 settingsProfileTitle: Profile
 settingsProfileSubtitle: Update your personal details
 settingsPreferencesTitle: Preferences
-settingsPreferencesSubtitle: Set theme, location, and exports
+settingsPreferencesSubtitle: Set theme, location, language, and exports
 settingsDarkModeTitle: Dark theme
 settingsDarkModeSubtitle: Save preferred theme
 settingsDarkModeToggle: Toggle dark mode
