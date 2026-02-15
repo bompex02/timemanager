@@ -3,12 +3,15 @@
     v-model="model"
     :orientation="props.direction"
     class="flex gap-8"
+    :class="[props.direction === 'vertical' ? 'flex-col': '']"
   >
     <RadioGroupItem
       v-for="section in sections"
       :key="section"
       :value="section"
-      class="flex flex-col items-center"
+      :class="[
+        props.direction === 'horizontal' ? 'flex flex-col items-center': 'flex flex-row-reverse items-center gap-2 justify-center',
+      ]"
     >
       <slot :name="section" />
       <div class="size-4 flex items-center justify-center border-text-100 border rounded-full relative">
