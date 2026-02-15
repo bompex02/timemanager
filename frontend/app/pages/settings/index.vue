@@ -91,7 +91,7 @@
         <!-- TODO: Set theme on switch. In UserStore? -->
         <BaseRadioGroup
           v-model="userStore.theme"
-          class="items-center justify-center space-x-24"
+          class="justify-center space-x-24"
           type="image"
           :initial-selection="userStore.theme"
         >
@@ -125,41 +125,109 @@
           </label> -->
         </BaseRadioGroup>
       </section>
-      <!-- Work Parameters Section -->
-      <section class="box flex flex-col gap-4">
-        <!-- Headline -->
-        <div class="flex">
-          <span>
-            <h2>{{ t('settingsWorkParametersTitle') }}</h2>
-            <p class="section-headline-description">
-              {{ t('settingsWorkParametersSubtitle') }}
-            </p>
-          </span>
-          <span class="ml-auto space-x-2">
-            <BaseButton
-              variant="text"
-              @click="resetPreferences"
-            >
-              {{ t('reset') }}
-            </BaseButton>
-            <BaseButton
-              variant="primary"
-              :disabled="savingPreferences"
-              @click="savePreferences"
-            >
-              {{ savingPreferences ? t('saving') : t('save') }}
-            </BaseButton>
-          </span>
-        </div>
-        <!-- Content -->
-        <BaseNumberField
-          v-model="preferences.targetHoursPerWeek"
-          :label="t('settingsTargetHoursLabel')"
-          required
-          :min-value="0"
-          :max-value="168"
-        />
-      </section>
+      <div class="grid grid-cols-2 gap-4">
+        <!-- Work Parameters Section -->
+        <section class="box flex flex-col gap-4">
+          <!-- Headline -->
+          <div class="flex">
+            <span>
+              <h2>{{ t('settingsWorkParametersTitle') }}</h2>
+              <p class="section-headline-description">
+                {{ t('settingsWorkParametersSubtitle') }}
+              </p>
+            </span>
+            <span class="ml-auto space-x-2">
+              <BaseButton
+                variant="text"
+                @click="resetPreferences"
+              >
+                {{ t('reset') }}
+              </BaseButton>
+              <BaseButton
+                variant="primary"
+                :disabled="savingPreferences"
+                @click="savePreferences"
+              >
+                {{ savingPreferences ? t('saving') : t('save') }}
+              </BaseButton>
+            </span>
+          </div>
+          <!-- Content -->
+          <BaseRadioGroup
+            v-model="preferences.defaultLocation"
+            class="justify-center gap-12"
+          >
+            <template #office>
+              <div class="flex flex-col items-center p-4">
+                <BuildingOffice2Icon class="size-8" />
+                <p>{{ t('settingsLocationOffice') }}</p>
+                <p class="text-xs text-text-300">
+                  {{ t('settingsLocationOfficeSubtitle') }}
+                </p>
+              </div>
+            </template>
+            <template #homeoffice>
+              <div class="flex flex-col items-center p-4">
+                <HomeModernIcon class="size-8" />
+                <p>{{ t('settingsLocationHomeoffice') }}</p>
+                <p class="text-xs text-text-300">
+                  {{ t('settingsLocationHomeofficeSubtitle') }}
+                </p>
+              </div>
+            </template>
+          </BaseRadioGroup>
+          <BaseNumberField
+            v-model="preferences.targetHoursPerWeek"
+            :label="t('settingsTargetHoursLabel')"
+            required
+            :min-value="0"
+            :max-value="168"
+          />
+        </section>
+        <!-- Security Section -->
+        <section class="box flex flex-col gap-4">
+          <!-- Headline -->
+          <div class="flex">
+            <span>
+              <h2>{{ t('settingsSecurityTitle') }}</h2>
+              <p class="section-headline-description">
+                {{ t('settingsSecuritySubtitle') }}
+              </p>
+            </span>
+            <span class="ml-auto space-x-2">
+              <BaseButton
+                variant="text"
+                @click="resetPreferences"
+              >
+                {{ t('reset') }}
+              </BaseButton>
+              <BaseButton
+                variant="primary"
+                :disabled="changingPassword"
+                @click="changePassword"
+              >
+                {{ changingPassword ? t('saving') : t('changePassword') }}
+              </BaseButton>
+            </span>
+          </div>
+          <!-- Content -->
+          <BaseInput
+            v-model="passwordForm.current"
+            :label="t('settingsCurrentPasswordLabel')"
+            type="password"
+          />
+          <BaseInput
+            v-model="passwordForm.new"
+            :label="t('settingsNewPasswordLabel')"
+            type="password"
+          />
+          <BaseInput
+            v-model="passwordForm.confirm"
+            :label="t('settingsConfirmPasswordLabel')"
+            type="password"
+          />
+        </section>
+      </div>
 
       <!-- Preferences Section -->
       <section class="box">
@@ -189,9 +257,6 @@
                   <div class="text-sm font-semibold text-text-100">
                     {{ t('settingsLocationOffice') }}
                   </div>
-                  <div class="text-xs text-text-300">
-                    {{ t('settingsLocationOfficeSubtitle') }}
-                  </div>
                 </button>
                 <button
                   type="button"
@@ -201,9 +266,6 @@
                 >
                   <div class="text-sm font-semibold text-text-100">
                     {{ t('settingsLocationHomeoffice') }}
-                  </div>
-                  <div class="text-xs text-text-300">
-                    {{ t('settingsLocationHomeofficeSubtitle') }}
                   </div>
                 </button>
               </div>
@@ -271,55 +333,6 @@
           </BaseButton>
         </div>
       </section>
-
-      <!-- Security Section -->
-      <section class="box">
-        <div class="mb-6 flex flex-col gap-1">
-          <h2 class="text-xl font-semibold text-text-100">
-            {{ t('settingsSecurityTitle') }}
-          </h2>
-          <p class="text-sm text-text-300">
-            {{ t('settingsSecuritySubtitle') }}
-          </p>
-        </div>
-
-        <div class="grid grid-cols-1 gap-4 md:max-w-md">
-          <div class="flex flex-col gap-2">
-            <BaseInput
-              v-model="passwordForm.current"
-              :label="t('settingsCurrentPasswordLabel')"
-              type="password"
-            />
-          </div>
-
-          <div class="flex flex-col gap-2">
-            <BaseInput
-              v-model="passwordForm.new"
-              :label="t('settingsNewPasswordLabel')"
-              type="password"
-            />
-          </div>
-
-          <div class="flex flex-col gap-2">
-            <BaseInput
-              v-model="passwordForm.confirm"
-              :label="t('settingsConfirmPasswordLabel')"
-              type="password"
-            />
-          </div>
-
-          <div class="flex justify-end">
-            <BaseButton
-              variant="primary"
-              :disabled="changingPassword"
-              class="px-6 py-2 text-sm font-medium text-white transition-all hover:bg-accent-600 disabled:opacity-50 disabled:cursor-not-allowed"
-              @click="changePassword"
-            >
-              {{ changingPassword ? t('changing') : t('changePassword') }}
-            </BaseButton>
-          </div>
-        </div>
-      </section>
     </div>
   </div>
 </template>
@@ -329,6 +342,7 @@ import { ref, reactive, onMounted, watch } from 'vue'
 import { useUserStore } from '~/stores/user-store'
 import { useAuth } from '~/composables/useAuth'
 import type { UserPreferences } from '@shared/types'
+import { BuildingOffice2Icon, HomeModernIcon } from '@heroicons/vue/24/outline'
 
 const config = useRuntimeConfig()
 const userStore = useUserStore()
