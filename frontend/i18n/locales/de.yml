@@ -113,3 +113,9 @@ passwordChangeSuccess: Passwort erfolgreich geändert
 logoutSuccess: Bis bald
 passwordRequired: Bitte ein Passwort angeben
 passwordMinLength: Passwort muss mindestens 6 Zeichen lang sein
+theme: Erscheinungsbild
+settingsThemeSubtitle: Sprache und Erscheinungsbild einstellen
+settingsWorkParametersTitle: Arbeitsparameter
+settingsWorkParametersSubtitle: Arbeitsort und wöchentliche Arbeitszeit festlegen
+settingsExportSettingsTitle: Export-Einstellungen
+settingsExportSettingsSubtitle: Format und Trennzeichen festlegen

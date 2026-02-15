@@ -113,3 +113,9 @@ passwordChangeSuccess: Password changed successfully
 logoutSuccess: See you soon
 passwordRequired: Please enter a password
 passwordMinLength: Password must be at least 6 characters
+theme: Theme
+settingsThemeSubtitle: Configure language and appearance 
+settingsWorkParametersTitle: Work Parameters
+settingsWorkParametersSubtitle: Set your work location and weekly working hours
+settingsExportSettingsTitle: Export Settings
+settingsExportSettingsSubtitle: Configure format and delimiter
