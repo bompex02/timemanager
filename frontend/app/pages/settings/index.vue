@@ -33,7 +33,7 @@
     >
       <!-- Profile Section -->
       <section class="box flex flex-col gap-4">
-        <!-- Settings Headline -->
+        <!-- Headline -->
         <div class="flex">
           <span>
             <h2>{{ t('settingsAccountTitle') }}</h2>
@@ -57,7 +57,7 @@
             </BaseButton>
           </span>
         </div>
-        <!-- Settings Content -->
+        <!-- Content -->
         <span class="grid grid-cols-2 gap-4">
           <BaseInput
             v-model="profileForm.firstName"
@@ -76,6 +76,90 @@
           required
         />
       </section>
+      <!-- Preferences Section -->
+      <section class="box">
+        <!-- Headline -->
+        <div class="flex">
+          <span>
+            <h2>{{ t('theme') }}</h2>
+            <p class="section-headline-description">
+              {{ t('settingsThemeSubtitle') }}
+            </p>
+          </span>
+        </div>
+        <!-- Content -->
+        <!-- TODO: Set theme on switch. In UserStore? -->
+        <BaseRadioGroup
+          v-model="userStore.theme"
+          class="items-center justify-center space-x-24"
+          type="image"
+          :initial-selection="userStore.theme"
+        >
+          <template #night>
+            <img
+              src="/icons/DarkTheme.svg"
+              class="size-56"
+            >
+          </template>
+          <template #day>
+            <img
+              src="/icons/LightTheme.svg"
+              class="size-56"
+            >
+          </template>
+          <template #system>
+            <img
+              src="/icons/SystemTheme.svg"
+              class="size-56"
+            >
+          </template>
+          <!-- <label class="relative inline-flex cursor-pointer items-center">
+            <input
+              v-model="preferences.darkMode"
+              type="checkbox"
+              class="peer sr-only"
+              :aria-label="t('settingsDarkModeToggle')"
+            >
+            <div class="h-7 w-12 rounded-full bg-surface-300 transition peer-checked:bg-accent-500 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent-400" />
+            <div class="absolute left-0.5 top-0.5 h-6 w-6 rounded-full bg-white shadow transition peer-checked:translate-x-5" />
+          </label> -->
+        </BaseRadioGroup>
+      </section>
+      <!-- Work Parameters Section -->
+      <section class="box flex flex-col gap-4">
+        <!-- Headline -->
+        <div class="flex">
+          <span>
+            <h2>{{ t('settingsWorkParametersTitle') }}</h2>
+            <p class="section-headline-description">
+              {{ t('settingsWorkParametersSubtitle') }}
+            </p>
+          </span>
+          <span class="ml-auto space-x-2">
+            <BaseButton
+              variant="text"
+              @click="resetPreferences"
+            >
+              {{ t('reset') }}
+            </BaseButton>
+            <BaseButton
+              variant="primary"
+              :disabled="savingPreferences"
+              @click="savePreferences"
+            >
+              {{ savingPreferences ? t('saving') : t('save') }}
+            </BaseButton>
+          </span>
+        </div>
+        <!-- Content -->
+        <BaseNumberField
+          v-model="preferences.targetHoursPerWeek"
+          :label="t('settingsTargetHoursLabel')"
+          required
+          :min-value="0"
+          :max-value="168"
+        />
+      </section>
 
       <!-- Preferences Section -->
       <section class="box">
@@ -89,28 +173,6 @@
         </div>
 
         <div class="space-y-6">
-          <!-- Dark Mode Toggle -->
-          <div class="flex items-start justify-between gap-3 rounded-lg border border-surface-300 bg-surface-100 p-4">
-            <div>
-              <div class="text-sm font-semibold text-text-100">
-                {{ t('settingsDarkModeTitle') }}
-              </div>
-              <p class="text-sm text-text-300">
-                {{ t('settingsDarkModeSubtitle') }}
-              </p>
-            </div>
-            <label class="relative inline-flex cursor-pointer items-center">
-              <input
-                v-model="preferences.darkMode"
-                type="checkbox"
-                class="peer sr-only"
-                :aria-label="t('settingsDarkModeToggle')"
-              >
-              <div class="h-7 w-12 rounded-full bg-surface-300 transition peer-checked:bg-accent-500 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent-400" />
-              <div class="absolute left-0.5 top-0.5 h-6 w-6 rounded-full bg-white shadow transition peer-checked:translate-x-5" />
-            </label>
-          </div>
-
           <!-- Default Location & Target Hours -->
           <div class="grid gap-6 md:grid-cols-2">
             <!-- Default Location -->
