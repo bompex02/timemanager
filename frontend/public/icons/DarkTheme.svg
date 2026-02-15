@@ -1,0 +1,11 @@
+<svg xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" version="1.1" id="svg1" inkscape:export-filename="LightTheme.svg" inkscape:export-xdpi="96" inkscape:export-ydpi="96" viewBox="22.17 30.42 63.04 51.18">
+  <sodipodi:namedview id="namedview1" pagecolor="#0000ff" bordercolor="#000000" borderopacity="0.25" inkscape:showpageshadow="2" inkscape:pageopacity="0.0" inkscape:pagecheckerboard="0" inkscape:deskcolor="#d1d1d1" inkscape:document-units="mm">
+    <inkscape:page x="0" y="0" width="105.83333" height="105.83333" id="page2" margin="0" bleed="0"/>
+  </sodipodi:namedview>
+  <defs id="defs1"/>
+  <g inkscape:label="Layer 1" inkscape:groupmode="layer" id="layer1">
+    <rect style="fill:#0d1820;fill-opacity:1;stroke:#ffffff;stroke-width:0.221245;stroke-opacity:1" id="rect1" width="62.820683" height="50.9613" x="22.282497" y="30.532499" ry="5.8735061"/>
+    <rect style="fill:#121f2a;fill-opacity:1;stroke:#ffffff;stroke-width:0.164562;stroke-opacity:1" id="rect1-3" width="50.714081" height="34.924278" x="34.385033" y="46.597862" ry="2.2164977"/>
+    <text xml:space="preserve" style="font-size:3.175px;writing-mode:lr-tb;direction:ltr;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0.264583;stroke-opacity:1" x="38.068062" y="52.206078" id="text1"><tspan sodipodi:role="line" id="tspan1" style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0.264583;stroke-opacity:1" x="38.068062" y="52.206078">Abc</tspan></text>
+  </g>
+</svg>
