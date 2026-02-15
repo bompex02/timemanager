@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto py-10 gap-4 flex flex-col">
+  <div class="container mx-auto py-5 gap-4 flex flex-col">
     <!-- Header -->
     <header class="mb-2">
       <h1>
@@ -153,36 +153,39 @@
             </span>
           </div>
           <!-- Content -->
-          <BaseRadioGroup
-            v-model="preferences.defaultLocation"
-            class="justify-center gap-12"
-          >
-            <template #office>
-              <div class="flex flex-col items-center p-4">
-                <BuildingOffice2Icon class="size-8" />
-                <p>{{ t('settingsLocationOffice') }}</p>
-                <p class="text-xs text-text-300">
-                  {{ t('settingsLocationOfficeSubtitle') }}
-                </p>
-              </div>
-            </template>
-            <template #homeoffice>
-              <div class="flex flex-col items-center p-4">
-                <HomeModernIcon class="size-8" />
-                <p>{{ t('settingsLocationHomeoffice') }}</p>
-                <p class="text-xs text-text-300">
-                  {{ t('settingsLocationHomeofficeSubtitle') }}
-                </p>
-              </div>
-            </template>
-          </BaseRadioGroup>
-          <BaseNumberField
-            v-model="preferences.targetHoursPerWeek"
-            :label="t('settingsTargetHoursLabel')"
-            required
-            :min-value="0"
-            :max-value="168"
-          />
+          <div class="grid grid-cols-2">
+            <BaseRadioGroup
+              v-model="preferences.defaultLocation"
+              class="justify-start gap-12 col-span-1"
+            >
+              <template #office>
+                <div class="flex flex-col items-center p-4 bg-surface-100 rounded-lg mb-2">
+                  <BuildingOffice2Icon class="size-20" />
+                  <p>{{ t('settingsLocationOffice') }}</p>
+                  <p class="text-xs text-text-300">
+                    {{ t('settingsLocationOfficeSubtitle') }}
+                  </p>
+                </div>
+              </template>
+              <template #homeoffice>
+                <div class="flex flex-col items-center p-4 bg-surface-100 rounded-lg mb-2">
+                  <HomeModernIcon class="size-20" />
+                  <p>{{ t('settingsLocationHomeoffice') }}</p>
+                  <p class="text-xs text-text-300">
+                    {{ t('settingsLocationHomeofficeSubtitle') }}
+                  </p>
+                </div>
+              </template>
+            </BaseRadioGroup>
+            <BaseNumberField
+              v-model="preferences.targetHoursPerWeek"
+              :label="t('settingsTargetHoursLabel')"
+              required
+              class="self-center"
+              :min-value="0"
+              :max-value="168"
+            />
+          </div>
         </section>
         <!-- Security Section -->
         <section class="box flex flex-col gap-4">
@@ -228,109 +231,44 @@
           />
         </section>
       </div>
-
-      <!-- Preferences Section -->
-      <section class="box">
-        <div class="mb-6">
-          <h2 class="text-xl font-semibold text-text-100">
-            {{ t('settingsPreferencesTitle') }}
-          </h2>
-          <p class="text-sm text-text-300">
-            {{ t('settingsPreferencesSubtitle') }}
-          </p>
+      <!-- Export Section -->
+      <section class="box flex flex-col gap-4">
+        <!-- Headline -->
+        <div class="flex">
+          <span>
+            <h2>{{ t('settingsExportSettingsTitle') }}</h2>
+            <p class="section-headline-description">
+              {{ t('settingsExportSettingsSubtitle') }}
+            </p>
+          </span>
+          <span class="ml-auto space-x-2">
+            <BaseButton
+              variant="text"
+              @click="resetPreferences"
+            >
+              {{ t('reset') }}
+            </BaseButton>
+            <BaseButton
+              variant="primary"
+              :disabled="savingPreferences"
+              @click="savePreferences"
+            >
+              {{ savingPreferences ? t('saving') : t('save') }}
+            </BaseButton>
+          </span>
         </div>
-
-        <div class="space-y-6">
-          <!-- Default Location & Target Hours -->
-          <div class="grid gap-6 md:grid-cols-2">
-            <!-- Default Location -->
-            <div class="space-y-3">
-              <span class="text-sm font-medium text-text-200">{{ t('settingsDefaultLocationLabel') }}</span>
-              <!-- TODO: MOVE INTO SEPERATE COMPONENT -->
-              <div class="grid grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  class="rounded-lg border border-surface-300 bg-surface-100 p-3 text-left transition-all hover:border-accent-300 hover:bg-accent-50"
-                  :class="preferences.defaultLocation === 'office' ? 'border-accent-400 bg-accent-50 ring-2 ring-accent-200' : ''"
-                  @click="preferences.defaultLocation = 'office'"
-                >
-                  <div class="text-sm font-semibold text-text-100">
-                    {{ t('settingsLocationOffice') }}
-                  </div>
-                </button>
-                <button
-                  type="button"
-                  class="rounded-lg border border-surface-300 bg-surface-100 p-3 text-left transition-all hover:border-text-100"
-                  :class="preferences.defaultLocation === 'homeoffice' ? 'border-text-100 bg-accent-50 ring-2 ring-accent-200' : ''"
-                  @click="preferences.defaultLocation = 'homeoffice'"
-                >
-                  <div class="text-sm font-semibold text-text-100">
-                    {{ t('settingsLocationHomeoffice') }}
-                  </div>
-                </button>
-              </div>
-            </div>
-
-            <!-- Target Hours -->
-            <div class="flex flex-col gap-2 self-end">
-              <BaseInput
-                v-model.number="preferences.targetHoursPerWeek"
-                :label="t('settingsTargetHoursLabel')"
-                type="number"
-                required
-              />
-            </div>
-
-            <!-- Export Format -->
-            <div class="flex flex-col gap-2">
-              <label class="text-sm font-medium text-text-200">{{ t('settingsExportFormatLabel') }}</label>
-              <select
-                v-model="preferences.exportFormat"
-                class="rounded-lg border border-surface-300 bg-white px-4 py-2 text-sm text-text-100 outline-none transition-all focus:border-accent-400 focus:ring-2 focus:ring-accent-100"
-              >
-                <option value="csv">
-                  {{ t('settingsExportFormatCsv') }}
-                </option>
-                <option value="xlsx">
-                  {{ t('settingsExportFormatXlsx') }}
-                </option>
-              </select>
-            </div>
-
-            <!-- Export Delimiter -->
-            <div class="flex flex-col gap-2">
-              <label class="text-sm font-medium text-text-200">{{ t('settingsExportDelimiterLabel') }}</label>
-              <select
-                v-model="preferences.exportDelimiter"
-                class="rounded-lg border border-surface-300 bg-white px-4 py-2 text-sm text-text-100 outline-none transition-all focus:border-accent-400 focus:ring-2 focus:ring-accent-100"
-              >
-                <option value="semicolon">
-                  {{ t('settingsExportDelimiterSemicolon') }}
-                </option>
-                <option value="comma">
-                  {{ t('settingsExportDelimiterComma') }}
-                </option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div class="mt-6 flex justify-end gap-3">
-          <BaseButton
-            variant="text"
-            class="px-4 py-2 text-sm font-medium text-text-200 transition-colors hover:bg-surface-300 hover:text-text-100"
-            @click="resetPreferences"
-          >
-            {{ t('reset') }}
-          </BaseButton>
-          <BaseButton
-            variant="primary"
-            :disabled="savingPreferences"
-            class="px-6 py-2 text-sm font-medium text-white transition-all hover:bg-accent-600 disabled:opacity-50 disabled:cursor-not-allowed"
-            @click="savePreferences"
-          >
-            {{ savingPreferences ? t('saving') : t('settingsSavePreferences') }}
-          </BaseButton>
+        <!-- Content -->
+        <div class="grid grid-cols-2 gap-4">
+          <BaseSelect
+            v-model="preferences.exportFormat"
+            :items="[t('settingsExportFormatCsv'), t('settingsExportFormatXlsx')]"
+            :label="t('settingsExportFormatLabel')"
+          />
+          <BaseSelect
+            v-model="preferences.exportDelimiter"
+            :items="[t('settingsExportDelimiterSemicolon'), t('settingsExportDelimiterComma')]"
+            :label="t('settingsExportDelimiterLabel')"
+          />
         </div>
       </section>
     </div>
