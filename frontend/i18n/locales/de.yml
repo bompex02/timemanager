@@ -119,3 +119,5 @@ settingsWorkParametersTitle: Arbeitsparameter
 settingsWorkParametersSubtitle: Arbeitsort und wöchentliche Arbeitszeit festlegen
 settingsExportSettingsTitle: Export-Einstellungen
 settingsExportSettingsSubtitle: Format und Trennzeichen festlegen
+language: Sprache
+settingsLanguageSubtitle: Anwendungssprache festlegen

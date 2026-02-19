@@ -119,3 +119,5 @@ settingsWorkParametersTitle: Work Parameters
 settingsWorkParametersSubtitle: Set your work location and weekly working hours
 settingsExportSettingsTitle: Export Settings
 settingsExportSettingsSubtitle: Configure format and delimiter
+language: Language
+settingsLanguageSubtitle: Configure the application language

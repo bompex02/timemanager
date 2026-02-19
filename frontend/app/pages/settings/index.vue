@@ -78,78 +78,85 @@
       </section>
       <!-- Preferences Section -->
       <section class="box">
-        <!-- Headline -->
-        <div class="flex">
-          <span>
-            <h2>{{ t('theme') }}</h2>
-            <p class="section-headline-description">
-              {{ t('settingsThemeSubtitle') }}
-            </p>
-          </span>
-        </div>
         <!-- Content -->
         <!-- TODO: Set theme on switch. In UserStore? -->
         <div class="flex gap-8">
-          <BaseRadioGroup
-            v-model="userStore.theme"
-            class="justify-start"
-            type="image"
-            :initial-selection="userStore.theme"
-          >
-            <template #night>
-              <img
-                src="/icons/DarkTheme.svg"
-                class="size-56"
-              >
-            </template>
-            <template #day>
-              <img
-                src="/icons/LightTheme.svg"
-                class="size-56"
-              >
-            </template>
-            <template #system>
-              <img
-                src="/icons/SystemTheme.svg"
-                class="size-56"
-              >
-            </template>
-            <!-- <label class="relative inline-flex cursor-pointer items-center">
-               <input
-                 v-model="preferences.darkMode"
-                 type="checkbox"
-                 class="peer sr-only"
-                 :aria-label="t('settingsDarkModeToggle')"
-               >
-               <div class="h-7 w-12 rounded-full bg-surface-300 transition peer-checked:bg-accent-500 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent-400" />
-               <div class="absolute left-0.5 top-0.5 h-6 w-6 rounded-full bg-white shadow transition peer-checked:translate-x-5" />
-             </label> -->
-          </BaseRadioGroup>
+          <div>
+            <span>
+              <h2>{{ t('theme') }}</h2>
+              <p class="section-headline-description">
+                {{ t('settingsThemeSubtitle') }}
+              </p>
+            </span>
+            <BaseRadioGroup
+              v-model="userStore.theme"
+              class="justify-start"
+              type="image"
+              :initial-selection="userStore.theme"
+            >
+              <template #night>
+                <img
+                  src="/icons/DarkTheme.svg"
+                  class="size-56"
+                >
+              </template>
+              <template #day>
+                <img
+                  src="/icons/LightTheme.svg"
+                  class="size-56"
+                >
+              </template>
+              <template #system>
+                <img
+                  src="/icons/SystemTheme.svg"
+                  class="size-56"
+                >
+              </template>
+              <!-- <label class="relative inline-flex cursor-pointer items-center">
+                 <input
+                   v-model="preferences.darkMode"
+                   type="checkbox"
+                   class="peer sr-only"
+                   :aria-label="t('settingsDarkModeToggle')"
+                 >
+                 <div class="h-7 w-12 rounded-full bg-surface-300 transition peer-checked:bg-accent-500 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent-400" />
+                 <div class="absolute left-0.5 top-0.5 h-6 w-6 rounded-full bg-white shadow transition peer-checked:translate-x-5" />
+               </label> -->
+            </BaseRadioGroup>
+          </div>
           <Separator
             orientation="vertical"
             decorative
             class="bg-text-100 w-0.5 rounded-full"
           />
-          <BaseRadioGroup
-            v-model="userStore.selectedLang"
-            class="justify-center"
-            direction="vertical"
-          >
-            <template #de>
-              Deutsch
-              <img
-                src="/icons/Germany.svg"
-                class="size-10"
-              >
-            </template>
-            <template #en>
-              English
-              <img
-                src="/icons/Uk.svg"
-                class="size-10"
-              >
-            </template>
-          </BaseRadioGroup>
+          <div class="flex flex-col">
+            <span>
+              <h2>{{ t('language') }}</h2>
+              <p class="section-headline-description">
+                {{ t('settingsLanguageSubtitle') }}
+              </p>
+            </span>
+            <BaseRadioGroup
+              v-model="userStore.selectedLang"
+              class="flex-1 justify-center"
+              direction="vertical"
+            >
+              <template #de>
+                Deutsch
+                <img
+                  src="/icons/Germany.svg"
+                  class="size-10"
+                >
+              </template>
+              <template #en>
+                English
+                <img
+                  src="/icons/Uk.svg"
+                  class="size-10"
+                >
+              </template>
+            </BaseRadioGroup>
+          </div>
         </div>
       </section>
       <div class="grid grid-cols-2 gap-4">
@@ -313,7 +320,7 @@ import { Separator } from 'reka-ui'
 const config = useRuntimeConfig()
 const userStore = useUserStore()
 const { validatePassword } = useAuth()
-const { t } = useI18n()
+const { t, setLocale } = useI18n()
 // States
 const loading = ref(true)
 const error = ref<string | null>(null)
@@ -380,6 +387,14 @@ const persistPreferences = async (): Promise<boolean> => {
 
   return true
 }
+
+type Langugae = 'en' | 'de'
+watch(
+  () => userStore.selectedLang,
+  (newLang) => {
+    setLocale(newLang as Langugae)
+  }, { immediate: true },
+)
 
 // loades current user data into profile form
 const loadCurrentUser = () => {
