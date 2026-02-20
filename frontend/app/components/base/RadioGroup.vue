@@ -1,16 +1,16 @@
 <template>
   <RadioGroupRoot
     v-model="model"
-    :orientation="props.direction"
+    :orientation="direction"
     class="flex gap-8"
-    :class="[props.direction === 'vertical' ? 'flex-col': '']"
+    :class="[direction === 'vertical' ? 'flex': 'flex-col']"
   >
     <RadioGroupItem
       v-for="section in sections"
       :key="section"
       :value="section"
       :class="[
-        props.direction === 'horizontal' ? 'flex flex-col items-center': 'flex flex-row-reverse items-center gap-2 justify-center',
+        direction === 'vertical' ? 'flex flex-col items-center': 'flex flex-row-reverse items-center gap-2 justify-center',
       ]"
     >
       <slot :name="section" />
@@ -26,19 +26,16 @@
 <script setup lang="ts">
 import { RadioGroupRoot, RadioGroupItem, RadioGroupIndicator } from 'reka-ui'
 
-const props = withDefaults(defineProps<{
+const { direction = 'horizontal', initialSelection } = defineProps<{
   direction?: 'vertical' | 'horizontal'
   type?: 'text' | 'image'
   initialSelection?: string
-}>(), {
-  direction: 'horizontal',
-  type: 'text',
-})
+}>()
 
 const sections = Object.keys(useSlots())
 const model = defineModel<string>()
 
 onMounted(() => {
-  if (props.initialSelection) model.value = props.initialSelection
+  if (initialSelection) model.value = initialSelection
 })
 </script>

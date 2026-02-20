@@ -92,6 +92,7 @@
               v-model="userStore.theme"
               class="justify-start"
               type="image"
+              direction="vertical"
               :initial-selection="userStore.theme"
             >
               <template #night>
@@ -139,7 +140,7 @@
             <BaseRadioGroup
               v-model="userStore.selectedLang"
               class="flex-1 justify-center"
-              direction="vertical"
+              direction="horizontal"
             >
               <template #de>
                 Deutsch
