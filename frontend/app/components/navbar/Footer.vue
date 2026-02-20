@@ -1,5 +1,13 @@
 <template>
-  <div class="text-white p-4 px-8 flex items-center justify-center w-full">
+  <div
+    class="text-white p-4 px-8 flex items-center w-full gap-3"
+    :class="props.isOpen ? 'justify-start' : 'justify-center px-4'"
+  >
+    <UserAvatar
+      v-if="props.isOpen"
+      :size="40"
+      class="ring-2 ring-white/20 shadow-md"
+    />
     <Transition name="fade-slide">
       <p
         v-if="props.isOpen"
@@ -10,6 +18,7 @@
     </Transition>
     <BaseButton
       variant="text"
+      :class="props.isOpen ? 'ml-auto' : ''"
       @click="logout"
     >
       <ArrowRightEndOnRectangleIcon class="size-8" />
@@ -19,6 +28,7 @@
 
 <script setup lang="ts">
 import { ArrowRightEndOnRectangleIcon } from '@heroicons/vue/24/outline'
+import UserAvatar from '../User-Avatar.vue'
 
 const { logout } = useAuth()
 const userStore = useUserStore()
