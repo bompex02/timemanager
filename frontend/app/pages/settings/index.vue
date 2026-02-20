@@ -192,6 +192,7 @@
             <BaseRadioGroup
               v-model="preferences.defaultLocation"
               class="justify-start gap-12 col-span-1"
+              direction="vertical"
             >
               <template #office>
                 <div class="flex flex-col items-center p-4 bg-surface-100 rounded-lg mb-2">
