@@ -633,21 +633,21 @@ const initialize = async () => {
   }
 }
 
-watch(
-  () => preferences.darkMode,
-  async (isDark) => {
-    userStore.theme = isDark ? 'night' : 'day'
-    if (isHydratingPreferences.value) return
+// watch(
+//   () => preferences.darkMode,
+//   async (isDark) => {
+//     userStore.theme = isDark ? 'night' : 'day'
+//     if (isHydratingPreferences.value) return
 
-    try {
-      await persistPreferences()
-    }
-    catch (err) {
-      const message = err instanceof Error ? err.message : t('errorGeneric')
-      showError(message)
-    }
-  },
-)
+//     try {
+//       await persistPreferences()
+//     }
+//     catch (err) {
+//       const message = err instanceof Error ? err.message : t('errorGeneric')
+//       showError(message)
+//     }
+//   },
+// )
 
 onMounted(() => {
   initialize()
