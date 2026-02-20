@@ -5,7 +5,7 @@
     </HoverCardTrigger>
     <HoverCardPortal>
       <HoverCardContent
-        class="bg-primary-500 p-4 rounded-lg"
+        class="bg-primary-500 text-white p-4 rounded-lg"
         side="right"
         :side-offset="35"
       >
